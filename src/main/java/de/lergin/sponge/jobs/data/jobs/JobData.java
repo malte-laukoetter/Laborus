@@ -8,42 +8,35 @@ import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.manipulator.mutable.common.AbstractData;
 import org.spongepowered.api.data.merge.MergeFunction;
-import org.spongepowered.api.data.value.mutable.Value;
+import org.spongepowered.api.data.value.mutable.MapValue;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class JobData extends AbstractData<JobData, ImmutableJobDataManipulator> {
-    String jobId;
-    Integer xp;
+    Map<String, Integer> jobs = new HashMap<>();
 
-    protected JobData(String jobId, int xp) {
-        this.jobId = jobId;
-        this.xp = xp;
+    protected JobData(Job job) {
+        this(job.toMap());
+    }
+
+    protected JobData(Map<String, Integer> jobs) {
+        this.jobs.putAll(jobs);
+
         registerGettersAndSetters();
     }
 
-    protected JobData(Job job) {
-        this(job.getId(), job.getXp());
-    }
-
-    public Value<String> jobId(){
-        return Sponge.getRegistry().getValueFactory().createValue(JobKeys.JOB_ID, this.jobId, "");
-    }
-
-    public Value<Integer> xp(){
-        return Sponge.getRegistry().getValueFactory().createValue(JobKeys.JOB_XP, this.xp, 0);
+    public MapValue<String, Integer> jobs(){
+        return Sponge.getRegistry().getValueFactory().createMapValue(JobKeys.JOB_DATA, this.jobs);
     }
 
 
     @Override
     protected void registerGettersAndSetters() {
-        registerFieldGetter(JobKeys.JOB_ID, () -> this.jobId);
-        registerFieldSetter(JobKeys.JOB_ID, value -> this.jobId = value);
-        registerKeyValue(JobKeys.JOB_ID, this::jobId);
-
-        registerFieldGetter(JobKeys.JOB_XP, () -> this.xp);
-        registerFieldSetter(JobKeys.JOB_XP, value -> this.xp = value);
-        registerKeyValue(JobKeys.JOB_XP, this::xp);
+        registerFieldGetter(JobKeys.JOB_DATA, () -> this.jobs);
+        registerFieldSetter(JobKeys.JOB_DATA, value -> this.jobs = value);
+        registerKeyValue(JobKeys.JOB_DATA, this::jobs);
     }
 
     @Override
@@ -56,22 +49,21 @@ public class JobData extends AbstractData<JobData, ImmutableJobDataManipulator> 
 
     @Override
     public Optional<JobData> from(DataContainer dataContainer) {
-        if (!dataContainer.contains(JobKeys.JOB_ID.getQuery(), JobKeys.JOB_XP.getQuery())) {
+        if (!dataContainer.contains(JobKeys.JOB_DATA.getQuery())) {
             return Optional.empty();
         }
-        this.jobId = dataContainer.getString(JobKeys.JOB_ID.getQuery()).get();
-        this.xp = dataContainer.getInt(JobKeys.JOB_XP.getQuery()).get();
+        this.jobs = (Map<String, Integer>) dataContainer.getMap(JobKeys.JOB_DATA.getQuery()).get();
         return Optional.of(this);
     }
 
     @Override
     public JobData copy() {
-        return new JobData(jobId, xp);
+        return new JobData(jobs);
     }
 
     @Override
     public ImmutableJobDataManipulator asImmutable() {
-        return new ImmutableJobDataManipulator(jobId, xp);
+        return new ImmutableJobDataManipulator(jobs);
     }
 
     @Override
@@ -81,11 +73,11 @@ public class JobData extends AbstractData<JobData, ImmutableJobDataManipulator> 
 
     @Override
     public int getContentVersion() {
-        return 1;
+        return 3;
     }
 
     @Override
     public DataContainer toContainer() {
-        return super.toContainer().set(JobKeys.JOB_ID, this.jobId).set(JobKeys.JOB_XP, this.xp);
+        return super.toContainer().set(JobKeys.JOB_DATA, this.jobs);
     }
 }

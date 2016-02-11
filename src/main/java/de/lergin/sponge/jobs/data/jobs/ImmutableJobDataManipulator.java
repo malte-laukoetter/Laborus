@@ -6,39 +6,38 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.manipulator.immutable.common.AbstractImmutableData;
 import org.spongepowered.api.data.value.BaseValue;
-import org.spongepowered.api.data.value.immutable.ImmutableValue;
+import org.spongepowered.api.data.value.immutable.ImmutableMapValue;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class ImmutableJobDataManipulator extends AbstractImmutableData<ImmutableJobDataManipulator, JobData> {
-    String jobId;
-    Integer xp;
+    Map<String, Integer> jobs = new HashMap<>();
 
     protected ImmutableJobDataManipulator(String jobId, int xp) {
-        this.jobId = jobId;
-        this.xp = xp;
+        jobs.put(jobId, xp);
         registerGetters();
     }
 
     protected ImmutableJobDataManipulator(Job job) {
-        this(job.getId(), job.getXp());
+        this(job.toMap());
     }
 
-    public ImmutableValue<String> jobId(){
-        return Sponge.getRegistry().getValueFactory().createValue(JobKeys.JOB_ID, this.jobId, "").asImmutable();
+    protected ImmutableJobDataManipulator(Map<String, Integer> jobs) {
+        this.jobs.putAll(jobs);
+
+        registerGetters();
     }
 
-    public ImmutableValue<Integer> xp(){
-        return Sponge.getRegistry().getValueFactory().createValue(JobKeys.JOB_XP, this.xp, 0).asImmutable();
+    public ImmutableMapValue<String, Integer> jobs(){
+        return Sponge.getRegistry().getValueFactory().createMapValue(JobKeys.JOB_DATA, this.jobs).asImmutable();
     }
 
     @Override
     protected void registerGetters() {
-        registerFieldGetter(JobKeys.JOB_ID, () -> this.jobId);
-        registerKeyValue(JobKeys.JOB_ID, this::jobId);
-
-        registerFieldGetter(JobKeys.JOB_XP, () -> this.xp);
-        registerKeyValue(JobKeys.JOB_XP, this::xp);
+        registerFieldGetter(JobKeys.JOB_DATA, () -> this.jobs);
+        registerKeyValue(JobKeys.JOB_DATA, this::jobs);
     }
 
     @Override
@@ -52,7 +51,7 @@ public class ImmutableJobDataManipulator extends AbstractImmutableData<Immutable
 
     @Override
     public JobData asMutable() {
-        return new JobData(jobId, xp);
+        return new JobData(jobs);
     }
 
     @Override
@@ -62,6 +61,6 @@ public class ImmutableJobDataManipulator extends AbstractImmutableData<Immutable
 
     @Override
     public int getContentVersion() {
-        return 1;
+        return 3;
     }
 }
