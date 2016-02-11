@@ -10,11 +10,15 @@ import de.lergin.sponge.jobs.job.Job;
 import de.lergin.sponge.jobs.job.PlaceBlockJob;
 import de.lergin.sponge.jobs.util.ConfigHelper;
 import de.lergin.sponge.jobs.util.TranslationHelper;
+import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.slf4j.Logger;
+import org.spongepowered.api.CatalogTypes;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.block.BlockType;
+import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameConstructionEvent;
@@ -25,6 +29,7 @@ import org.spongepowered.api.event.world.SaveWorldEvent;
 import org.spongepowered.api.plugin.Plugin;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 @Plugin(id = "Jobs", name = "Jobs", version = "0.1")
@@ -87,10 +92,22 @@ public class JobsMain {
 
         //init commands
 
-        Job job = new BreakBlockJob();
-        Job job2 = new PlaceBlockJob();
 
-        logger.info("initialized job " + job.getName());
+        //init jobs
+        for(ConfigurationNode node : ConfigHelper.getNode("jobs").getChildrenMap().values()){
+            List<BlockType> blockTypes = new ArrayList<>();
+
+            for(ConfigurationNode blockNode : node.getNode("destroyBlocks").getChildrenList()){
+                blockTypes.add(Sponge.getRegistry().getType(
+                        CatalogTypes.BLOCK_TYPE,
+                        blockNode.getKey().toString()
+                ).get());
+            }
+
+            Job job = new BreakBlockJob(node.getKey().toString(), node.getNode("name").getString(), blockTypes);
+
+            logger.info(TranslationHelper.l("info.job.init", job.getId()));
+        }
     }
 
     @Listener

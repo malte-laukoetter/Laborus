@@ -1,10 +1,7 @@
 package de.lergin.sponge.jobs.listener;
 
 import de.lergin.sponge.jobs.data.JobKeys;
-import de.lergin.sponge.jobs.data.jobs.JobData;
-import de.lergin.sponge.jobs.data.jobs.JobDataManipulatorBuilder;
 import de.lergin.sponge.jobs.job.Job;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.data.Transaction;
