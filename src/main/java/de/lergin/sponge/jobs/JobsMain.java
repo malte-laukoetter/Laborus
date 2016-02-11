@@ -1,11 +1,17 @@
 package de.lergin.sponge.jobs;
 
 import com.google.inject.Inject;
+import de.lergin.sponge.jobs.data.jobs.ImmutableJobDataManipulator;
+import de.lergin.sponge.jobs.data.jobs.JobData;
+import de.lergin.sponge.jobs.data.jobs.JobDataManipulatorBuilder;
+import de.lergin.sponge.jobs.job.BreakBlockJob;
+import de.lergin.sponge.jobs.job.Job;
 import de.lergin.sponge.jobs.util.ConfigHelper;
 import de.lergin.sponge.jobs.util.TranslationHelper;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.slf4j.Logger;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameConstructionEvent;
@@ -68,12 +74,17 @@ public class JobsMain {
     @Listener
     public void onGameInitialization(GameInitializationEvent event) {
         //init customData
-
+        Sponge.getDataManager().register(JobData.class, ImmutableJobDataManipulator.class,
+                new JobDataManipulatorBuilder());
 
         //init eventListener
 
 
         //init commands
+
+        Job job = new BreakBlockJob();
+
+        logger.info("initialized job " + job.getName());
     }
 
     @Listener
