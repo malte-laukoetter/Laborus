@@ -1,6 +1,8 @@
 package de.lergin.sponge.jobs.job;
 
 import de.lergin.sponge.jobs.data.JobKeys;
+import de.lergin.sponge.jobs.data.jobs.JobData;
+import de.lergin.sponge.jobs.data.jobs.JobDataManipulatorBuilder;
 import org.spongepowered.api.entity.living.player.Player;
 
 import java.util.HashMap;
@@ -11,7 +13,7 @@ public class Job {
     private String id;
     private int xp;
 
-    public Job(String name, String id) {
+    public Job(String id, String name) {
         this.name = name;
         this.id = id;
     }
@@ -41,6 +43,8 @@ public class Job {
 
         jobData.put(getId(), jobData.getOrDefault(getId(), 0) + amount);
 
-        player.offer(JobKeys.JOB_DATA, jobData);
+        player.offer(new JobDataManipulatorBuilder().job(this, jobData.getOrDefault(getId(), 0) + amount).create());
+
+        System.out.println(player.get(JobKeys.JOB_DATA));
     }
 }

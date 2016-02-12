@@ -1,6 +1,7 @@
 package de.lergin.sponge.jobs.listener;
 
 import de.lergin.sponge.jobs.data.JobKeys;
+import de.lergin.sponge.jobs.job.BreakBlockJob;
 import de.lergin.sponge.jobs.job.Job;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockType;
@@ -15,9 +16,9 @@ import java.util.List;
 
 public class BreakBlockListener {
     List<BlockType> blockTypes;
-    Job job;
+    BreakBlockJob job;
 
-    public BreakBlockListener(Job job, List<BlockType> blockTypes) {
+    public BreakBlockListener(BreakBlockJob job, List<BlockType> blockTypes) {
         this.blockTypes = blockTypes;
         this.job = job;
     }
@@ -27,9 +28,9 @@ public class BreakBlockListener {
         if(event.getCause().get("Source", Player.class).isPresent()) {
             for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
                 if (blockTypes.contains(transaction.getOriginal().getState().getType())) {
-                    job.addXp(player, 1);
-
-                    player.sendMessage(Text.of(player.get(JobKeys.JOB_DATA).get().get(job.getId())));
+                    event.setCancelled(
+                            !job.blockBreak(transaction.getOriginal().getState().getType(), player)
+                    );
                 }
             }
         }

@@ -19,8 +19,8 @@ public class JobDataManipulatorBuilder implements DataManipulatorBuilder<JobData
         return new JobData(jobs);
     }
 
-    public JobDataManipulatorBuilder job(Job job){
-        jobs.putAll(job.toMap());
+    public JobDataManipulatorBuilder job(Job job, Integer xp){
+        jobs.put(job.getId(), xp);
 
         return this;
     }

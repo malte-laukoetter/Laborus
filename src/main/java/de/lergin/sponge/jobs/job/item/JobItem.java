@@ -13,6 +13,10 @@ public class JobItem {
     private Object item;
     private Job job;
 
+    public int getNeedXp() {
+        return needXp;
+    }
+
     public JobItem(int xp, int needXp, Job job, Object item) {
         this.xp = xp;
         this.needXp = needXp;
@@ -31,5 +35,13 @@ public class JobItem {
 
     public boolean canDo(Player player){
         return canDo(player.get(JobKeys.JOB_DATA).orElse(new HashMap<>()).getOrDefault(job.getId(), 0));
+    }
+
+    public Object getItem(){
+        return item;
+    }
+
+    public Job getJob(){
+        return job;
     }
 }

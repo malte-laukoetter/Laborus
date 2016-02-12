@@ -95,16 +95,11 @@ public class JobsMain {
 
         //init jobs
         for(ConfigurationNode node : ConfigHelper.getNode("jobs").getChildrenMap().values()){
-            List<BlockType> blockTypes = new ArrayList<>();
-
-            for(ConfigurationNode blockNode : node.getNode("destroyBlocks").getChildrenList()){
-                blockTypes.add(Sponge.getRegistry().getType(
-                        CatalogTypes.BLOCK_TYPE,
-                        blockNode.getKey().toString()
-                ).get());
-            }
-
-            Job job = new BreakBlockJob(node.getKey().toString(), node.getNode("name").getString(), blockTypes);
+            Job job = new BreakBlockJob(
+                    node.getKey().toString(),
+                    node.getNode("name").getString(),
+                    node.getNode("destroyBlocks").getChildrenMap().values()
+            );
 
             logger.info(TranslationHelper.l("info.job.init", job.getId()));
         }
