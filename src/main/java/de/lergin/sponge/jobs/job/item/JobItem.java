@@ -7,17 +7,17 @@ import org.spongepowered.api.entity.living.player.Player;
 import java.util.HashMap;
 
 public class JobItem {
-    private int xp = 0;
-    private int needXp = 0;
+    private float xp = 0.0f;
+    private float needXp = 0.0f;
     private Class itemType;
     private Object item;
     private Job job;
 
-    public int getNeedXp() {
+    public float getNeedXp() {
         return needXp;
     }
 
-    public JobItem(int xp, int needXp, Job job, Object item) {
+    public JobItem(float xp, float needXp, Job job, Object item) {
         this.xp = xp;
         this.needXp = needXp;
         this.itemType = item.getClass();
@@ -25,16 +25,16 @@ public class JobItem {
         this.job = job;
     }
 
-    public Integer getXp(){
+    public float getXp(){
         return xp;
     }
 
-    public boolean canDo(int xp){
-        return (needXp - xp) > 0;
+    public boolean canDo(float xp){
+        return (needXp - xp) <= 0;
     }
 
     public boolean canDo(Player player){
-        return canDo(player.get(JobKeys.JOB_DATA).orElse(new HashMap<>()).getOrDefault(job.getId(), 0));
+        return canDo(player.get(JobKeys.JOB_DATA).orElse(new HashMap<>()).getOrDefault(job.getId(), 0.0f));
     }
 
     public Object getItem(){

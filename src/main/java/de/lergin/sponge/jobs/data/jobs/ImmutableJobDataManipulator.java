@@ -13,24 +13,20 @@ import java.util.Map;
 import java.util.Optional;
 
 public class ImmutableJobDataManipulator extends AbstractImmutableData<ImmutableJobDataManipulator, JobData> {
-    Map<String, Integer> jobs = new HashMap<>();
+    Map<String, Float> jobs = new HashMap<>();
 
-    protected ImmutableJobDataManipulator(String jobId, int xp) {
+    protected ImmutableJobDataManipulator(String jobId, Float xp) {
         jobs.put(jobId, xp);
         registerGetters();
     }
 
-    protected ImmutableJobDataManipulator(Job job) {
-        this(job.toMap());
-    }
-
-    protected ImmutableJobDataManipulator(Map<String, Integer> jobs) {
+    protected ImmutableJobDataManipulator(Map<String, Float> jobs) {
         this.jobs.putAll(jobs);
 
         registerGetters();
     }
 
-    public ImmutableMapValue<String, Integer> jobs(){
+    public ImmutableMapValue<String, Float> jobs(){
         return Sponge.getRegistry().getValueFactory().createMapValue(JobKeys.JOB_DATA, this.jobs).asImmutable();
     }
 
@@ -61,6 +57,6 @@ public class ImmutableJobDataManipulator extends AbstractImmutableData<Immutable
 
     @Override
     public int getContentVersion() {
-        return 3;
+        return 4;
     }
 }

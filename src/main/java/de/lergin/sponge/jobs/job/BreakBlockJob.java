@@ -3,7 +3,6 @@ package de.lergin.sponge.jobs.job;
 import de.lergin.sponge.jobs.JobsMain;
 import de.lergin.sponge.jobs.job.item.JobItem;
 import de.lergin.sponge.jobs.listener.BreakBlockListener;
-import de.lergin.sponge.jobs.util.PlayerJobHelper;
 import de.lergin.sponge.jobs.util.TranslationHelper;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.CatalogTypes;
@@ -26,8 +25,8 @@ public class BreakBlockJob extends Job {
         for(ConfigurationNode blockNode : blockTypeNodes){
             jobItems.add(
                     new JobItem(
-                            blockNode.getNode("xp").getInt(0),
-                            blockNode.getNode("needXp").getInt(0),
+                            blockNode.getNode("xp").getFloat(0.0f),
+                            blockNode.getNode("needXp").getFloat(0.0f),
                             this,
                             Sponge.getRegistry().getType(
                                     CatalogTypes.BLOCK_TYPE,
@@ -51,7 +50,7 @@ public class BreakBlockJob extends Job {
     public boolean blockBreak(BlockType blockType, Player player){
         for(JobItem jobItem : jobItems){
             if(jobItem.getItem().equals(blockType)){
-                if(PlayerJobHelper.hasEnoughtXp(player, jobItem)){
+                if(jobItem.canDo(player)){
                     this.addXp(player, jobItem.getXp());
                     return true;
                 }else{

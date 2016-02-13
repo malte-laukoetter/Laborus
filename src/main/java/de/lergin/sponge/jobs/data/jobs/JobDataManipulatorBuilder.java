@@ -12,15 +12,21 @@ import java.util.Map;
 import java.util.Optional;
 
 public class JobDataManipulatorBuilder implements DataManipulatorBuilder<JobData, ImmutableJobDataManipulator> {
-    Map<String, Integer> jobs = new HashMap<>();
+    Map<String, Float> jobs = new HashMap<>();
 
     @Override
     public JobData create() {
         return new JobData(jobs);
     }
 
-    public JobDataManipulatorBuilder job(Job job, Integer xp){
+    public JobDataManipulatorBuilder job(Job job, float xp){
         jobs.put(job.getId(), xp);
+
+        return this;
+    }
+
+    public JobDataManipulatorBuilder jobs(Map<String, Float> jobs){
+        this.jobs.putAll(jobs);
 
         return this;
     }
@@ -34,7 +40,7 @@ public class JobDataManipulatorBuilder implements DataManipulatorBuilder<JobData
     public Optional<JobData> build(DataView dataView) throws InvalidDataException {
         if(dataView.contains(JobKeys.JOB_DATA.getQuery())) {
             return Optional.of(new JobData(
-                    (Map<String,Integer>) dataView.getMap(JobKeys.JOB_DATA.getQuery()).get()
+                    (Map<String,Float>) dataView.getMap(JobKeys.JOB_DATA.getQuery()).get()
             ));
         }
         return Optional.empty();

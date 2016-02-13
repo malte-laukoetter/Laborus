@@ -7,5 +7,5 @@ import static org.spongepowered.api.data.key.KeyFactory.makeMapKey;
 import static org.spongepowered.api.data.DataQuery.of;
 
 public class JobKeys {
-    public static final Key<MapValue<String, Integer>> JOB_DATA = makeMapKey(String.class, Integer.class, of("JobData"));
+    public static final Key<MapValue<String, Float>> JOB_DATA = makeMapKey(String.class, Float.class, of("JobData"));
 }
