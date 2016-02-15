@@ -1,4 +1,4 @@
-package de.lergin.sponge.jobs.job.item;
+package de.lergin.sponge.jobs.job;
 
 import de.lergin.sponge.jobs.data.JobKeys;
 import de.lergin.sponge.jobs.job.Job;
