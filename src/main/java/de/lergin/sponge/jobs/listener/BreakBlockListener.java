@@ -2,6 +2,7 @@ package de.lergin.sponge.jobs.listener;
 
 import de.lergin.sponge.jobs.job.Job;
 import de.lergin.sponge.jobs.job.JobAction;
+import org.spongepowered.api.CatalogType;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.data.Transaction;
@@ -23,8 +24,6 @@ public class BreakBlockListener extends BlockJobListener {
         if (event.getCause().get("Source", Player.class).isPresent()) {
             for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
                 if (blockTypes.contains(transaction.getOriginal().getState().getType())) {
-                    player.sendMessage(Text.of("sadsad"));
-
                     event.setCancelled(
                             !job.onBlockEvent(transaction.getOriginal().getState().getType(), player, JobAction.BREAK)
                     );

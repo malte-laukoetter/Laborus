@@ -45,12 +45,19 @@ public class Job {
         jobData.put(getId(), jobData.getOrDefault(getId(), 0.0f) + amount);
 
         player.offer(new JobDataManipulatorBuilder().jobs(jobData).create());
+
+        //TODO: translate, format and setting
+        player.sendMessage(ChatTypes.ACTION_BAR, Text.of(getName() + ": " + getXp(player)));
+    }
+
+    public float getXp(Player player){
+        return player.get(JobKeys.JOB_DATA).orElse(new HashMap<>()).getOrDefault(getId(), 0.0f);
     }
 
     public boolean onBlockEvent(BlockType blockType, Player player, JobAction action){
         for(JobItem jobItem : jobActions.get(action)){
             if(jobItem.getItem().equals(blockType)){
-                if(jobItem.canDo(player)){
+                if(jobItem.canDo(getXp((player)))){
                     this.addXp(player, jobItem.getXp());
                     return true;
                 }else{
