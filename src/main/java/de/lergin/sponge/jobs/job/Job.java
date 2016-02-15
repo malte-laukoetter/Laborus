@@ -13,6 +13,8 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.chat.ChatTypes;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
