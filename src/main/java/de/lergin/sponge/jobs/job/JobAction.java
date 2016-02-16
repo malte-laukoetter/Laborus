@@ -1,6 +1,7 @@
 package de.lergin.sponge.jobs.job;
 
 import de.lergin.sponge.jobs.listener.BreakBlockListener;
+import de.lergin.sponge.jobs.listener.EntityDamageListener;
 import de.lergin.sponge.jobs.listener.EntityKillListener;
 import de.lergin.sponge.jobs.listener.PlaceBlockListener;
 import org.spongepowered.api.CatalogType;
@@ -12,7 +13,7 @@ import java.util.List;
 public enum JobAction {
     BREAK(BreakBlockListener.class, CatalogTypes.BLOCK_TYPE),
     ENTITY_KILL(EntityKillListener.class, CatalogTypes.ENTITY_TYPE),
-    //DAMAGE(EntityDamageListener.class),
+    ENTITY_DAMAGE(EntityDamageListener.class, CatalogTypes.ENTITY_TYPE),
     PLACE(PlaceBlockListener.class, CatalogTypes.BLOCK_TYPE);
 
     Class listener;

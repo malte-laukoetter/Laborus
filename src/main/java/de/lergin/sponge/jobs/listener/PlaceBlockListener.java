@@ -19,7 +19,7 @@ public class PlaceBlockListener extends JobListener<BlockType> {
     }
 
     @Listener
-    public void onBlockPlace(ChangeBlockEvent.Place event, @First Player player) {
+    public void onEvent(ChangeBlockEvent.Place event, @First Player player) {
         if (event.getCause().get("Source", Player.class).isPresent()) {
             for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
                 final BlockType BLOCK_TYPE = transaction.getFinal().getState().getType();

@@ -28,6 +28,7 @@ public class Job {
         initJobAction(jobConfig.getNode("destroyBlocks"), JobAction.BREAK);
         initJobAction(jobConfig.getNode("placeBlocks"), JobAction.PLACE);
         initJobAction(jobConfig.getNode("killEntities"), JobAction.ENTITY_KILL);
+        initJobAction(jobConfig.getNode("damageEntities"), JobAction.ENTITY_DAMAGE);
     }
 
     public String getName() {
