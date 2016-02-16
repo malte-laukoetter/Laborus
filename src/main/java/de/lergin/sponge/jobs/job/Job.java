@@ -3,15 +3,11 @@ package de.lergin.sponge.jobs.job;
 import de.lergin.sponge.jobs.JobsMain;
 import de.lergin.sponge.jobs.data.JobKeys;
 import de.lergin.sponge.jobs.data.jobs.JobDataManipulatorBuilder;
-import de.lergin.sponge.jobs.listener.BreakBlockListener;
-import de.lergin.sponge.jobs.listener.PlaceBlockListener;
 import de.lergin.sponge.jobs.util.TranslationHelper;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.CatalogType;
 import org.spongepowered.api.CatalogTypes;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.block.BlockState;
-import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.chat.ChatTypes;
@@ -29,8 +25,9 @@ public class Job {
         this.id = jobConfig.getKey().toString();
 
 
-        initBlockAction(jobConfig.getNode("destroyBlocks"), JobAction.BREAK);
-        initBlockAction(jobConfig.getNode("placeBlocks"), JobAction.PLACE);
+        initJobAction(jobConfig.getNode("destroyBlocks"), JobAction.BREAK);
+        initJobAction(jobConfig.getNode("placeBlocks"), JobAction.PLACE);
+        initJobAction(jobConfig.getNode("killEntities"), JobAction.ENTITY_KILL);
     }
 
     public String getName() {
@@ -56,9 +53,9 @@ public class Job {
         return player.get(JobKeys.JOB_DATA).orElse(new HashMap<>()).getOrDefault(getId(), 0.0f);
     }
 
-    public boolean onBlockEvent(BlockType blockType, Player player, JobAction action){
+    public boolean onJobListener(Object item, Player player, JobAction action){
         for(JobItem jobItem : jobActions.get(action)){
-            if(jobItem.getItem().equals(blockType)){
+            if(jobItem.getItem().equals(item)){
                 if(jobItem.canDo(getXp((player)))){
                     this.addXp(player, jobItem.getXp());
                     return true;
@@ -72,19 +69,19 @@ public class Job {
         return false;
     }
 
-    private void initBlockAction(ConfigurationNode blockActionNode, JobAction action){
-        if(blockActionNode.getChildrenMap().isEmpty())
+    private void initJobAction(ConfigurationNode jobActionNode, JobAction action){
+        if(jobActionNode.getChildrenMap().isEmpty())
             return;
 
         jobActions.put(
                 action,
-                generateJobItemList(blockActionNode.getChildrenMap().values(), CatalogTypes.BLOCK_TYPE)
+                generateJobItemList(jobActionNode.getChildrenMap().values(), action.getCatalogType())
         );
 
         try {
             Sponge.getEventManager().registerListeners(
                     JobsMain.instance(),
-                    action.getListenerConstructor().newInstance(this, generateBlockTypeList(jobActions.get(action)))
+                    action.getListenerConstructor().newInstance(this, generateJobItemTypeList(jobActions.get(action)))
             );
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
@@ -95,30 +92,35 @@ public class Job {
         List<JobItem> jobItems = new ArrayList<>();
 
         for(ConfigurationNode jobItemNode : nodes){
-            jobItems.add(
-                    new JobItem(
-                            jobItemNode.getNode("xp").getFloat(0.0f),
-                            jobItemNode.getNode("needXp").getFloat(0.0f),
-                            this,
-                            Sponge.getRegistry().getType(
-                                    catalogType,
-                                    jobItemNode.getKey().toString()
-                            ).get()
-                    )
+
+            Optional<? extends CatalogType> optionalJobItemItem = Sponge.getRegistry().getType(
+                    catalogType,
+                    jobItemNode.getKey().toString()
             );
+
+            if(optionalJobItemItem.isPresent()){
+                jobItems.add(
+                        new JobItem(
+                                jobItemNode.getNode("xp").getFloat(0.0f),
+                                jobItemNode.getNode("needXp").getFloat(0.0f),
+                                this,
+                                optionalJobItemItem.get()
+                        )
+                );
+            }
         }
 
         return jobItems;
     }
 
-    private static List<BlockType> generateBlockTypeList(List<JobItem> jobItems){
-        List<BlockType> blockTypes = new ArrayList<>();
+    private static <T> List<T> generateJobItemTypeList(List<JobItem> jobItems){
+        List<T> itemTypes = new ArrayList<>();
 
         for(JobItem jobItem : jobItems){
-            blockTypes.add((BlockType) jobItem.getItem());
+            itemTypes.add((T) jobItem.getItem());
         }
 
-        return blockTypes;
+        return itemTypes;
     }
 
 }

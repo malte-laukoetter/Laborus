@@ -1,23 +1,34 @@
 package de.lergin.sponge.jobs.job;
 
 import de.lergin.sponge.jobs.listener.BreakBlockListener;
+import de.lergin.sponge.jobs.listener.EntityKillListener;
 import de.lergin.sponge.jobs.listener.PlaceBlockListener;
+import org.spongepowered.api.CatalogType;
+import org.spongepowered.api.CatalogTypes;
 
 import java.lang.reflect.Constructor;
 import java.util.List;
 
 public enum JobAction {
-    BREAK(BreakBlockListener.class),
-    PLACE(PlaceBlockListener.class);
+    BREAK(BreakBlockListener.class, CatalogTypes.BLOCK_TYPE),
+    ENTITY_KILL(EntityKillListener.class, CatalogTypes.ENTITY_TYPE),
+    //DAMAGE(EntityDamageListener.class),
+    PLACE(PlaceBlockListener.class, CatalogTypes.BLOCK_TYPE);
 
     Class listener;
+    Class<? extends CatalogType> catalogType;
 
-    JobAction(Class listener){
+    JobAction(Class listener, Class<? extends CatalogType> catalogType){
         this.listener = listener;
+        this.catalogType = catalogType;
     }
 
     protected Class getListener(){
         return listener;
+    }
+
+    public Class<? extends CatalogType> getCatalogType(){
+        return catalogType;
     }
 
     public Constructor getListenerConstructor() throws NoSuchMethodException {
