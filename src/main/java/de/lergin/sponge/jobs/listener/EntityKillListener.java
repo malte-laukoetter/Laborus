@@ -25,8 +25,8 @@ public class EntityKillListener extends JobListener<EntityType> {
         if (optionalDamageSource.isPresent() && optionalDamageSource.get().getSource().getType().equals(EntityTypes.PLAYER)) {
             final EntityType ENTITY_TYPE = event.getTargetEntity().getType();
 
-            if (jobItemTypes.contains(ENTITY_TYPE)) {
-                job.onJobListener(ENTITY_TYPE, (Player) optionalDamageSource.get().getSource(), JobAction.ENTITY_KILL);
+            if (JOB_ITEM_TYPES.contains(ENTITY_TYPE)) {
+                JOB.onJobListener(ENTITY_TYPE, (Player) optionalDamageSource.get().getSource(), JobAction.ENTITY_KILL);
             }
         }
     }

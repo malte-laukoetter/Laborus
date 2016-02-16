@@ -16,13 +16,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class Job {
-    private String name;
-    private String id;
+    private final String NAME;
+    private final String ID;
     private Map<JobAction, List<JobItem>> jobActions = new HashMap<>();
 
     public Job(ConfigurationNode jobConfig) {
-        this.name = jobConfig.getNode("name").getString();
-        this.id = jobConfig.getKey().toString();
+        this.NAME = jobConfig.getNode("name").getString();
+        this.ID = jobConfig.getKey().toString();
 
 
         initJobAction(jobConfig.getNode("destroyBlocks"), JobAction.BREAK);
@@ -32,11 +32,11 @@ public class Job {
     }
 
     public String getName() {
-        return name;
+        return NAME;
     }
 
     public String getId() {
-        return id;
+        return ID;
     }
 
     public void addXp(Player player, float amount){
@@ -46,8 +46,8 @@ public class Job {
 
         player.offer(new JobDataManipulatorBuilder().jobs(jobData).create());
 
-        //TODO: translate, format and setting
-        player.sendMessage(ChatTypes.ACTION_BAR, Text.of(getName() + ": " + getXp(player)));
+        //TODO: setting
+        player.sendMessage(ChatTypes.ACTION_BAR, TranslationHelper.p(player, "player.info.job.xp.action_bar", getName(), getXp(player)));
     }
 
     public float getXp(Player player){

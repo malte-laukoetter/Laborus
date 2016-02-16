@@ -21,7 +21,7 @@ public final class TranslationHelper {
 
     private final static String BUNDLE_NAME = "de.lergin.sponge.jobs.util.Jobs";
 
-    private static Logger logger = JobsMain.instance().getLogger();
+    private final static Logger LOGGER = JobsMain.instance().getLogger();
 
     private static final Function<Locale, ResourceBundle> LOOKUP_FUNC = new Function<Locale, ResourceBundle>() {
         @Nullable
@@ -47,7 +47,7 @@ public final class TranslationHelper {
 
     /**
      * returns the translation of the key (as text) in the given language
-     * @param Locale the language
+     * @param locale the language
      * @param key resourceBundle key
      * @param args replace arguments
      * @return the translated text
@@ -90,10 +90,10 @@ public final class TranslationHelper {
         }catch(MissingFormatArgumentException e){
             // we need to check if the message is our error message so we are not creating a endless loop
             if(key.equals("warn.translation.too_many_arguments")){
-                logger.warn(String.format("Translation for \"warn.translation.too_many_arguments\" in language \"%s\" " +
+                LOGGER.warn(String.format("Translation for \"warn.translation.too_many_arguments\" in language \"%s\" " +
                         "wants too many arguments", local.toLanguageTag()));
             }else{
-                logger.warn(l("warn.translation.too_many_arguments", local.toLanguageTag(), key) + " (ERROR CODE: 1)");
+                LOGGER.warn(l("warn.translation.too_many_arguments", local.toLanguageTag(), key) + " (ERROR CODE: 1)");
             }
 
             return new ResourceBundleTranslation(key, LOOKUP_FUNC).get(local);

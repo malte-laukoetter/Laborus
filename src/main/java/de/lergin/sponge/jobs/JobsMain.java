@@ -28,7 +28,6 @@ public class JobsMain {
     @DefaultConfig(sharedRoot = true)
     public ConfigurationLoader<CommentedConfigurationNode> configManager;
 
-
     @Inject
     private Logger logger;
 

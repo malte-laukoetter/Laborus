@@ -26,8 +26,8 @@ public class EntityDamageListener extends JobListener<EntityType> {
         if (optionalDamageSource.isPresent() && damageSource.getSource().getType().equals(EntityTypes.PLAYER)) {
             final EntityType ENTITY_TYPE = event.getTargetEntity().getType();
 
-            if (jobItemTypes.contains(ENTITY_TYPE)) {
-                event.setCancelled(!job.onJobListener(
+            if (JOB_ITEM_TYPES.contains(ENTITY_TYPE)) {
+                event.setCancelled(!JOB.onJobListener(
                         ENTITY_TYPE,
                         (Player) damageSource.getSource(),
                         JobAction.ENTITY_DAMAGE
