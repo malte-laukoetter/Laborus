@@ -1,6 +1,7 @@
 package de.lergin.sponge.jobs;
 
 import com.google.inject.Inject;
+import de.lergin.sponge.jobs.command.ToggleJobStatusCommand;
 import de.lergin.sponge.jobs.data.jobs.ImmutableJobDataManipulator;
 import de.lergin.sponge.jobs.data.jobs.JobData;
 import de.lergin.sponge.jobs.data.jobs.JobDataManipulatorBuilder;
@@ -80,6 +81,7 @@ public class JobsMain {
 
 
         //init commands
+        new ToggleJobStatusCommand();
 
         //init jobs
         for(ConfigurationNode node : ConfigHelper.getNode("jobs").getChildrenMap().values()){
