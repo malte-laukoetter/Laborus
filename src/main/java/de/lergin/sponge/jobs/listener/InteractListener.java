@@ -18,7 +18,8 @@ public class InteractListener extends JobListener<ItemType> {
 
     @Listener
     public void onEvent(InteractEvent event, @First Player player) {
-        if (event.getCause().get("Source", Player.class).isPresent() && player.getItemInHand().isPresent()) {
+        if (event.getCause().get("Source", Player.class).isPresent() && JOB.enabled(player) &&
+                player.getItemInHand().isPresent()) {
             final ItemType ITEM_TYPE = player.getItemInHand().get().getItem();
 
 

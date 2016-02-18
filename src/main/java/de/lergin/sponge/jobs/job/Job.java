@@ -75,6 +75,10 @@ public class Job {
         return false;
     }
 
+    public boolean enabled(Player player){
+        return player.get(JobKeys.JOB_ENABLED).orElse(true);
+    }
+
     private void initJobAction(ConfigurationNode jobActionNode, JobAction action){
         if(jobActionNode.getChildrenMap().isEmpty())
             return;
