@@ -6,10 +6,10 @@ import de.lergin.sponge.jobs.data.jobs.JobDataManipulatorBuilder;
 import de.lergin.sponge.jobs.util.TranslationHelper;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.CatalogType;
-import org.spongepowered.api.CatalogTypes;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.Text;
+import org.spongepowered.api.entity.living.player.gamemode.GameMode;
 import org.spongepowered.api.text.chat.ChatTypes;
 
 import java.lang.reflect.InvocationTargetException;
@@ -19,6 +19,7 @@ public class Job {
     private final String NAME;
     private final String ID;
     private Map<JobAction, List<JobItem>> jobActions = new HashMap<>();
+    private List<GameMode> enabledGameModes = JobsMain.instance().enabledGameModes;
 
     public Job(ConfigurationNode jobConfig) {
         this.NAME = jobConfig.getNode("name").getString();
@@ -76,7 +77,7 @@ public class Job {
     }
 
     public boolean enabled(Player player){
-        return player.get(JobKeys.JOB_ENABLED).orElse(true);
+        return player.get(JobKeys.JOB_ENABLED).orElse(true) && enabledGameModes.contains(player.get(Keys.GAME_MODE).get());
     }
 
     private void initJobAction(ConfigurationNode jobActionNode, JobAction action){
