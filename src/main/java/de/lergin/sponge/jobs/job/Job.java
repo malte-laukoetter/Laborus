@@ -29,6 +29,7 @@ public class Job {
         initJobAction(jobConfig.getNode("placeBlocks"), JobAction.PLACE);
         initJobAction(jobConfig.getNode("killEntities"), JobAction.ENTITY_KILL);
         initJobAction(jobConfig.getNode("damageEntities"), JobAction.ENTITY_DAMAGE);
+        initJobAction(jobConfig.getNode("useItems"), JobAction.ITEM_USE);
     }
 
     public String getName() {
@@ -47,7 +48,9 @@ public class Job {
         player.offer(new JobDataManipulatorBuilder().jobs(jobData).create());
 
         //TODO: setting
-        player.sendMessage(ChatTypes.ACTION_BAR, TranslationHelper.p(player, "player.info.job.xp.action_bar", getName(), getXp(player)));
+        player.sendMessage(ChatTypes.ACTION_BAR,
+                TranslationHelper.p(player, "player.info.job.xp.action_bar", getName(), getXp(player))
+        );
     }
 
     public float getXp(Player player){
@@ -61,7 +64,9 @@ public class Job {
                     this.addXp(player, jobItem.getXp());
                     return true;
                 }else{
-                    player.sendMessage(TranslationHelper.p(player, "player.warning.job.not_enough_xp"));
+                    player.sendMessage(ChatTypes.ACTION_BAR,
+                            TranslationHelper.p(player, "player.warning.job.not_enough_xp")
+                    );
                     return false;
                 }
             }

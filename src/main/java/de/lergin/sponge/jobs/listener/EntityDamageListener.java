@@ -21,9 +21,8 @@ public class EntityDamageListener extends JobListener<EntityType> {
 
     @Listener
     public void onEvent(DamageEntityEvent event, @First EntityDamageSource damageSource) {
-        Optional<EntityDamageSource> optionalDamageSource = event.getCause().get("Source", EntityDamageSource.class);
-
-        if (optionalDamageSource.isPresent() && damageSource.getSource().getType().equals(EntityTypes.PLAYER)) {
+        if (event.getCause().get("Source", EntityDamageSource.class).isPresent() &&
+                damageSource.getSource().getType().equals(EntityTypes.PLAYER)) {
             final EntityType ENTITY_TYPE = event.getTargetEntity().getType();
 
             if (JOB_ITEM_TYPES.contains(ENTITY_TYPE)) {
