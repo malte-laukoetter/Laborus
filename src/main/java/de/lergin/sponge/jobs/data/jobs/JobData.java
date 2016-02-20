@@ -16,17 +16,17 @@ import java.util.Map;
 import java.util.Optional;
 
 public class JobData extends AbstractData<JobData, ImmutableJobDataManipulator> {
-    Map<String, Float> jobs = new HashMap<>();
+    Map<String, Double> jobs = new HashMap<>();
     boolean jobsEnabled = true;
 
-    protected JobData(Map<String, Float> jobs, boolean jobsEnabled) {
+    protected JobData(Map<String, Double> jobs, boolean jobsEnabled) {
         this.jobs.putAll(jobs);
         this.jobsEnabled  = jobsEnabled;
 
         registerGettersAndSetters();
     }
 
-    public MapValue<String, Float> jobs(){
+    public MapValue<String, Double> jobs(){
         return Sponge.getRegistry().getValueFactory().createMapValue(JobKeys.JOB_DATA, this.jobs);
     }
 
@@ -59,7 +59,7 @@ public class JobData extends AbstractData<JobData, ImmutableJobDataManipulator> 
         if (!dataContainer.contains(JobKeys.JOB_DATA.getQuery())) {
             return Optional.empty();
         }
-        this.jobs = (Map<String, Float>) dataContainer.getMap(JobKeys.JOB_DATA.getQuery()).get();
+        this.jobs = (Map<String, Double>) dataContainer.getMap(JobKeys.JOB_DATA.getQuery()).get();
         this.jobsEnabled = dataContainer.getBoolean(JobKeys.JOB_ENABLED.getQuery()).get();
         return Optional.of(this);
     }
@@ -81,7 +81,7 @@ public class JobData extends AbstractData<JobData, ImmutableJobDataManipulator> 
 
     @Override
     public int getContentVersion() {
-        return 5;
+        return 6;
     }
 
     @Override

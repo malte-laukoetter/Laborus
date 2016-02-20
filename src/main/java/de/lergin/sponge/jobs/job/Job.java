@@ -41,10 +41,10 @@ public class Job {
         return ID;
     }
 
-    public void addXp(Player player, float amount){
-        Map<String, Float> jobData = player.get(JobKeys.JOB_DATA).orElse(new HashMap<>());
+    public void addXp(Player player, double amount){
+        Map<String, Double> jobData = player.get(JobKeys.JOB_DATA).orElse(new HashMap<>());
 
-        jobData.put(getId(), jobData.getOrDefault(getId(), 0.0f) + amount);
+        jobData.put(getId(), jobData.getOrDefault(getId(), 0.0) + amount);
 
         player.offer(new JobDataManipulatorBuilder().jobs(jobData).create());
 
@@ -54,8 +54,8 @@ public class Job {
         );
     }
 
-    public float getXp(Player player){
-        return player.get(JobKeys.JOB_DATA).orElse(new HashMap<>()).getOrDefault(getId(), 0.0f);
+    public double getXp(Player player){
+        return player.get(JobKeys.JOB_DATA).orElse(new HashMap<>()).getOrDefault(getId(), 0.0);
     }
 
     public boolean onJobListener(Object item, Player player, JobAction action){
@@ -112,8 +112,8 @@ public class Job {
             if(optionalJobItemItem.isPresent()){
                 jobItems.add(
                         new JobItem(
-                                jobItemNode.getNode("xp").getFloat(0.0f),
-                                jobItemNode.getNode("needXp").getFloat(0.0f),
+                                jobItemNode.getNode("xp").getDouble(0.0),
+                                jobItemNode.getNode("needXp").getDouble(0.0),
                                 this,
                                 optionalJobItemItem.get()
                         )
