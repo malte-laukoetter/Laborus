@@ -2,7 +2,6 @@ package de.lergin.sponge.jobs.job;
 
 import de.lergin.sponge.jobs.JobsMain;
 import de.lergin.sponge.jobs.data.JobKeys;
-import de.lergin.sponge.jobs.data.jobs.JobDataManipulatorBuilder;
 import de.lergin.sponge.jobs.util.ConfigHelper;
 import de.lergin.sponge.jobs.util.TranslationHelper;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -62,7 +61,7 @@ public class Job {
             if(jobItem.getItem().equals(item)){
                 if(jobItem.canDo(getXp((player)))){
                     double newXp = jobItem.getXp() *
-                         (isSelected(player)? 1 : ConfigHelper.getNode("settings", "xp_without_job").getDouble(0.5));
+                         (isSelected(player)? 1 : ConfigHelper.getNode("setting", "xp_without_job").getDouble(0.5));
 
                     this.addXp(player, newXp);
                     return true;

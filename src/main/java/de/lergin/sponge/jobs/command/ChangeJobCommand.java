@@ -102,7 +102,7 @@ public class ChangeJobCommand extends JobCommand{
 
 
         if(join){
-            if(selectedJobs.size() > ConfigHelper.getNode("settings", "max_selected_jobs").getInt(1)){
+            if(selectedJobs.size() > ConfigHelper.getNode("setting", "max_selected_jobs").getInt(1)){
                 player.sendMessage(TranslationHelper.p(player, "player.warn.job.too_many_selected_jobs"));
 
                 return CommandResult.empty();
@@ -110,14 +110,14 @@ public class ChangeJobCommand extends JobCommand{
 
             String jobId =
                     ((Job) args.getOne(configNode.getNode("params", "job", "description").getString("job")).get()).getId();
-            
+
             if(selectedJobs.add(jobId)){
                 player.sendMessage(TranslationHelper.p(player, "player.info.job.select_job", jobId));
-            }else{
+                return CommandResult.success();
+            }else {
                 player.sendMessage(TranslationHelper.p(player, "player.warning.job.cant_select_job.already_selected", jobId));
+                return CommandResult.empty();
             }
-
-            return CommandResult.success();
         }else{
             String jobId =
                     ((Job) args.getOne(configNode.getNode("params", "job", "description").getString("job")).get()).getId();
