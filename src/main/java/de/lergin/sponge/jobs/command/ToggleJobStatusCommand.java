@@ -63,7 +63,7 @@ public class ToggleJobStatusCommand extends JobCommand {
 
         player.offer(JobKeys.JOB_ENABLED, !jobsEnabled);
 
-        player.sendMessage(TranslationHelper.p(player, "player.info.job.jobs.toggle", !jobsEnabled));
+        player.sendMessage(TranslationHelper.p(player, "player.info.job.toggle", !jobsEnabled));
 
         return CommandResult.success();
     }

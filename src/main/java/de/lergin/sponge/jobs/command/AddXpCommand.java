@@ -115,7 +115,7 @@ public class AddXpCommand extends JobCommand {
 
         player.offer(JobKeys.JOB_DATA, jobData);
 
-        player.sendMessage(TranslationHelper.p(player, "player.info.job.jobs.add_xp", addXp, jobId, newXp));
+        player.sendMessage(TranslationHelper.p(player, "player.info.job.add_xp", addXp, jobId, newXp));
 
         return CommandResult.success();
     }

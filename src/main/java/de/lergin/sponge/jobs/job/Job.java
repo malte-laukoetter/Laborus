@@ -64,7 +64,6 @@ public class Job {
                     double newXp = jobItem.getXp() *
                          (isSelected(player)? 1 : ConfigHelper.getNode("settings", "xp_without_job").getDouble(0.5));
 
-
                     this.addXp(player, newXp);
                     return true;
                 }else{
