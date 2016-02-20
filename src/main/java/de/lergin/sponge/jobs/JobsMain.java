@@ -2,6 +2,7 @@ package de.lergin.sponge.jobs;
 
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
+import de.lergin.sponge.jobs.command.AddXpCommand;
 import de.lergin.sponge.jobs.command.ToggleJobStatusCommand;
 import de.lergin.sponge.jobs.data.jobs.ImmutableJobDataManipulator;
 import de.lergin.sponge.jobs.data.jobs.JobData;
@@ -25,10 +26,7 @@ import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStoppedEvent;
 import org.spongepowered.api.plugin.Plugin;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 
 @Plugin(id = "Jobs", name = "Jobs", version = "0.1")
 public class JobsMain {
@@ -50,6 +48,8 @@ public class JobsMain {
     }
 
     public List<GameMode> enabledGameModes = new ArrayList<>();
+
+    public Map<String, Job> jobs = new HashMap<>();
 
     @Listener
     public void gameConstruct(GameConstructionEvent event) {
@@ -89,10 +89,6 @@ public class JobsMain {
         //init eventListener
 
 
-        //init commands
-        new ToggleJobStatusCommand();
-
-
         //load some data from the config
         initEnabledGameModes();
 
@@ -100,8 +96,14 @@ public class JobsMain {
         for(ConfigurationNode node : ConfigHelper.getNode("jobs").getChildrenMap().values()){
             Job job = new Job(node);
 
+            jobs.put(job.getId(), job);
+
             logger.info(TranslationHelper.l("info.job.init", job.getId()));
         }
+
+        //init commands
+        new ToggleJobStatusCommand();
+        new AddXpCommand();
     }
 
     @Listener

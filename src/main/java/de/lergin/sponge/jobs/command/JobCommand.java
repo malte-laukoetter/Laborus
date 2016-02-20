@@ -6,6 +6,8 @@ import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
+import org.spongepowered.api.command.args.CommandElement;
+import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.command.spec.CommandSpec;
 
@@ -60,6 +62,17 @@ public abstract class JobCommand {
         @Override
         public CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
             return JobCommand.this.execute(commandSource, commandContext);
+        }
+    }
+
+    static CommandElement getCommandElementWithPermission(CommandElement commandElement, String permission){
+        if(permission.equals("")){
+            return commandElement;
+        }else{
+            return GenericArguments.requiringPermission(
+                    commandElement,
+                    permission
+            );
         }
     }
 }
