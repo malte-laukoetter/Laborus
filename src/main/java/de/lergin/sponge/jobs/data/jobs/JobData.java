@@ -8,8 +8,8 @@ import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.manipulator.mutable.common.AbstractData;
 import org.spongepowered.api.data.merge.MergeFunction;
-import org.spongepowered.api.data.value.mutable.ListValue;
 import org.spongepowered.api.data.value.mutable.MapValue;
+import org.spongepowered.api.data.value.mutable.SetValue;
 import org.spongepowered.api.data.value.mutable.Value;
 
 import java.util.*;
@@ -17,9 +17,9 @@ import java.util.*;
 public class JobData extends AbstractData<JobData, ImmutableJobDataManipulator> {
     Map<String, Double> jobs = new HashMap<>();
     boolean jobsEnabled = true;
-    List<String> selectedJobs;
+    Set<String> selectedJobs = new HashSet<>();
 
-    protected JobData(Map<String, Double> jobs, boolean jobsEnabled, List<String> selectedJobs) {
+    protected JobData(Map<String, Double> jobs, boolean jobsEnabled, Set<String> selectedJobs) {
         this.jobs.putAll(jobs);
         this.jobsEnabled  = jobsEnabled;
         this.selectedJobs = selectedJobs;
@@ -35,8 +35,8 @@ public class JobData extends AbstractData<JobData, ImmutableJobDataManipulator> 
         return Sponge.getRegistry().getValueFactory().createValue(JobKeys.JOB_ENABLED, this.jobsEnabled);
     }
 
-    public ListValue<String> selectedJobs(){
-        return Sponge.getRegistry().getValueFactory().createListValue(JobKeys.JOB_SELECTED, this.selectedJobs);
+    public SetValue<String> selectedJobs(){
+        return Sponge.getRegistry().getValueFactory().createSetValue(JobKeys.JOB_SELECTED, this.selectedJobs);
     }
 
 
@@ -70,7 +70,7 @@ public class JobData extends AbstractData<JobData, ImmutableJobDataManipulator> 
         }
         this.jobs = (Map<String, Double>) dataContainer.getMap(JobKeys.JOB_DATA.getQuery()).get();
         this.jobsEnabled = dataContainer.getBoolean(JobKeys.JOB_ENABLED.getQuery()).get();
-        this.selectedJobs = (List<String>) dataContainer.getList(JobKeys.JOB_SELECTED.getQuery()).get();
+        this.selectedJobs = (Set<String>) dataContainer.get(JobKeys.JOB_SELECTED.getQuery()).get();
         return Optional.of(this);
     }
 

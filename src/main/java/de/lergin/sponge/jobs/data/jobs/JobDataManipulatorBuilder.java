@@ -1,5 +1,6 @@
 package de.lergin.sponge.jobs.data.jobs;
 
+import com.google.common.collect.ImmutableList;
 import de.lergin.sponge.jobs.data.JobKeys;
 import de.lergin.sponge.jobs.job.Job;
 import org.spongepowered.api.data.DataHolder;
@@ -12,7 +13,7 @@ import java.util.*;
 public class JobDataManipulatorBuilder implements DataManipulatorBuilder<JobData, ImmutableJobDataManipulator> {
     Map<String, Double> jobs = new HashMap<>();
     boolean jobsEnabled = true;
-    List<String> selectedJobs;
+    Set<String> selectedJobs = new HashSet<>();
 
     @Override
     public JobData create() {
@@ -45,10 +46,17 @@ public class JobDataManipulatorBuilder implements DataManipulatorBuilder<JobData
     @Override
     public Optional<JobData> build(DataView dataView) throws InvalidDataException {
         if(dataView.contains(JobKeys.JOB_DATA.getQuery())) {
+
+            // the data needs to be parsed by hand because we are getting a list instead of a set
+            Set<String> selectedJobs = new HashSet<>();
+            for(Object string : (ImmutableList<?>) dataView.get(JobKeys.JOB_SELECTED.getQuery()).orElse(new HashSet<String>())){
+                selectedJobs.add((String) string);
+            }
+
             return Optional.of(new JobData(
                     (Map<String,Double>) dataView.getMap(JobKeys.JOB_DATA.getQuery()).get(),
                     dataView.getBoolean(JobKeys.JOB_ENABLED.getQuery()).orElse(true),
-                    (List<String>) dataView.getList(JobKeys.JOB_SELECTED.getQuery()).orElse(new ArrayList<>())
+                    selectedJobs
             ));
         }
         return Optional.empty();

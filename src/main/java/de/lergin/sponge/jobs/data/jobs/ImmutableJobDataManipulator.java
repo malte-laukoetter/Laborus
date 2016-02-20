@@ -6,22 +6,19 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.manipulator.immutable.common.AbstractImmutableData;
 import org.spongepowered.api.data.value.BaseValue;
-import org.spongepowered.api.data.value.immutable.ImmutableListValue;
 import org.spongepowered.api.data.value.immutable.ImmutableMapValue;
+import org.spongepowered.api.data.value.immutable.ImmutableSetValue;
 import org.spongepowered.api.data.value.immutable.ImmutableValue;
 import org.spongepowered.api.data.value.mutable.Value;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class ImmutableJobDataManipulator extends AbstractImmutableData<ImmutableJobDataManipulator, JobData> {
     Map<String, Double> jobs = new HashMap<>();
     boolean jobsEnabled = true;
-    List<String> selectedJobs;
+    Set<String> selectedJobs = new HashSet<>();
 
-    protected ImmutableJobDataManipulator(Map<String, Double> jobs, boolean jobsEnabled, List<String> selectedJobs) {
+    protected ImmutableJobDataManipulator(Map<String, Double> jobs, boolean jobsEnabled, Set<String> selectedJobs) {
         this.jobs.putAll(jobs);
         this.jobsEnabled = jobsEnabled;
         this.selectedJobs = selectedJobs;
@@ -37,8 +34,8 @@ public class ImmutableJobDataManipulator extends AbstractImmutableData<Immutable
         return Sponge.getRegistry().getValueFactory().createValue(JobKeys.JOB_ENABLED, this.jobsEnabled).asImmutable();
     }
 
-    public ImmutableListValue<String> selectedJobs(){
-        return Sponge.getRegistry().getValueFactory().createListValue(JobKeys.JOB_SELECTED, this.selectedJobs).asImmutable();
+    public ImmutableSetValue<String> selectedJobs(){
+        return Sponge.getRegistry().getValueFactory().createSetValue(JobKeys.JOB_SELECTED, this.selectedJobs).asImmutable();
     }
 
     @Override
@@ -49,8 +46,8 @@ public class ImmutableJobDataManipulator extends AbstractImmutableData<Immutable
         registerFieldGetter(JobKeys.JOB_ENABLED, () -> this.jobsEnabled);
         registerKeyValue(JobKeys.JOB_ENABLED, this::jobsEnabled);
 
-        registerFieldGetter(JobKeys.JOB_SELECTED, () -> this.selectedJobs);
-        registerKeyValue(JobKeys.JOB_SELECTED, this::selectedJobs);
+        registerFieldGetter(JobKeys.JOB_SELECTED, () -> this.jobsEnabled);
+        registerKeyValue(JobKeys.JOB_ENABLED, this::selectedJobs);
     }
 
     @Override
