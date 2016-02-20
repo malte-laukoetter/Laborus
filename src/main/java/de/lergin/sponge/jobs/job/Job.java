@@ -3,6 +3,7 @@ package de.lergin.sponge.jobs.job;
 import de.lergin.sponge.jobs.JobsMain;
 import de.lergin.sponge.jobs.data.JobKeys;
 import de.lergin.sponge.jobs.data.jobs.JobDataManipulatorBuilder;
+import de.lergin.sponge.jobs.util.ConfigHelper;
 import de.lergin.sponge.jobs.util.TranslationHelper;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.CatalogType;
@@ -46,8 +47,6 @@ public class Job {
 
         jobData.put(getId(), jobData.getOrDefault(getId(), 0.0) + amount);
 
-        player.offer(new JobDataManipulatorBuilder().jobs(jobData).create());
-
         //TODO: setting
         player.sendMessage(ChatTypes.ACTION_BAR,
                 TranslationHelper.p(player, "player.info.job.xp.action_bar", getName(), getXp(player))
@@ -62,7 +61,11 @@ public class Job {
         for(JobItem jobItem : jobActions.get(action)){
             if(jobItem.getItem().equals(item)){
                 if(jobItem.canDo(getXp((player)))){
-                    this.addXp(player, jobItem.getXp());
+                    double newXp = jobItem.getXp() *
+                         (isSelected(player)? 1 : ConfigHelper.getNode("settings", "xp_without_job").getDouble(0.5));
+
+
+                    this.addXp(player, newXp);
                     return true;
                 }else{
                     player.sendMessage(ChatTypes.ACTION_BAR,
@@ -78,6 +81,12 @@ public class Job {
 
     public boolean enabled(Player player){
         return player.get(JobKeys.JOB_ENABLED).orElse(true) && enabledGameModes.contains(player.get(Keys.GAME_MODE).get());
+    }
+
+    public boolean isSelected(Player player){
+        Set<String> selectedJobs = player.get(JobKeys.JOB_SELECTED).orElse(new HashSet<>());
+
+        return selectedJobs.contains(getId());
     }
 
     private void initJobAction(ConfigurationNode jobActionNode, JobAction action){
