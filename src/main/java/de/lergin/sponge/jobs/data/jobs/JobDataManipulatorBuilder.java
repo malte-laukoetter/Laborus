@@ -7,16 +7,17 @@ import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.manipulator.DataManipulatorBuilder;
 import org.spongepowered.api.util.persistence.InvalidDataException;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public class JobDataManipulatorBuilder implements DataManipulatorBuilder<JobData, ImmutableJobDataManipulator> {
     Map<String, Double> jobs = new HashMap<>();
     boolean jobsEnabled = true;
-    List<String> selectedJobs;
 
     @Override
     public JobData create() {
-        return new JobData(jobs, jobsEnabled, selectedJobs);
+        return new JobData(jobs, jobsEnabled);
     }
 
     public JobDataManipulatorBuilder job(Job job, double xp){
@@ -39,7 +40,7 @@ public class JobDataManipulatorBuilder implements DataManipulatorBuilder<JobData
 
     @Override
     public Optional<JobData> createFrom(DataHolder dataHolder) {
-        return Optional.of(dataHolder.get(JobData.class).orElse(new JobData(jobs, jobsEnabled, selectedJobs)));
+        return Optional.of(dataHolder.get(JobData.class).orElse(new JobData(jobs, jobsEnabled)));
     }
 
     @Override
@@ -47,8 +48,7 @@ public class JobDataManipulatorBuilder implements DataManipulatorBuilder<JobData
         if(dataView.contains(JobKeys.JOB_DATA.getQuery())) {
             return Optional.of(new JobData(
                     (Map<String,Double>) dataView.getMap(JobKeys.JOB_DATA.getQuery()).get(),
-                    dataView.getBoolean(JobKeys.JOB_ENABLED.getQuery()).orElse(true),
-                    (List<String>) dataView.getList(JobKeys.JOB_SELECTED.getQuery()).orElse(new ArrayList<>())
+                    dataView.getBoolean(JobKeys.JOB_ENABLED.getQuery()).orElse(true)
             ));
         }
         return Optional.empty();
