@@ -2,6 +2,7 @@ package de.lergin.sponge.jobs.job;
 
 import de.lergin.sponge.jobs.JobsMain;
 import de.lergin.sponge.jobs.data.JobKeys;
+import de.lergin.sponge.jobs.job.bonus.MultiDrop;
 import de.lergin.sponge.jobs.util.ConfigHelper;
 import de.lergin.sponge.jobs.util.TranslationHelper;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -20,17 +21,25 @@ public class Job {
     private final String ID;
     private Map<JobAction, List<JobItem>> jobActions = new HashMap<>();
     private List<GameMode> enabledGameModes = JobsMain.instance().enabledGameModes;
+    private Set<JobBonus> jobBonuses = new HashSet<>();
 
     public Job(ConfigurationNode jobConfig) {
         this.NAME = jobConfig.getNode("name").getString();
         this.ID = jobConfig.getKey().toString();
-
 
         initJobAction(jobConfig.getNode("destroyBlocks"), JobAction.BREAK);
         initJobAction(jobConfig.getNode("placeBlocks"), JobAction.PLACE);
         initJobAction(jobConfig.getNode("killEntities"), JobAction.ENTITY_KILL);
         initJobAction(jobConfig.getNode("damageEntities"), JobAction.ENTITY_DAMAGE);
         initJobAction(jobConfig.getNode("useItems"), JobAction.ITEM_USE);
+
+        for(ConfigurationNode bonusNode : jobConfig.getNode("bonus").getChildrenList()){
+            switch (bonusNode.getKey().toString()){
+                case "multiDrop":
+                    jobBonuses.add(new MultiDrop(bonusNode));
+                    break;
+            }
+        }
     }
 
     public String getName() {
@@ -64,6 +73,13 @@ public class Job {
                          (isSelected(player)? 1 : ConfigHelper.getNode("setting", "xp_without_job").getDouble(0.5));
 
                     this.addXp(player, newXp);
+
+                    for(JobBonus jobBonus :  jobBonuses){
+                        if(jobBonus.canHappen(jobItem)){
+                            jobBonus.useBonus(jobItem, player);
+                        }
+                    }
+
                     return true;
                 }else{
                     player.sendMessage(ChatTypes.ACTION_BAR,
@@ -86,6 +102,7 @@ public class Job {
 
         return selectedJobs.contains(getId());
     }
+
 
     private void initJobAction(ConfigurationNode jobActionNode, JobAction action){
         if(jobActionNode.getChildrenMap().isEmpty())
