@@ -2,6 +2,7 @@ package de.lergin.sponge.jobs.job;
 
 import de.lergin.sponge.jobs.JobsMain;
 import de.lergin.sponge.jobs.data.JobKeys;
+import de.lergin.sponge.jobs.job.bonus.EpDrop;
 import de.lergin.sponge.jobs.job.bonus.MultiDrop;
 import de.lergin.sponge.jobs.util.ConfigHelper;
 import de.lergin.sponge.jobs.util.TranslationHelper;
@@ -33,10 +34,13 @@ public class Job {
         initJobAction(jobConfig.getNode("damageEntities"), JobAction.ENTITY_DAMAGE);
         initJobAction(jobConfig.getNode("useItems"), JobAction.ITEM_USE);
 
-        for(ConfigurationNode bonusNode : jobConfig.getNode("bonus").getChildrenList()){
+        for(ConfigurationNode bonusNode : jobConfig.getNode("bonus").getChildrenMap().values()){
             switch (bonusNode.getKey().toString()){
                 case "multiDrop":
                     jobBonuses.add(new MultiDrop(bonusNode));
+                    break;
+                case "ep":
+                    jobBonuses.add(new EpDrop(bonusNode));
                     break;
             }
         }
