@@ -16,6 +16,7 @@ import org.spongepowered.api.text.chat.ChatTypes;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Job {
     private final String NAME;
@@ -23,10 +24,23 @@ public class Job {
     private Map<JobAction, List<JobItem>> jobActions = new HashMap<>();
     private List<GameMode> enabledGameModes = JobsMain.instance().enabledGameModes;
     private Set<JobBonus> jobBonuses = new HashSet<>();
+    private List<Integer> level = new ArrayList<>();
 
     public Job(ConfigurationNode jobConfig) {
         this.NAME = jobConfig.getNode("name").getString();
         this.ID = jobConfig.getKey().toString();
+
+        List<? extends ConfigurationNode> levelConfig;
+
+        if(jobConfig.getNode("use_default_level").getBoolean(false)){
+            levelConfig = ConfigHelper.getNode("level").getChildrenList();
+        }else{
+            levelConfig = jobConfig.getNode("level").getChildrenList();
+        }
+
+        this.level.addAll(
+                levelConfig.stream().map(ConfigurationNode::getInt).collect(Collectors.toList())
+        );
 
         initJobAction(jobConfig.getNode("destroyBlocks"), JobAction.BREAK);
         initJobAction(jobConfig.getNode("placeBlocks"), JobAction.PLACE);
@@ -57,7 +71,18 @@ public class Job {
     public void addXp(Player player, double amount){
         Map<String, Double> jobData = player.get(JobKeys.JOB_DATA).orElse(new HashMap<>());
 
-        jobData.put(getId(), jobData.getOrDefault(getId(), 0.0) + amount);
+        double oldXp = jobData.getOrDefault(getId(), 0.0);
+        double newXp = oldXp + amount;
+
+        jobData.put(getId(), newXp);
+
+        this.level.stream().filter(level -> level > oldXp && level <= newXp).forEach(level -> {
+            //TODO: setting
+            player.sendMessage(
+                    TranslationHelper.p(player, "player.info.job.level_up", getName(), this.level.indexOf(level))
+            );
+        });
+
 
         //TODO: setting
         player.sendMessage(ChatTypes.ACTION_BAR,
@@ -78,11 +103,9 @@ public class Job {
 
                     this.addXp(player, newXp);
 
-                    for(JobBonus jobBonus :  jobBonuses){
-                        if(jobBonus.canHappen(jobItem)){
-                            jobBonus.useBonus(jobItem, player);
-                        }
-                    }
+                    jobBonuses.stream()
+                            .filter(jobBonus -> jobBonus.canHappen(jobItem))
+                            .forEach(jobBonus -> jobBonus.useBonus(jobItem, player));
 
                     return true;
                 }else{

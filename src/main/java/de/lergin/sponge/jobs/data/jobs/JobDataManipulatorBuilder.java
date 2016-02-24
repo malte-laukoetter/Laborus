@@ -9,6 +9,7 @@ import org.spongepowered.api.data.manipulator.DataManipulatorBuilder;
 import org.spongepowered.api.util.persistence.InvalidDataException;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class JobDataManipulatorBuilder implements DataManipulatorBuilder<JobData, ImmutableJobDataManipulator> {
     Map<String, Double> jobs = new HashMap<>();
@@ -48,10 +49,10 @@ public class JobDataManipulatorBuilder implements DataManipulatorBuilder<JobData
         if(dataView.contains(JobKeys.JOB_DATA.getQuery())) {
 
             // the data needs to be parsed by hand because we are getting a list instead of a set
-            Set<String> selectedJobs = new HashSet<>();
-            for(Object string : (ImmutableList<?>) dataView.get(JobKeys.JOB_SELECTED.getQuery()).orElse(new HashSet<String>())){
-                selectedJobs.add((String) string);
-            }
+            Set<String> selectedJobs =
+                    ((ImmutableList<?>) dataView.get(JobKeys.JOB_SELECTED.getQuery()).orElse(new HashSet<>())).stream()
+                            .map(string -> (String) string)
+                            .collect(Collectors.toSet());
 
             return Optional.of(new JobData(
                     (Map<String,Double>) dataView.getMap(JobKeys.JOB_DATA.getQuery()).get(),
