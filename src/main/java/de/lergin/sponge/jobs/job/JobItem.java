@@ -2,13 +2,13 @@ package de.lergin.sponge.jobs.job;
 
 public class JobItem {
     private final double XP;
-    private final double NEED_XP;
+    private final int NEED_LEVEL;
     private final Object ITEM;
     private final Job JOB;
 
-    public JobItem(double xp, double needXp, Job job, Object item) {
+    public JobItem(double xp, int needLevel, Job job, Object item) {
         this.XP = xp;
-        this.NEED_XP = needXp;
+        this.NEED_LEVEL = needLevel;
         this.ITEM = item;
         this.JOB = job;
     }
@@ -17,8 +17,8 @@ public class JobItem {
         return XP;
     }
 
-    public double getNeedXp() {
-        return NEED_XP;
+    public double getNeedLevel() {
+        return NEED_LEVEL;
     }
 
     public Object getItem(){
@@ -30,6 +30,6 @@ public class JobItem {
     }
 
     public boolean canDo(double xp){
-        return (getNeedXp() - xp) <= 0;
+        return (getNeedLevel() - xp) <= 0;
     }
 }

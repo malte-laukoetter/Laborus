@@ -164,7 +164,7 @@ public class Job {
                 jobItems.add(
                         new JobItem(
                                 jobItemNode.getNode("xp").getDouble(0.0),
-                                jobItemNode.getNode("needXp").getDouble(0.0),
+                                jobItemNode.getNode("needLevel").getInt(0),
                                 this,
                                 optionalJobItemItem.get()
                         )
