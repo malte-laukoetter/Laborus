@@ -18,7 +18,7 @@ public abstract class JobBonus {
         return random.nextFloat() < probability;
     }
 
-    public abstract boolean canHappen(JobItem jobItem);
+    public abstract boolean canHappen(JobItem jobItem, Player player);
 
     /**
      * executes the bonus with the probability of {@link this.probability}

@@ -38,7 +38,7 @@ public class EpDrop extends JobBonus {
     }
 
     @Override
-    public boolean canHappen(JobItem jobItem) {
+    public boolean canHappen(JobItem jobItem, Player player) {
         return true;
     }
 

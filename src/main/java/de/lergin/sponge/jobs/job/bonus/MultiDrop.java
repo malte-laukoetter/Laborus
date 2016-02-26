@@ -49,7 +49,7 @@ public class MultiDrop extends JobBonus {
     }
 
     @Override
-    public boolean canHappen(JobItem jobItem) {
+    public boolean canHappen(JobItem jobItem, Player player) {
         return jobItem.getItem() instanceof BlockType;
     }
 

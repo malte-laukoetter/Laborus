@@ -3,6 +3,7 @@ package de.lergin.sponge.jobs.job;
 import de.lergin.sponge.jobs.JobsMain;
 import de.lergin.sponge.jobs.data.JobKeys;
 import de.lergin.sponge.jobs.job.bonus.EpDrop;
+import de.lergin.sponge.jobs.job.bonus.ItemRepair;
 import de.lergin.sponge.jobs.job.bonus.MultiDrop;
 import de.lergin.sponge.jobs.util.ConfigHelper;
 import de.lergin.sponge.jobs.util.TranslationHelper;
@@ -56,6 +57,9 @@ public class Job {
                 case "ep":
                     jobBonuses.add(new EpDrop(bonusNode));
                     break;
+                case "itemRepair":
+                    jobBonuses.add(new ItemRepair(bonusNode));
+                    break;
             }
         }
     }
@@ -104,7 +108,7 @@ public class Job {
                     this.addXp(player, newXp);
 
                     jobBonuses.stream()
-                            .filter(jobBonus -> jobBonus.canHappen(jobItem))
+                            .filter(jobBonus -> jobBonus.canHappen(jobItem, player))
                             .forEach(jobBonus -> jobBonus.useBonus(jobItem, player));
 
                     return true;
