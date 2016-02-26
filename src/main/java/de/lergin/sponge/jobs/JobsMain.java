@@ -9,6 +9,7 @@ import de.lergin.sponge.jobs.data.jobs.ImmutableJobDataManipulator;
 import de.lergin.sponge.jobs.data.jobs.JobData;
 import de.lergin.sponge.jobs.data.jobs.JobDataManipulatorBuilder;
 import de.lergin.sponge.jobs.job.Job;
+import de.lergin.sponge.jobs.util.AntiReplaceFarming;
 import de.lergin.sponge.jobs.util.ConfigHelper;
 import de.lergin.sponge.jobs.util.TranslationHelper;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -27,13 +28,20 @@ import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStoppedEvent;
 import org.spongepowered.api.plugin.Plugin;
 
+import java.nio.file.Path;
+import java.sql.SQLException;
 import java.util.*;
 
 @Plugin(id = "Jobs", name = "Jobs", version = "0.1")
 public class JobsMain {
     @Inject
-    @DefaultConfig(sharedRoot = true)
+    @DefaultConfig(sharedRoot = false)
     public ConfigurationLoader<CommentedConfigurationNode> configManager;
+
+    @Inject
+    @DefaultConfig(sharedRoot = false)
+    public Path configDir;
+
 
     @Inject
     private Logger logger;
