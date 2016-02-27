@@ -91,7 +91,7 @@ public class JobsMain {
 
     @Listener
     public void onGameInitialization(GameInitializationEvent event) {
-        AntiReplaceFarming.myMethodThatQueries();
+        AntiReplaceFarming.setupDataBase();
         //init customData
         Sponge.getDataManager().register(JobData.class, ImmutableJobDataManipulator.class,
                 new JobDataManipulatorBuilder());
