@@ -2,6 +2,7 @@ package de.lergin.sponge.jobs.listener;
 
 import de.lergin.sponge.jobs.job.Job;
 import de.lergin.sponge.jobs.job.JobAction;
+import de.lergin.sponge.jobs.util.AntiReplaceFarming;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.data.Transaction;
@@ -24,6 +25,8 @@ public class BreakBlockListener extends JobListener<BlockType> {
                 final BlockType BLOCK_TYPE = transaction.getOriginal().getState().getType();
 
                 if (JOB_ITEM_TYPES.contains(BLOCK_TYPE)) {
+                    AntiReplaceFarming.addLocation(transaction.getOriginal().getLocation().get());
+
                     event.setCancelled(
                             !JOB.onJobListener(BLOCK_TYPE, player, JobAction.BREAK)
                     );
