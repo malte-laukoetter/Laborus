@@ -17,21 +17,21 @@ public final class AntiReplaceFarming {
         );
     }
 
-    public static boolean testLocation(Location<World> loc, JobAction action){
+    public static boolean testLocation(Location<World> loc, BlockState blockState, JobAction action){
         Connection conn = null;
         try {
             conn = getConnection();
-            PreparedStatement getData = conn.prepareStatement("SELECT blockState FROM anti_replace_farming WHERE world=? AND x=? AND y=? AND z=? AND action=? AND time >  TIMESTAMPADD(DAY, -2, NOW())");
+            //TODO: time -> config
+            PreparedStatement getData = conn.prepareStatement("SELECT id FROM anti_replace_farming WHERE world=? AND x=? AND y=? AND z=? AND action=? AND blockState=? AND time >  TIMESTAMPADD(DAY, -2, NOW()) LIMIT 1");
 
             getData.setString(1, loc.getExtent().getUniqueId().toString());
             getData.setInt(2, loc.getBlockX());
             getData.setInt(3, loc.getBlockY());
             getData.setInt(4, loc.getBlockZ());
             getData.setString(5, action.name());
+            getData.setString(6, blockState.toString());
 
             ResultSet res = getData.executeQuery();
-
-            System.out.println(res);
 
             if (res.next()) {
                 conn.close();
