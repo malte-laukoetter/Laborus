@@ -22,16 +22,26 @@ public class BreakBlockListener extends JobListener<BlockType> {
     public void onEvent(ChangeBlockEvent.Break event, @First Player player) {
         if (event.getCause().get("Source", Player.class).isPresent() && JOB.enabled(player)) {
             for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
+                //test if the block currently shouldn't be rewarded
+                if(!AntiReplaceFarming.testLocation(transaction.getOriginal().getLocation().get(), JobAction.BREAK)){
+                    event.setCancelled(false);
+                    return;
+                }
+
                 final BlockType BLOCK_TYPE = transaction.getOriginal().getState().getType();
 
                 if (JOB_ITEM_TYPES.contains(BLOCK_TYPE)) {
-//                    AntiReplaceFarming.testLocation(transaction.getOriginal().getLocation().get());
-                    AntiReplaceFarming.addLocation(transaction.getOriginal().getLocation().get(), JobAction.BREAK);
-                    AntiReplaceFarming.testLocation(transaction.getOriginal().getLocation().get(), JobAction.BREAK);
+                    if(JOB.onJobListener(BLOCK_TYPE, player, JobAction.BREAK)){
+                        AntiReplaceFarming.addLocation(
+                                transaction.getOriginal().getLocation().get(),
+                                transaction.getOriginal().getState(),
+                                JobAction.BREAK
+                        );
 
-                    event.setCancelled(
-                            !JOB.onJobListener(BLOCK_TYPE, player, JobAction.BREAK)
-                    );
+                        event.setCancelled(false);
+                    }else{
+                        event.setCancelled(true);
+                    }
                 }
             }
         }

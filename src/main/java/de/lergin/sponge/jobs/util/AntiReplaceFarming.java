@@ -2,6 +2,7 @@ package de.lergin.sponge.jobs.util;
 
 import de.lergin.sponge.jobs.JobsMain;
 import de.lergin.sponge.jobs.job.JobAction;
+import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -30,13 +31,15 @@ public final class AntiReplaceFarming {
 
             ResultSet res = getData.executeQuery();
 
-            while (res.next()) {
-                System.out.println(res.getObject("blockState"));
+            System.out.println(res);
+
+            if (res.next()) {
+                conn.close();
+                return false;
+            }else{
+                conn.close();
+                return true;
             }
-
-            conn.close();
-
-            //TODO: return result
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -44,7 +47,7 @@ public final class AntiReplaceFarming {
         return false;
     }
 
-    public static void addLocation(Location<World> loc, JobAction action){
+    public static void addLocation(Location<World> loc, BlockState blockState, JobAction action){
         Connection conn = null;
         try {
             conn = getConnection();
@@ -54,7 +57,7 @@ public final class AntiReplaceFarming {
             getData.setInt(2, loc.getBlockX());
             getData.setInt(3, loc.getBlockY());
             getData.setInt(4, loc.getBlockZ());
-            getData.setString(5, loc.getBlock().toString());
+            getData.setString(5, blockState.toString());
             getData.setString(6, action.name());
 
             getData.execute();
@@ -77,7 +80,7 @@ public final class AntiReplaceFarming {
 
         try {
             if (conn != null) {
-                //TODO stop droping table in release ;)
+                //TODO stop dropping table in release ;)
                 conn.prepareStatement("DROP TABLE IF EXISTS anti_replace_farming").execute();
                 conn.prepareStatement("CREATE TABLE IF NOT EXISTS anti_replace_farming (id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY, world CHAR(36) NOT NULL , x INTEGER NOT NULL , y INTEGER NOT NULL , z INTEGER NOT NULL , blockstate VARCHAR(255), action VARCHAR(127), time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP());").execute();
                 conn.close();
