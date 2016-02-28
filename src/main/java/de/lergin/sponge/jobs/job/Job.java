@@ -48,6 +48,7 @@ public class Job {
         initJobAction(jobConfig.getNode("killEntities"), JobAction.ENTITY_KILL);
         initJobAction(jobConfig.getNode("damageEntities"), JobAction.ENTITY_DAMAGE);
         initJobAction(jobConfig.getNode("useItems"), JobAction.ITEM_USE);
+        initJobAction(jobConfig.getNode("tameEntities"), JobAction.ENTITY_TAME);
 
         for(ConfigurationNode bonusNode : jobConfig.getNode("bonus").getChildrenMap().values()){
             switch (bonusNode.getKey().toString()){

@@ -9,8 +9,9 @@ import java.util.List;
 
 public enum JobAction {
     BREAK(BreakBlockListener.class, CatalogTypes.BLOCK_TYPE),
-    ENTITY_KILL(EntityKillListener.class, CatalogTypes.ENTITY_TYPE),
     ENTITY_DAMAGE(EntityDamageListener.class, CatalogTypes.ENTITY_TYPE),
+    ENTITY_KILL(EntityKillListener.class, CatalogTypes.ENTITY_TYPE),
+    ENTITY_TAME(EntityTameListener.class, CatalogTypes.ENTITY_TYPE),
     ITEM_USE(InteractListener.class, CatalogTypes.ITEM_TYPE),
     PLACE(PlaceBlockListener.class, CatalogTypes.BLOCK_TYPE);
 
