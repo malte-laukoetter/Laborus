@@ -14,6 +14,9 @@ import org.spongepowered.api.world.extent.Extent;
 import java.util.Optional;
 import java.util.Random;
 
+/**
+ * Bonus that drops some extra ep
+ */
 public class EpDrop extends JobBonus {
     int minEp;
     int maxEp;

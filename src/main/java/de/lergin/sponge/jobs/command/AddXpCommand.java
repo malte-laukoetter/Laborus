@@ -22,6 +22,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * adds some xp to the {@link Player}
+ */
 public class AddXpCommand extends JobCommand {
     private final static ConfigurationNode configNode = ConfigHelper.getNode("commands", "addXp");
 

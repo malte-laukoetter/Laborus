@@ -19,6 +19,9 @@ import org.spongepowered.api.text.Text;
 
 import java.util.*;
 
+/**
+ * changes the selected {@link Job}s
+ */
 public class ChangeJobCommand extends JobCommand{
     private final static ConfigurationNode configNode = ConfigHelper.getNode("commands", "changeJob");
 
