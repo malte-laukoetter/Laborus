@@ -2,6 +2,7 @@ package de.lergin.sponge.jobs.listener;
 
 import de.lergin.sponge.jobs.job.Job;
 import de.lergin.sponge.jobs.job.JobAction;
+import de.lergin.sponge.jobs.util.AntiReplaceFarming;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.data.Transaction;
@@ -22,11 +23,23 @@ public class PlaceBlockListener extends JobListener<BlockType> {
     public void onEvent(ChangeBlockEvent.Place event, @First Player player) {
         if (event.getCause().get("Source", Player.class).isPresent() && JOB.enabled(player)) {
             for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
-                final BlockType BLOCK_TYPE = transaction.getFinal().getState().getType();
+                final BlockSnapshot FINAL_BLOCK = transaction.getFinal();
+                final BlockType BLOCK_TYPE = FINAL_BLOCK.getState().getType();
 
                 if (JOB_ITEM_TYPES.contains(BLOCK_TYPE)) {
-                    transaction.setValid(JOB.onJobListener(BLOCK_TYPE, player, JobAction.PLACE));
+                    //test if the block currently shouldn't be rewarded
+                    if(!AntiReplaceFarming.testLocation(FINAL_BLOCK.getLocation().get(), FINAL_BLOCK.getState(), JobAction.BREAK)){
+                        if(!JOB.onJobListener(BLOCK_TYPE, player, JobAction.PLACE)){
+                            transaction.setValid(false);
+                        }
+                    }
                 }
+
+                AntiReplaceFarming.addLocation(
+                        FINAL_BLOCK.getLocation().get(),
+                        FINAL_BLOCK.getState(),
+                        JobAction.PLACE
+                );
             }
         }
     }
