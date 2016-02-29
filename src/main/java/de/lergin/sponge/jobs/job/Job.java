@@ -190,4 +190,14 @@ public class Job {
         return itemTypes;
     }
 
+    public int getCurrendLevel(double xp){
+        for(int testLevel : this.level) {
+            if (testLevel > xp) {
+                return this.level.indexOf(testLevel) - 1;
+            }
+        }
+
+        return this.level.size();
+    }
+
 }

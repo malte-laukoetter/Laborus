@@ -10,6 +10,9 @@ import org.spongepowered.api.event.filter.cause.First;
 
 import java.util.List;
 
+/**
+ * listener for jobEvents when an entity is tamed
+ */
 public class EntityTameListener extends JobListener<EntityType> {
     public EntityTameListener(Job job, List<EntityType> blockTypes) {
         super(job, blockTypes);

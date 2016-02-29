@@ -11,6 +11,9 @@ import org.spongepowered.api.text.Text;
 
 import java.util.List;
 
+/**
+ * listener for interacting jobEvents
+ */
 public class InteractListener extends JobListener<ItemType> {
     public InteractListener(Job job, List<ItemType> itemTypes) {
         super(job, itemTypes);

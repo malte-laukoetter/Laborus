@@ -13,6 +13,9 @@ import org.spongepowered.api.event.filter.cause.First;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * listener for entity kill jobEvents
+ */
 public class EntityKillListener extends JobListener<EntityType> {
     public EntityKillListener(Job job, List<EntityType> entityTypes) {
         super(job, entityTypes);

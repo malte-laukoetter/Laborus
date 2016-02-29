@@ -8,9 +8,18 @@ import org.spongepowered.api.world.World;
 
 import java.sql.*;
 
+/**
+ * class for all the stuff that has to do with blocking the "exploiding" of the jobsystem that has to do with destroying
+ * and replacing of blocks
+ */
 public final class AntiReplaceFarming {
     final static boolean USE_ANTI_REPLACE = ConfigHelper.getNode("setting", "use_anti_replace").getBoolean(false);
 
+    /**
+     * creates a connection with the database
+     * @return the DB-Connection
+     * @throws SQLException
+     */
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(
                 "jdbc:h2:./" + JobsMain.instance().configDir.getParent().toString() + "/jobs",
@@ -19,6 +28,13 @@ public final class AntiReplaceFarming {
         );
     }
 
+    /**
+     * tests if the {@link Location<World>} has a database entry with the {@link BlockState} and {@link JobAction}
+     * @param loc the {@link Location<World>} that should be tested
+     * @param blockState the {@link BlockState} that the {@link Location<World>} should have
+     * @param action the {@link JobAction} that should be tested
+     * @return true if a database entry exist or antiReplaceFarming is deactivated
+     */
     public static boolean testLocation(Location<World> loc, BlockState blockState, JobAction action){
         if(!USE_ANTI_REPLACE)
             return true;
@@ -53,6 +69,12 @@ public final class AntiReplaceFarming {
         return false;
     }
 
+    /**
+     * adds the {@link Location<World>} with the {@link BlockState} and {@link JobAction} to the antiReplaceFarming-DB
+     * @param loc the {@link Location<World>} that should be added
+     * @param blockState the {@link BlockState} that was/is at the position
+     * @param action the {@link JobAction} that has happened
+     */
     public static void addLocation(Location<World> loc, BlockState blockState, JobAction action){
         if(!USE_ANTI_REPLACE)
             return;
@@ -79,6 +101,9 @@ public final class AntiReplaceFarming {
         }
     }
 
+    /**
+     * creates the DataBase
+     */
     public static void setupDataBase(){
         Connection conn = null;
         try {

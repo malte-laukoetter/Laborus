@@ -13,6 +13,9 @@ import org.spongepowered.api.event.filter.cause.First;
 
 import java.util.List;
 
+/**
+ * listener for break block jobEvents
+ */
 public class BreakBlockListener extends JobListener<BlockType> {
     public BreakBlockListener(Job job, List<BlockType> blockTypes) {
         super(job, blockTypes);
@@ -26,7 +29,6 @@ public class BreakBlockListener extends JobListener<BlockType> {
                 final BlockType BLOCK_TYPE = ORIGINAL_BLOCK.getState().getType();
 
                 if (JOB_ITEM_TYPES.contains(BLOCK_TYPE)) {
-
                     //test if the block currently shouldn't be rewarded
                     if(AntiReplaceFarming.testLocation(ORIGINAL_BLOCK.getLocation().get(), ORIGINAL_BLOCK.getState(), JobAction.PLACE)){
                         if(!JOB.onJobListener(BLOCK_TYPE, player, JobAction.BREAK))

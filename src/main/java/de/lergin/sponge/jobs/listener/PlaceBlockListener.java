@@ -14,6 +14,9 @@ import org.spongepowered.api.event.filter.cause.First;
 
 import java.util.List;
 
+/**
+ * listener for place block jobEvents
+ */
 public class PlaceBlockListener extends JobListener<BlockType> {
     public PlaceBlockListener(Job job, List<BlockType> blockTypes) {
         super(job, blockTypes);

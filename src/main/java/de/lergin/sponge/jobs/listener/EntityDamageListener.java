@@ -14,6 +14,9 @@ import org.spongepowered.api.event.filter.cause.First;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * listener for entity damage jobEvents
+ */
 public class EntityDamageListener extends JobListener<EntityType> {
     public EntityDamageListener(Job job, List<EntityType> entityTypes) {
         super(job, entityTypes);
