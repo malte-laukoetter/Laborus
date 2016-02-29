@@ -24,9 +24,7 @@ public class BreakBlockListener extends JobListener<BlockType> {
                 final BlockType BLOCK_TYPE = transaction.getOriginal().getState().getType();
 
                 if (JOB_ITEM_TYPES.contains(BLOCK_TYPE)) {
-                    event.setCancelled(
-                            !JOB.onJobListener(BLOCK_TYPE, player, JobAction.BREAK)
-                    );
+                    transaction.setValid(JOB.onJobListener(BLOCK_TYPE, player, JobAction.BREAK));
                 }
             }
         }
