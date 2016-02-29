@@ -18,19 +18,37 @@ public enum JobAction {
     Class listener;
     Class<? extends CatalogType> catalogType;
 
+    /**
+     * creates a new JobAction
+     * @param listener the listener for this action
+     * @param catalogType the {@link CatalogType} that all actions of this {@link JobAction} have
+     */
     JobAction(Class listener, Class<? extends CatalogType> catalogType){
         this.listener = listener;
         this.catalogType = catalogType;
     }
 
+    /**
+     * returns the {@link JobListener} of this {@link JobAction}
+     * @return
+     */
     protected Class getListener(){
         return listener;
     }
 
+    /**
+     * gets the {@link CatalogType} of the {@link JobAction}
+     * @return the {@link CatalogType}
+     */
     public Class<? extends CatalogType> getCatalogType(){
         return catalogType;
     }
 
+    /**
+     * returns the Constructor for the listener
+     * @return the constructor
+     * @throws NoSuchMethodException
+     */
     public Constructor getListenerConstructor() throws NoSuchMethodException {
         return getListener().getConstructor(Job.class, List.class);
     }

@@ -19,6 +19,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * class for Jobs
+ */
 public class Job {
     private final String NAME;
     private final String ID;
@@ -27,6 +30,10 @@ public class Job {
     private Set<JobBonus> jobBonuses = new HashSet<>();
     private List<Integer> level = new ArrayList<>();
 
+    /**
+     * create a new Job from a config node
+     * @param jobConfig a config node with all the information for the job
+     */
     public Job(ConfigurationNode jobConfig) {
         this.NAME = jobConfig.getNode("name").getString();
         this.ID = jobConfig.getKey().toString();
@@ -65,14 +72,27 @@ public class Job {
         }
     }
 
+    /**
+     * returns the name of the job
+     * @return the name
+     */
     public String getName() {
         return NAME;
     }
 
+    /**
+     * returns the id of the job
+     * @return the id
+     */
     public String getId() {
         return ID;
     }
 
+    /**
+     * adds some xp to the {@link Player} in this job
+     * @param player the {@link Player}
+     * @param amount the amount of xp that should be added
+     */
     public void addXp(Player player, double amount){
         Map<String, Double> jobData = player.get(JobKeys.JOB_DATA).orElse(new HashMap<>());
 
@@ -89,22 +109,36 @@ public class Job {
         });
 
 
-        //TODO: setting
-        player.sendMessage(ChatTypes.ACTION_BAR,
-                TranslationHelper.p(player, "player.info.job.xp.action_bar", getName(), getXp(player))
-        );
+        if(newXp != 0){
+            //TODO: setting
+            player.sendMessage(ChatTypes.ACTION_BAR,
+                    TranslationHelper.p(player, "player.info.job.xp.action_bar", getName(), getXp(player))
+            );
+        }
     }
 
+    /**
+     * returns the jobXp of the player
+     * @param player the player from that the xp should be returned
+     * @return the xp of the player
+     */
     public double getXp(Player player){
         return player.get(JobKeys.JOB_DATA).orElse(new HashMap<>()).getOrDefault(getId(), 0.0);
     }
 
+    /**
+     * called by the {@link de.lergin.sponge.jobs.listener.JobListener} and handles the awarding of the player
+     * @param item the item of the event
+     * @param player the {@link Player} that has caused the event
+     * @param action the {@link JobAction} of the {@link de.lergin.sponge.jobs.listener.JobListener}
+     * @return true if the {@link Player} was awarded
+     */
     public boolean onJobListener(Object item, Player player, JobAction action){
         for(JobItem jobItem : jobActions.get(action)){
             if(jobItem.getItem().equals(item)){
                 if(jobItem.canDo(getXp((player)))){
                     double newXp = jobItem.getXp() *
-                         (isSelected(player)? 1 : ConfigHelper.getNode("setting", "xp_without_job").getDouble(0.5));
+                         (isSelected(player) ? 1 : ConfigHelper.getNode("setting", "xp_without_job").getDouble(0.5));
 
                     this.addXp(player, newXp);
 
@@ -125,17 +159,31 @@ public class Job {
         return false;
     }
 
+    /**
+     * is the JobSystem for the {@link Player} enabled
+     * @param player the {@link Player} that should be tested
+     * @return true if it is enabled
+     */
     public boolean enabled(Player player){
         return player.get(JobKeys.JOB_ENABLED).orElse(true) && enabledGameModes.contains(player.get(Keys.GAME_MODE).get());
     }
 
+    /**
+     * is this {@link Job} selected
+     * @param player the {@link Player} that should be tested
+     * @return true if the {@link Job} selected
+     */
     public boolean isSelected(Player player){
         Set<String> selectedJobs = player.get(JobKeys.JOB_SELECTED).orElse(new HashSet<>());
 
         return selectedJobs.contains(getId());
     }
 
-
+    /**
+     * initialize a {@link JobAction} for this {@link Job}
+     * @param jobActionNode a {@link ConfigurationNode} that has the settings for the {@link JobAction}
+     * @param action the {@link JobAction} that should be initialized
+     */
     private void initJobAction(ConfigurationNode jobActionNode, JobAction action){
         if(jobActionNode.getChildrenMap().isEmpty())
             return;
@@ -155,6 +203,12 @@ public class Job {
         }
     }
 
+    /**
+     * generates a {@link List} of {@link JobItem}s from a {@link Collection} of {@link ConfigurationNode}s
+     * @param nodes a {@link Collection} of {@link ConfigurationNode}s with the data for the {@link JobItem}s
+     * @param catalogType the {@link Class} of the {@link CatalogType} of the {@link JobItem}s
+     * @return a {@link List} of the {@link JobItem}s that are created by the Config
+     */
     private List<JobItem> generateJobItemList(Collection<? extends ConfigurationNode> nodes, Class<? extends CatalogType> catalogType){
         List<JobItem> jobItems = new ArrayList<>();
 
@@ -180,17 +234,22 @@ public class Job {
         return jobItems;
     }
 
+    /**
+     * creates a {@link List} of T (Type of the {@link JobItem}s) from the {@link List} of {@link JobItem}s
+     * @param jobItems the {@link JobItem}s
+     * @param <T> the Type of the {@link JobItem}s
+     * @return a {@link List} of T
+     */
     private static <T> List<T> generateJobItemTypeList(List<JobItem> jobItems){
-        List<T> itemTypes = new ArrayList<>();
-
-        for(JobItem jobItem : jobItems){
-            itemTypes.add((T) jobItem.getItem());
-        }
-
-        return itemTypes;
+        return jobItems.stream().map(jobItem -> (T) jobItem.getItem()).collect(Collectors.toList());
     }
 
-    public int getCurrendLevel(double xp){
+    /**
+     * returns the level that relates to the xp
+     * @param xp the xp
+     * @return the level
+     */
+    public int getCurrentLevel(double xp){
         for(int testLevel : this.level) {
             if (testLevel > xp) {
                 return this.level.indexOf(testLevel) - 1;

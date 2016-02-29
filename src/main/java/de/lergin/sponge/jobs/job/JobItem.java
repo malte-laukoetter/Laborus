@@ -61,7 +61,7 @@ public class JobItem {
      * @return true: can do the action, otherwise false
      */
     public boolean canDo(double xp){
-        return canDo(getJob().getCurrendLevel(xp));
+        return canDo(getJob().getCurrentLevel(xp));
     }
 
     /**
