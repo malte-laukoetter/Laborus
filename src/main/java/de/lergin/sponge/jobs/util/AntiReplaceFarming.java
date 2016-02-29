@@ -9,6 +9,8 @@ import org.spongepowered.api.world.World;
 import java.sql.*;
 
 public final class AntiReplaceFarming {
+    final static boolean USE_ANTI_REPLACE = ConfigHelper.getNode("setting", "use_anti_replace").getBoolean(false);
+
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(
                 "jdbc:h2:./" + JobsMain.instance().configDir.getParent().toString() + "/jobs",
@@ -18,11 +20,14 @@ public final class AntiReplaceFarming {
     }
 
     public static boolean testLocation(Location<World> loc, BlockState blockState, JobAction action){
+        if(!USE_ANTI_REPLACE)
+            return true;
+
         Connection conn = null;
         try {
             conn = getConnection();
-            //TODO: time -> config
-            PreparedStatement getData = conn.prepareStatement("SELECT id FROM anti_replace_farming WHERE world=? AND x=? AND y=? AND z=? AND action=? AND blockState=? AND time >  TIMESTAMPADD(DAY, -2, NOW()) LIMIT 1");
+
+            PreparedStatement getData = conn.prepareStatement("SELECT id FROM anti_replace_farming WHERE world=? AND x=? AND y=? AND z=? AND jobaction=? AND blockState=? AND time >  TIMESTAMPADD(HOUR, ?, NOW()) LIMIT 1");
 
             getData.setString(1, loc.getExtent().getUniqueId().toString());
             getData.setInt(2, loc.getBlockX());
@@ -30,6 +35,7 @@ public final class AntiReplaceFarming {
             getData.setInt(4, loc.getBlockZ());
             getData.setString(5, action.name());
             getData.setString(6, blockState.toString());
+            getData.setInt(7, - ConfigHelper.getNode("setting", "antiReplaceTime").getInt(48));
 
             ResultSet res = getData.executeQuery();
 
@@ -48,10 +54,13 @@ public final class AntiReplaceFarming {
     }
 
     public static void addLocation(Location<World> loc, BlockState blockState, JobAction action){
+        if(!USE_ANTI_REPLACE)
+            return;
+
         Connection conn = null;
         try {
             conn = getConnection();
-            PreparedStatement getData = conn.prepareStatement("INSERT INTO anti_replace_farming(world, x, y, z, blockstate, action) VALUES (?, ?, ?, ?, ?, ?)");
+            PreparedStatement getData = conn.prepareStatement("INSERT INTO anti_replace_farming(world, x, y, z, blockstate, jobaction) VALUES (?, ?, ?, ?, ?, ?)");
 
             getData.setString(1, loc.getExtent().getUniqueId().toString());
             getData.setInt(2, loc.getBlockX());
@@ -80,9 +89,8 @@ public final class AntiReplaceFarming {
 
         try {
             if (conn != null) {
-                //TODO stop dropping table in release ;)
                 conn.prepareStatement("DROP TABLE IF EXISTS anti_replace_farming").execute();
-                conn.prepareStatement("CREATE TABLE IF NOT EXISTS anti_replace_farming (id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY, world CHAR(36) NOT NULL , x INTEGER NOT NULL , y INTEGER NOT NULL , z INTEGER NOT NULL , blockstate VARCHAR(255), action VARCHAR(127), time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP());").execute();
+                conn.prepareStatement("CREATE TABLE IF NOT EXISTS anti_replace_farming (id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY, world CHAR(36) NOT NULL , x INTEGER NOT NULL , y INTEGER NOT NULL , z INTEGER NOT NULL , blockstate VARCHAR(255), jobaction VARCHAR(127), time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP());").execute();
                 conn.close();
             }
 
