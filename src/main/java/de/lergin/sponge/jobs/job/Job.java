@@ -2,6 +2,7 @@ package de.lergin.sponge.jobs.job;
 
 import de.lergin.sponge.jobs.JobsMain;
 import de.lergin.sponge.jobs.data.JobKeys;
+import de.lergin.sponge.jobs.job.ability.EffectAbility;
 import de.lergin.sponge.jobs.job.bonus.EpDrop;
 import de.lergin.sponge.jobs.job.bonus.ItemRepair;
 import de.lergin.sponge.jobs.job.bonus.MultiDrop;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 public class Job {
     private final String NAME;
     private final String ID;
+    private final JobAbility jobAbility;
     private Map<JobAction, List<JobItem>> jobActions = new HashMap<>();
     private List<GameMode> enabledGameModes = JobsMain.instance().enabledGameModes;
     private Set<JobBonus> jobBonuses = new HashSet<>();
@@ -70,6 +72,16 @@ public class Job {
                     break;
             }
         }
+
+        ConfigurationNode abilityConfig = jobConfig.getNode("ability");
+
+        switch (abilityConfig.getNode("id").getString("")){
+            case "effect":
+                this.jobAbility = new EffectAbility(this, jobConfig.getNode("ability"));
+                break;
+            default:
+                this.jobAbility = null;
+        }
     }
 
     /**
@@ -86,6 +98,14 @@ public class Job {
      */
     public String getId() {
         return ID;
+    }
+
+    /**
+     * returns the {@link JobAbility} of the job
+     * @return the {@link JobAbility}
+     */
+    public JobAbility getJobAbility() {
+        return jobAbility;
     }
 
     /**

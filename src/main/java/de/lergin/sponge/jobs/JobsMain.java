@@ -2,6 +2,7 @@ package de.lergin.sponge.jobs;
 
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
+import de.lergin.sponge.jobs.command.AbilityStartCommand;
 import de.lergin.sponge.jobs.command.AddXpCommand;
 import de.lergin.sponge.jobs.command.ChangeJobCommand;
 import de.lergin.sponge.jobs.command.ToggleJobStatusCommand;
@@ -117,6 +118,7 @@ public class JobsMain {
         new ToggleJobStatusCommand();
         new AddXpCommand();
         new ChangeJobCommand();
+        new AbilityStartCommand();
     }
 
     @Listener
