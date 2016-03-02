@@ -3,21 +3,48 @@ package de.lergin.sponge.jobs.job.ability;
 import de.lergin.sponge.jobs.job.Job;
 import de.lergin.sponge.jobs.job.JobAbility;
 import ninja.leaping.configurate.ConfigurationNode;
+import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.effect.particle.ParticleTypes;
+import org.spongepowered.api.effect.potion.PotionEffect;
+import org.spongepowered.api.effect.potion.PotionEffectType;
+import org.spongepowered.api.effect.potion.PotionEffectTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EffectAbility extends JobAbility {
+    PotionEffect effect;
+
     public EffectAbility(Job job, ConfigurationNode node) {
         super(
                 job,
                 node.getNode("name").getString("EffectAbility"),
                 node.getNode("coolDown").getInt(60)
         );
+
+        effect = PotionEffect.builder()
+                .amplifier(node.getNode("amplifier").getInt(1))
+                .duration(node.getNode("duration").getInt(200))
+                .potionType(
+                        Sponge.getRegistry()
+                                .getType(PotionEffectType.class, node.getNode("type").getString())
+                                .orElse(PotionEffectTypes.SPEED)
+                )
+                .particles(node.getNode("particles").getBoolean(true))
+                .ambience(node.getNode("ambience").getBoolean(false))
+                .build();
     }
 
     @Override
     public boolean startAbility(Player player) {
-        player.sendMessage(Text.of("START"));
+        List<PotionEffect> potionEffects = player.get(Keys.POTION_EFFECTS).orElse(new ArrayList<>());
+
+        potionEffects.add(effect);
+
+        player.offer(Keys.POTION_EFFECTS, potionEffects);
 
         return false;
     }
