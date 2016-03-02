@@ -15,10 +15,11 @@ public class JobDataManipulatorBuilder implements DataManipulatorBuilder<JobData
     Map<String, Double> jobs = new HashMap<>();
     boolean jobsEnabled = true;
     Set<String> selectedJobs = new HashSet<>();
+    Map<String, Long> abilityUsed = new HashMap<>();
 
     @Override
     public JobData create() {
-        return new JobData(jobs, jobsEnabled, selectedJobs);
+        return new JobData(jobs, jobsEnabled, selectedJobs, abilityUsed);
     }
 
     public JobDataManipulatorBuilder job(Job job, double xp){
@@ -41,7 +42,7 @@ public class JobDataManipulatorBuilder implements DataManipulatorBuilder<JobData
 
     @Override
     public Optional<JobData> createFrom(DataHolder dataHolder) {
-        return Optional.of(dataHolder.get(JobData.class).orElse(new JobData(jobs, jobsEnabled, selectedJobs)));
+        return Optional.of(dataHolder.get(JobData.class).orElse(new JobData(jobs, jobsEnabled, selectedJobs, abilityUsed)));
     }
 
     @Override
@@ -57,7 +58,8 @@ public class JobDataManipulatorBuilder implements DataManipulatorBuilder<JobData
             return Optional.of(new JobData(
                     (Map<String,Double>) dataView.getMap(JobKeys.JOB_DATA.getQuery()).get(),
                     dataView.getBoolean(JobKeys.JOB_ENABLED.getQuery()).orElse(true),
-                    selectedJobs
+                    selectedJobs,
+                    (Map<String,Long>) dataView.getMap(JobKeys.JOB_ABILITY_USED.getQuery()).get()
             ));
         }
         return Optional.empty();

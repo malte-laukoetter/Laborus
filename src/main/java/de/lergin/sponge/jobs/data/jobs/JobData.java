@@ -2,7 +2,6 @@ package de.lergin.sponge.jobs.data.jobs;
 
 import com.google.common.base.Preconditions;
 import de.lergin.sponge.jobs.data.JobKeys;
-import de.lergin.sponge.jobs.job.Job;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.DataHolder;
@@ -16,13 +15,15 @@ import java.util.*;
 
 public class JobData extends AbstractData<JobData, ImmutableJobDataManipulator> {
     Map<String, Double> jobs = new HashMap<>();
+    Map<String, Long> abilityUsed = new HashMap<>();
     boolean jobsEnabled = true;
     Set<String> selectedJobs = new HashSet<>();
 
-    protected JobData(Map<String, Double> jobs, boolean jobsEnabled, Set<String> selectedJobs) {
+    protected JobData(Map<String, Double> jobs, boolean jobsEnabled, Set<String> selectedJobs, Map<String, Long> abilityUsed) {
         this.jobs.putAll(jobs);
         this.jobsEnabled  = jobsEnabled;
         this.selectedJobs = selectedJobs;
+        this.abilityUsed = abilityUsed;
 
         registerGettersAndSetters();
     }
@@ -39,6 +40,9 @@ public class JobData extends AbstractData<JobData, ImmutableJobDataManipulator> 
         return Sponge.getRegistry().getValueFactory().createSetValue(JobKeys.JOB_SELECTED, this.selectedJobs);
     }
 
+    public MapValue<String, Long> abilityUsed(){
+        return Sponge.getRegistry().getValueFactory().createMapValue(JobKeys.JOB_ABILITY_USED, this.abilityUsed);
+    }
 
     @Override
     protected void registerGettersAndSetters() {
@@ -53,6 +57,10 @@ public class JobData extends AbstractData<JobData, ImmutableJobDataManipulator> 
         registerFieldGetter(JobKeys.JOB_SELECTED, () -> this.selectedJobs);
         registerFieldSetter(JobKeys.JOB_SELECTED, value -> this.selectedJobs = value);
         registerKeyValue(JobKeys.JOB_SELECTED, this::selectedJobs);
+
+        registerFieldGetter(JobKeys.JOB_ABILITY_USED, () -> this.abilityUsed);
+        registerFieldSetter(JobKeys.JOB_ABILITY_USED, value -> this.abilityUsed = value);
+        registerKeyValue(JobKeys.JOB_ABILITY_USED, this::abilityUsed);
     }
 
     @Override
@@ -71,17 +79,18 @@ public class JobData extends AbstractData<JobData, ImmutableJobDataManipulator> 
         this.jobs = (Map<String, Double>) dataContainer.getMap(JobKeys.JOB_DATA.getQuery()).get();
         this.jobsEnabled = dataContainer.getBoolean(JobKeys.JOB_ENABLED.getQuery()).get();
         this.selectedJobs = (Set<String>) dataContainer.get(JobKeys.JOB_SELECTED.getQuery()).get();
+        this.abilityUsed = (Map<String, Long>) dataContainer.get(JobKeys.JOB_ABILITY_USED.getQuery()).get();
         return Optional.of(this);
     }
 
     @Override
     public JobData copy() {
-        return new JobData(jobs, jobsEnabled, selectedJobs);
+        return new JobData(jobs, jobsEnabled, selectedJobs, abilityUsed);
     }
 
     @Override
     public ImmutableJobDataManipulator asImmutable() {
-        return new ImmutableJobDataManipulator(jobs, jobsEnabled, selectedJobs);
+        return new ImmutableJobDataManipulator(jobs, jobsEnabled, selectedJobs, abilityUsed);
     }
 
     @Override
@@ -91,12 +100,12 @@ public class JobData extends AbstractData<JobData, ImmutableJobDataManipulator> 
 
     @Override
     public int getContentVersion() {
-        return 7;
+        return 8;
     }
 
     @Override
     public DataContainer toContainer() {
         return super.toContainer().set(JobKeys.JOB_DATA, this.jobs).set(JobKeys.JOB_ENABLED, jobsEnabled)
-                .set(JobKeys.JOB_SELECTED, this.selectedJobs);
+                .set(JobKeys.JOB_SELECTED, this.selectedJobs).set(JobKeys.JOB_ABILITY_USED, this.abilityUsed);
     }
 }

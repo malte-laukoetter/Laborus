@@ -2,6 +2,8 @@ package de.lergin.sponge.jobs.job;
 
 import de.lergin.sponge.jobs.JobsMain;
 import de.lergin.sponge.jobs.data.JobKeys;
+import de.lergin.sponge.jobs.data.jobs.JobData;
+import de.lergin.sponge.jobs.data.jobs.JobDataManipulatorBuilder;
 import de.lergin.sponge.jobs.job.ability.EffectAbility;
 import de.lergin.sponge.jobs.job.bonus.EpDrop;
 import de.lergin.sponge.jobs.job.bonus.ItemRepair;
@@ -11,6 +13,7 @@ import de.lergin.sponge.jobs.util.TranslationHelper;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.CatalogType;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.DataTransactionResult;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameMode;
@@ -120,6 +123,12 @@ public class Job {
         double newXp = oldXp + amount;
 
         jobData.put(getId(), newXp);
+
+        if(player.supports(JobKeys.JOB_DATA)){
+            player.offer(JobKeys.JOB_DATA, jobData);
+        }else{
+            player.offer(new JobDataManipulatorBuilder().jobs(jobData).create());
+        }
 
         this.level.stream().filter(level -> level > oldXp && level <= newXp).forEach(level -> {
             //TODO: setting

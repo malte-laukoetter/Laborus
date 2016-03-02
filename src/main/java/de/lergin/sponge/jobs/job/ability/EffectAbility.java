@@ -5,12 +5,10 @@ import de.lergin.sponge.jobs.job.JobAbility;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.effect.particle.ParticleTypes;
 import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.effect.potion.PotionEffectType;
 import org.spongepowered.api.effect.potion.PotionEffectTypes;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,17 +38,15 @@ public class EffectAbility extends JobAbility {
 
     @Override
     public boolean startAbility(Player player) {
+        if(!canStartAbility(player))
+            return false;
+
         List<PotionEffect> potionEffects = player.get(Keys.POTION_EFFECTS).orElse(new ArrayList<>());
-
         potionEffects.add(effect);
-
         player.offer(Keys.POTION_EFFECTS, potionEffects);
 
-        return false;
-    }
+        startCoolDown(player);
 
-    @Override
-    public boolean canStartAbility(Player player) {
-        return false;
+        return true;
     }
 }

@@ -1,7 +1,6 @@
 package de.lergin.sponge.jobs.data.jobs;
 
 import de.lergin.sponge.jobs.data.JobKeys;
-import de.lergin.sponge.jobs.job.Job;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.manipulator.immutable.common.AbstractImmutableData;
@@ -9,7 +8,6 @@ import org.spongepowered.api.data.value.BaseValue;
 import org.spongepowered.api.data.value.immutable.ImmutableMapValue;
 import org.spongepowered.api.data.value.immutable.ImmutableSetValue;
 import org.spongepowered.api.data.value.immutable.ImmutableValue;
-import org.spongepowered.api.data.value.mutable.Value;
 
 import java.util.*;
 
@@ -17,11 +15,13 @@ public class ImmutableJobDataManipulator extends AbstractImmutableData<Immutable
     Map<String, Double> jobs = new HashMap<>();
     boolean jobsEnabled = true;
     Set<String> selectedJobs = new HashSet<>();
+    Map<String, Long> abilityUsed = new HashMap<>();
 
-    protected ImmutableJobDataManipulator(Map<String, Double> jobs, boolean jobsEnabled, Set<String> selectedJobs) {
+    protected ImmutableJobDataManipulator(Map<String, Double> jobs, boolean jobsEnabled, Set<String> selectedJobs, Map<String, Long> abilityUsed) {
         this.jobs.putAll(jobs);
         this.jobsEnabled = jobsEnabled;
         this.selectedJobs = selectedJobs;
+        this.abilityUsed = abilityUsed;
 
         registerGetters();
     }
@@ -38,6 +38,10 @@ public class ImmutableJobDataManipulator extends AbstractImmutableData<Immutable
         return Sponge.getRegistry().getValueFactory().createSetValue(JobKeys.JOB_SELECTED, this.selectedJobs).asImmutable();
     }
 
+    public ImmutableMapValue<String, Long> abilityUsed(){
+        return Sponge.getRegistry().getValueFactory().createMapValue(JobKeys.JOB_ABILITY_USED, this.abilityUsed).asImmutable();
+    }
+
     @Override
     protected void registerGetters() {
         registerFieldGetter(JobKeys.JOB_DATA, () -> this.jobs);
@@ -46,8 +50,11 @@ public class ImmutableJobDataManipulator extends AbstractImmutableData<Immutable
         registerFieldGetter(JobKeys.JOB_ENABLED, () -> this.jobsEnabled);
         registerKeyValue(JobKeys.JOB_ENABLED, this::jobsEnabled);
 
-        registerFieldGetter(JobKeys.JOB_SELECTED, () -> this.jobsEnabled);
-        registerKeyValue(JobKeys.JOB_ENABLED, this::selectedJobs);
+        registerFieldGetter(JobKeys.JOB_SELECTED, () -> this.selectedJobs);
+        registerKeyValue(JobKeys.JOB_SELECTED, this::selectedJobs);
+
+        registerFieldGetter(JobKeys.JOB_ABILITY_USED, () -> this.abilityUsed);
+        registerKeyValue(JobKeys.JOB_ABILITY_USED, this::abilityUsed);
     }
 
     @Override
@@ -61,7 +68,7 @@ public class ImmutableJobDataManipulator extends AbstractImmutableData<Immutable
 
     @Override
     public JobData asMutable() {
-        return new JobData(jobs, jobsEnabled, selectedJobs);
+        return new JobData(jobs, jobsEnabled, selectedJobs, abilityUsed);
     }
 
     @Override
@@ -71,6 +78,6 @@ public class ImmutableJobDataManipulator extends AbstractImmutableData<Immutable
 
     @Override
     public int getContentVersion() {
-        return 7;
+        return 8;
     }
 }
