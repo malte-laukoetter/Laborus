@@ -30,19 +30,8 @@ public class MultiDrop extends JobBonus {
             if(optionalItemType.isPresent()){
                 ItemStack itemStack = ItemStack.of(optionalItemType.get(), dropMultiplier);
 
-                Extent extent = player.getLocation().getExtent();
-
-                Optional<Entity> itemEntity = extent.createEntity(EntityTypes.ITEM, player.getLocation().getPosition());
-
-                if(itemEntity.isPresent()){
-                    Entity entity = itemEntity.get();
-
-                    entity.offer(Keys.REPRESENTED_ITEM, itemStack.createSnapshot());
-                    extent.spawnEntity(entity, Cause.of(player));
-
-                    if(isSendMessage()){
-                        player.sendMessage(getMessage());
-                    }
+                if(BonusHelper.dropItem(player.getLocation(), itemStack, Cause.of(player)) && isSendMessage()){
+                    player.sendMessage(getMessage());
                 }
             }
         }

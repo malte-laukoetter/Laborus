@@ -6,6 +6,7 @@ import de.lergin.sponge.jobs.data.jobs.JobData;
 import de.lergin.sponge.jobs.data.jobs.JobDataManipulatorBuilder;
 import de.lergin.sponge.jobs.job.ability.EffectAbility;
 import de.lergin.sponge.jobs.job.bonus.EpDrop;
+import de.lergin.sponge.jobs.job.bonus.ItemDrop;
 import de.lergin.sponge.jobs.job.bonus.ItemRepair;
 import de.lergin.sponge.jobs.job.bonus.MultiDrop;
 import de.lergin.sponge.jobs.util.ConfigHelper;
@@ -62,8 +63,8 @@ public class Job {
         initJobAction(jobConfig.getNode("useItems"), JobAction.ITEM_USE);
         initJobAction(jobConfig.getNode("tameEntities"), JobAction.ENTITY_TAME);
 
-        for(ConfigurationNode bonusNode : jobConfig.getNode("bonus").getChildrenMap().values()){
-            switch (bonusNode.getKey().toString()){
+        for(ConfigurationNode bonusNode : jobConfig.getNode("bonus").getChildrenList()){
+            switch (bonusNode.getNode("id").getString()){
                 case "multiDrop":
                     jobBonuses.add(new MultiDrop(bonusNode));
                     break;
@@ -72,6 +73,9 @@ public class Job {
                     break;
                 case "itemRepair":
                     jobBonuses.add(new ItemRepair(bonusNode));
+                    break;
+                case "itemDrop":
+                    jobBonuses.add(new ItemDrop(bonusNode));
                     break;
             }
         }
