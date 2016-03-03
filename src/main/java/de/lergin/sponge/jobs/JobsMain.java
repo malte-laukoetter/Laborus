@@ -15,6 +15,7 @@ import de.lergin.sponge.jobs.util.ConfigHelper;
 import de.lergin.sponge.jobs.util.TranslationHelper;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.slf4j.Logger;
@@ -29,6 +30,7 @@ import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStoppedEvent;
 import org.spongepowered.api.plugin.Plugin;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.*;
@@ -107,6 +109,22 @@ public class JobsMain {
 
         //init jobs
         for(ConfigurationNode node : ConfigHelper.getNode("jobs").getChildrenMap().values()){
+
+            String jobConfDir = node.getString("");
+
+            if(!node.hasMapChildren()){
+                try {
+                    ConfigurationNode jobNode =
+                            HoconConfigurationLoader.builder().setPath(configDir.resolve(jobConfDir)).build().load();
+
+                    jobNode.getNode("id").setValue(node.getKey().toString());
+
+                    node = jobNode;
+                } catch (IOException e) {
+                    logger.warn(TranslationHelper.l("warn.config.could_not_load.job", jobConfDir));
+                }
+            }
+
             Job job = new Job(node);
 
             jobs.put(job.getId(), job);

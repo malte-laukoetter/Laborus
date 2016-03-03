@@ -42,7 +42,12 @@ public class Job {
      */
     public Job(ConfigurationNode jobConfig) {
         this.NAME = jobConfig.getNode("name").getString();
-        this.ID = jobConfig.getKey().toString();
+
+        if(jobConfig.getNode("id").getString("").equals("")){
+            this.ID = jobConfig.getKey().toString();
+        }else{
+            this.ID = jobConfig.getNode("id").getString();
+        }
 
         List<? extends ConfigurationNode> levelConfig;
 
