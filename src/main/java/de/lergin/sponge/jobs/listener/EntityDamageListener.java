@@ -8,11 +8,9 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
-import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * listener for entity damage jobEvents

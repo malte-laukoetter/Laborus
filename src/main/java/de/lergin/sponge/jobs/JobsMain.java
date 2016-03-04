@@ -32,7 +32,6 @@ import org.spongepowered.api.plugin.Plugin;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.sql.SQLException;
 import java.util.*;
 
 @Plugin(id = "Jobs", name = "Jobs", version = "0.1")

@@ -5,10 +5,8 @@ import org.spongepowered.api.data.value.mutable.MapValue;
 import org.spongepowered.api.data.value.mutable.SetValue;
 import org.spongepowered.api.data.value.mutable.Value;
 
-import static org.spongepowered.api.data.key.KeyFactory.makeMapKey;
 import static org.spongepowered.api.data.DataQuery.of;
-import static org.spongepowered.api.data.key.KeyFactory.makeSetKey;
-import static org.spongepowered.api.data.key.KeyFactory.makeSingleKey;
+import static org.spongepowered.api.data.key.KeyFactory.*;
 
 public class JobKeys {
     public static final Key<MapValue<String, Double>> JOB_DATA = makeMapKey(String.class, Double.class, of("JobData"));

@@ -4,15 +4,11 @@ import de.lergin.sponge.jobs.job.JobBonus;
 import de.lergin.sponge.jobs.job.JobItem;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.block.BlockType;
-import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.entity.Entity;
-import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.world.extent.Extent;
 
 import java.util.Optional;
 
