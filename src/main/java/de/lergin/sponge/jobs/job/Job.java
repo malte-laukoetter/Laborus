@@ -8,11 +8,13 @@ import de.lergin.sponge.jobs.job.bonus.EpDrop;
 import de.lergin.sponge.jobs.job.bonus.ItemDrop;
 import de.lergin.sponge.jobs.job.bonus.ItemRepair;
 import de.lergin.sponge.jobs.job.bonus.MultiDrop;
+import de.lergin.sponge.jobs.util.BlockStateComparator;
 import de.lergin.sponge.jobs.util.ConfigHelper;
 import de.lergin.sponge.jobs.util.TranslationHelper;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.CatalogType;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameMode;
@@ -59,8 +61,8 @@ public class Job {
                 levelConfig.stream().map(ConfigurationNode::getInt).collect(Collectors.toList())
         );
 
-        initJobAction(jobConfig.getNode("destroyBlocks"), JobAction.BREAK);
-        initJobAction(jobConfig.getNode("placeBlocks"), JobAction.PLACE);
+        initStringJobAction(jobConfig.getNode("destroyBlocks"), JobAction.BREAK);
+        initStringJobAction(jobConfig.getNode("placeBlocks"), JobAction.PLACE);
         initJobAction(jobConfig.getNode("killEntities"), JobAction.ENTITY_KILL);
         initJobAction(jobConfig.getNode("damageEntities"), JobAction.ENTITY_DAMAGE);
         initJobAction(jobConfig.getNode("useItems"), JobAction.ITEM_USE);
@@ -171,13 +173,19 @@ public class Job {
      */
     public boolean onJobListener(Object item, Player player, JobAction action){
         for(JobItem jobItem : jobActions.get(action)){
-            if(jobItem.getItem().equals(item)){
+            if(
+                    jobItem.getItem().equals(item) ||
+                    (
+                            jobItem.getItem() instanceof  String &&
+                            item instanceof BlockState &&
+                            BlockStateComparator.compare((BlockState) item, (String) jobItem.getItem())
+                    )
+                    ){
                 if(jobItem.canDo(getXp((player)))){
                     double newXp = jobItem.getXp() *
                          (isSelected(player) ? 1 : ConfigHelper.getNode("setting", "xp_without_job").getDouble(0.5));
 
                     this.addXp(player, newXp);
-
                     jobBonuses.stream()
                             .filter(jobBonus -> jobBonus.canHappen(jobItem, player))
                             .forEach(jobBonus -> jobBonus.useBonus(jobItem, player));
@@ -240,6 +248,30 @@ public class Job {
     }
 
     /**
+     * initialize a {@link JobAction} for this {@link Job}
+     * @param jobActionNode a {@link ConfigurationNode} that has the settings for the {@link JobAction}
+     * @param action the {@link JobAction} that should be initialized
+     */
+    private void initStringJobAction(ConfigurationNode jobActionNode, JobAction action){
+        if(jobActionNode.getChildrenMap().isEmpty())
+            return;
+
+        jobActions.put(
+                action,
+                generateStringJobItemList(jobActionNode.getChildrenMap().values(), action.getCatalogType())
+        );
+
+        try {
+            Sponge.getEventManager().registerListeners(
+                    JobsMain.instance(),
+                    action.getListenerConstructor().newInstance(this, generateJobItemTypeList(jobActions.get(action)))
+            );
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * generates a {@link List} of {@link JobItem}s from a {@link Collection} of {@link ConfigurationNode}s
      * @param nodes a {@link Collection} of {@link ConfigurationNode}s with the data for the {@link JobItem}s
      * @param catalogType the {@link Class} of the {@link CatalogType} of the {@link JobItem}s
@@ -268,6 +300,21 @@ public class Job {
         }
 
         return jobItems;
+    }
+
+    /**
+     * generates a {@link List} of {@link JobItem}s from a {@link Collection} of {@link ConfigurationNode}s
+     * @param nodes a {@link Collection} of {@link ConfigurationNode}s with the data for the {@link JobItem}s
+     * @param catalogType the {@link Class} of the {@link CatalogType} of the {@link JobItem}s
+     * @return a {@link List} of the {@link JobItem}s that are created by the Config
+     */
+    private List<JobItem> generateStringJobItemList(Collection<? extends ConfigurationNode> nodes, Class<? extends CatalogType> catalogType){
+        return nodes.stream().map(jobItemNode -> new JobItem(
+                jobItemNode.getNode("xp").getDouble(0.0),
+                jobItemNode.getNode("needLevel").getInt(0),
+                this,
+                jobItemNode.getKey().toString()
+        )).collect(Collectors.toList());
     }
 
     /**

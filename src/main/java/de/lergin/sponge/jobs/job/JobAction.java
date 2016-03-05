@@ -3,12 +3,13 @@ package de.lergin.sponge.jobs.job;
 import de.lergin.sponge.jobs.listener.*;
 import org.spongepowered.api.CatalogType;
 import org.spongepowered.api.CatalogTypes;
+import org.spongepowered.api.block.BlockState;
 
 import java.lang.reflect.Constructor;
 import java.util.List;
 
 public enum JobAction {
-    BREAK(BreakBlockListener.class, CatalogTypes.BLOCK_TYPE),
+    BREAK(BreakBlockListener.class, BlockState.class),
     ENTITY_DAMAGE(EntityDamageListener.class, CatalogTypes.ENTITY_TYPE),
     ENTITY_KILL(EntityKillListener.class, CatalogTypes.ENTITY_TYPE),
     ENTITY_TAME(EntityTameListener.class, CatalogTypes.ENTITY_TYPE),

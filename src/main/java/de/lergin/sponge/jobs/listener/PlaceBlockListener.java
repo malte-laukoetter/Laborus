@@ -3,7 +3,9 @@ package de.lergin.sponge.jobs.listener;
 import de.lergin.sponge.jobs.job.Job;
 import de.lergin.sponge.jobs.job.JobAction;
 import de.lergin.sponge.jobs.util.AntiReplaceFarming;
+import de.lergin.sponge.jobs.util.BlockStateComparator;
 import org.spongepowered.api.block.BlockSnapshot;
+import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.entity.living.player.Player;
@@ -16,8 +18,8 @@ import java.util.List;
 /**
  * listener for place block jobEvents
  */
-public class PlaceBlockListener extends JobListener<BlockType> {
-    public PlaceBlockListener(Job job, List<BlockType> blockTypes) {
+public class PlaceBlockListener extends JobListener<String> {
+    public PlaceBlockListener(Job job, List<String> blockTypes) {
         super(job, blockTypes);
     }
 
@@ -26,16 +28,19 @@ public class PlaceBlockListener extends JobListener<BlockType> {
         if (event.getCause().get("Source", Player.class).isPresent() && JOB.enabled(player)) {
             for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
                 final BlockSnapshot FINAL_BLOCK = transaction.getFinal();
-                final BlockType BLOCK_TYPE = FINAL_BLOCK.getState().getType();
+                final BlockState BLOCK_STATE = FINAL_BLOCK.getState();
 
-                if (JOB_ITEM_TYPES.contains(BLOCK_TYPE)) {
-                    //test if the block currently shouldn't be rewarded
-                    if(!AntiReplaceFarming.testLocation(FINAL_BLOCK.getLocation().get(), FINAL_BLOCK.getState(), JobAction.BREAK)){
-                        if(!JOB.onJobListener(BLOCK_TYPE, player, JobAction.PLACE)){
-                            transaction.setValid(false);
-                        }
-                    }
-                }
+                JOB_ITEM_TYPES.stream()
+                        .filter(item -> BlockStateComparator.compare(BLOCK_STATE, item))
+                        .filter(item ->
+                                AntiReplaceFarming.testLocation(
+                                        FINAL_BLOCK.getLocation().get(),
+                                        FINAL_BLOCK.getState(),
+                                        JobAction.BREAK
+                                )
+                        )
+                        .filter(item -> !JOB.onJobListener(BLOCK_STATE, player, JobAction.PLACE))
+                        .forEach(item -> transaction.setValid(false));
 
                 AntiReplaceFarming.addLocation(
                         FINAL_BLOCK.getLocation().get(),
