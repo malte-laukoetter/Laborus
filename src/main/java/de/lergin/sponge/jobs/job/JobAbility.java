@@ -23,7 +23,7 @@ public abstract class JobAbility {
     public boolean canStartAbility(Player player){
         Map<String, Long> abilityUsed = player.get(JobKeys.JOB_ABILITY_USED).orElse(new HashMap<>());
 
-        return (abilityUsed.get(getJob().getId()) + coolDown) < Instant.now().getEpochSecond();
+        return (abilityUsed.getOrDefault(getJob().getId(), 0L) + coolDown) < Instant.now().getEpochSecond();
     }
 
     public void startCoolDown(Player player){

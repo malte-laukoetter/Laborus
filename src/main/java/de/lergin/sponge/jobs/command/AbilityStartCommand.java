@@ -45,9 +45,15 @@ public class AbilityStartCommand extends JobCommand {
             builder.permission(permission);
         }
 
+        //only add jobs that have a ability
+        Map<String, Job> jobs = new HashMap<>();
+        JobsMain.instance().jobs.values().stream()
+                .filter(Job::hasJobAbility)
+                .forEach(job -> jobs.put(job.getId(), job));
+
         builder.arguments(GenericArguments.choices(
                 Text.of(configNode.getNode("params", "job", "description").getString("job")),
-                JobsMain.instance().jobs
+                jobs
         ));
 
         return builder.build();

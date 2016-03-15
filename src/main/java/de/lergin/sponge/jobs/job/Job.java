@@ -122,6 +122,14 @@ public class Job {
     }
 
     /**
+     * tests if the job has a {@link JobAbility}
+     * @return true if the job has a {@link JobAbility}
+     */
+    public boolean hasJobAbility() {
+        return jobAbility != null;
+    }
+
+    /**
      * adds some xp to the {@link Player} in this job
      * @param player the {@link Player}
      * @param amount the amount of xp that should be added
