@@ -1,5 +1,7 @@
 package de.lergin.sponge.jobs.job.bonus;
 
+import de.lergin.sponge.jobs.job.Job;
+import de.lergin.sponge.jobs.job.JobAction;
 import de.lergin.sponge.jobs.job.JobBonus;
 import de.lergin.sponge.jobs.job.JobItem;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -42,21 +44,17 @@ public class ItemRepair extends JobBonus {
      * test if the item has a durability
      */
     @Override
-    public boolean canHappen(JobItem jobItem, Player player) {
+    public boolean canHappen(Job job, JobAction jobAction, JobItem jobItem, Player player) {
         Optional<ItemStack> optional = player.getItemInHand();
 
-        if(!optional.isPresent())
-            return false;
+        return optional.isPresent() &&
+                optional.get().supports(Keys.ITEM_DURABILITY) &&
+                testConditions(job, jobAction, jobItem, player);
 
-        return optional.get().supports(Keys.ITEM_DURABILITY);
     }
 
     public ItemRepair(ConfigurationNode config) {
-        super(
-                config.getNode("probability").getDouble(0.05),
-                config.getNode("sendMessage").getBoolean(false),
-                Text.of(config.getNode("message").getString(""))
-        );
+        super(config);
 
         this.maxPercent = config.getNode("maxPercent").getDouble(0.1);
         this.minPercent = config.getNode("minPercent").getDouble(0.1);

@@ -40,17 +40,8 @@ public class EpDrop extends JobBonus {
         }
     }
 
-    @Override
-    public boolean canHappen(JobItem jobItem, Player player) {
-        return true;
-    }
-
     public EpDrop(ConfigurationNode config) {
-        super(
-                config.getNode("probability").getDouble(0.05),
-                config.getNode("sendMessage").getBoolean(false),
-                Text.of(config.getNode("message").getString(""))
-        );
+        super(config);
 
         this.minEp = config.getNode("minEp").getInt(1);
         this.maxEp = config.getNode("maxEp").getInt(1);

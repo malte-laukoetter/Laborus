@@ -17,11 +17,7 @@ public class ItemDrop extends JobBonus {
     ItemStack itemStack;
 
     public ItemDrop(ConfigurationNode config) {
-        super(
-                config.getNode("probability").getDouble(0.05),
-                config.getNode("sendMessage").getBoolean(false),
-                Text.of(config.getNode("message").getString(""))
-        );
+        super(config);
 
         Optional<ItemType> optional = Sponge.getRegistry().getType(
                 CatalogTypes.ITEM_TYPE,
@@ -36,11 +32,6 @@ public class ItemDrop extends JobBonus {
         }else{
             //TODO: error message
         }
-    }
-
-    @Override
-    public boolean canHappen(JobItem jobItem, Player player) {
-        return true;
     }
 
     @Override

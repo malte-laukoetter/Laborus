@@ -1,5 +1,7 @@
 package de.lergin.sponge.jobs.job.bonus;
 
+import de.lergin.sponge.jobs.job.Job;
+import de.lergin.sponge.jobs.job.JobAction;
 import de.lergin.sponge.jobs.job.JobBonus;
 import de.lergin.sponge.jobs.job.JobItem;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -34,16 +36,12 @@ public class MultiDrop extends JobBonus {
     }
 
     @Override
-    public boolean canHappen(JobItem jobItem, Player player) {
-        return jobItem.getItem() instanceof BlockType;
+    public boolean canHappen(Job job, JobAction jobAction, JobItem jobItem, Player player) {
+        return jobItem.getItem() instanceof BlockType && testConditions(job, jobAction, jobItem, player);
     }
 
     public MultiDrop(ConfigurationNode config) {
-        super(
-                config.getNode("probability").getDouble(0.05),
-                config.getNode("sendMessage").getBoolean(false),
-                Text.of(config.getNode("message").getString(""))
-        );
+        super(config);
 
         //we only need to do the extra drop
         this.dropMultiplier = config.getNode("itemMultiplier").getInt(2) - 1;

@@ -188,7 +188,7 @@ public class Job {
 
                     this.addXp(player, newXp);
                     jobBonuses.stream()
-                            .filter(jobBonus -> jobBonus.canHappen(jobItem, player))
+                            .filter(jobBonus -> jobBonus.canHappen(this, action, jobItem, player))
                             .forEach(jobBonus -> jobBonus.useBonus(jobItem, player));
 
                     return true;
@@ -341,6 +341,10 @@ public class Job {
         }
 
         return this.level.size();
+    }
+
+    public int getLevel(Player player){
+        return getCurrentLevel(getXp(player));
     }
 
     @Override

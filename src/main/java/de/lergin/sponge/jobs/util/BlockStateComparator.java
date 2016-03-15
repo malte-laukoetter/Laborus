@@ -30,9 +30,22 @@ public class BlockStateComparator {
         if(!blockString.contains("["))
             return true;
 
+        return compareData(blockString, blockState.toString());
+    }
 
-        String[] dataStrings = blockString.split("\\[")[1].split("\\]")[0].split(",");
-        String[] dataStrings2 = blockState.toString().split("\\[")[1].split("\\]")[0].split(",");
+    public static boolean compare(String blockString1, String blockString2) {
+        Optional<BlockType> optional1 = Sponge.getRegistry().getType(CatalogTypes.BLOCK_TYPE, blockString1.split("\\[")[0]);
+        Optional<BlockType> optional2 = Sponge.getRegistry().getType(CatalogTypes.BLOCK_TYPE, blockString2.split("\\[")[0]);
+
+        return !(!optional1.isPresent() || !optional2.isPresent() || optional1.get() != optional2.get()) &&
+                (!blockString1.contains("[") && !blockString2.contains("[") ||
+                compareData(blockString1, blockString2));
+
+    }
+
+    private static boolean compareData(String dataString1, String dataString2){
+        String[] dataStrings = dataString1.split("\\[")[1].split("\\]")[0].split(",");
+        String[] dataStrings2 = dataString2.split("\\[")[1].split("\\]")[0].split(",");
 
         for (String dataString : dataStrings) {
             boolean wasTrue = false;
