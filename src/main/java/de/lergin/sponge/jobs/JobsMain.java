@@ -2,10 +2,7 @@ package de.lergin.sponge.jobs;
 
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
-import de.lergin.sponge.jobs.command.AbilityStartCommand;
-import de.lergin.sponge.jobs.command.AddXpCommand;
-import de.lergin.sponge.jobs.command.ChangeJobCommand;
-import de.lergin.sponge.jobs.command.ToggleJobStatusCommand;
+import de.lergin.sponge.jobs.command.*;
 import de.lergin.sponge.jobs.data.jobs.ImmutableJobDataManipulator;
 import de.lergin.sponge.jobs.data.jobs.JobData;
 import de.lergin.sponge.jobs.data.jobs.JobDataManipulatorBuilder;
@@ -21,6 +18,8 @@ import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.slf4j.Logger;
 import org.spongepowered.api.CatalogTypes;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.command.CommandCallable;
+import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.entity.living.player.gamemode.GameMode;
 import org.spongepowered.api.event.Listener;
@@ -72,23 +71,7 @@ public class JobsMain {
         ConfigHelper.loadConfig();
 
         //translation setup
-        Locale.setDefault(
-                Locale.forLanguageTag(
-                        ConfigHelper.getNode("translation", "defaultLanguage").getString("en")
-                )
-        );
-
-        logger.info(
-                TranslationHelper.s(Locale.ENGLISH, "translation.default.set", Locale.getDefault().toLanguageTag())
-        );
-
-
-        final Locale logLanguage = Locale.forLanguageTag(
-                ConfigHelper.getNode("translation", "logLanguage").getString("en")
-        );
-
-        TranslationHelper.setLogLanguage(logLanguage);
-        logger.info(TranslationHelper.l("translation.log.set", logLanguage.toLanguageTag()));
+        initTranslations();
     }
 
     @Listener
@@ -100,42 +83,14 @@ public class JobsMain {
         Sponge.getDataManager().register(JobData.class, ImmutableJobDataManipulator.class,
                 new JobDataManipulatorBuilder());
 
-        //init eventListener
-
-
         //load some data from the config
         initEnabledGameModes();
 
         //init jobs
-        for(ConfigurationNode node : ConfigHelper.getNode("jobs").getChildrenMap().values()){
-
-            String jobConfDir = node.getString("");
-
-            if(!node.hasMapChildren()){
-                try {
-                    ConfigurationNode jobNode =
-                            HoconConfigurationLoader.builder().setPath(configDir.getParent().resolve(jobConfDir)).build().load();
-
-                    jobNode.getNode("id").setValue(node.getKey().toString());
-
-                    node = jobNode;
-                } catch (IOException e) {
-                    logger.warn(TranslationHelper.l("warn.config.could_not_load.job", jobConfDir));
-                }
-            }
-
-            Job job = new Job(node);
-
-            jobs.put(job.getId(), job);
-
-            logger.info(TranslationHelper.l("info.job.init", job.getId()));
-        }
+        initJobs();
 
         //init commands
-        new ToggleJobStatusCommand();
-        new AddXpCommand();
-        new ChangeJobCommand();
-        new AbilityStartCommand();
+        initCommands();
     }
 
     @Listener
@@ -166,5 +121,72 @@ public class JobsMain {
                 //todo send a message to the log
             }
         }
+    }
+
+    private void initJobs(){
+        for(ConfigurationNode node : ConfigHelper.getNode("jobs").getChildrenMap().values()){
+
+            String jobConfDir = node.getString("");
+
+            if(!node.hasMapChildren()){
+                try {
+                    ConfigurationNode jobNode =
+                            HoconConfigurationLoader.builder().setPath(configDir.getParent().resolve(jobConfDir)).build().load();
+
+                    jobNode.getNode("id").setValue(node.getKey().toString());
+
+                    node = jobNode;
+                } catch (IOException e) {
+                    logger.warn(TranslationHelper.l("warn.config.could_not_load.job", jobConfDir));
+                }
+            }
+
+            Job job = new Job(node);
+
+            jobs.put(job.getId(), job);
+
+            logger.info(TranslationHelper.l("info.job.init", job.getId()));
+        }
+    }
+
+    private void initCommands(){
+        Map<List<String>, CommandCallable> childCommands = new HashMap<>();
+
+        final JobCommand abilityStartCommand = new AbilityStartCommand();
+        childCommands.put(abilityStartCommand.getCommandAliases(), abilityStartCommand.getCommandSpec());
+
+        final JobCommand addXpCommand = new AddXpCommand();
+        childCommands.put(addXpCommand.getCommandAliases(), addXpCommand.getCommandSpec());
+
+        final JobCommand changeJobCommand = new ChangeJobCommand();
+        childCommands.put(changeJobCommand.getCommandAliases(), changeJobCommand.getCommandSpec());
+
+        final JobCommand toggleJobStatusCommand = new ToggleJobStatusCommand();
+        childCommands.put(toggleJobStatusCommand.getCommandAliases(), toggleJobStatusCommand.getCommandSpec());
+
+        Sponge.getCommandManager().register(
+                JobsMain.instance(),
+                CommandSpec.builder().children(childCommands).build(),
+                ConfigHelper.getNode("commands", "mainCommand").getString("jobs")
+        );
+    }
+
+    private void initTranslations(){
+        Locale.setDefault(
+                Locale.forLanguageTag(
+                        ConfigHelper.getNode("translation", "defaultLanguage").getString("en")
+                )
+        );
+
+        logger.info(
+                TranslationHelper.s(Locale.ENGLISH, "translation.default.set", Locale.getDefault().toLanguageTag())
+        );
+
+        final Locale logLanguage = Locale.forLanguageTag(
+                ConfigHelper.getNode("translation", "logLanguage").getString("en")
+        );
+
+        TranslationHelper.setLogLanguage(logLanguage);
+        logger.info(TranslationHelper.l("translation.log.set", logLanguage.toLanguageTag()));
     }
 }

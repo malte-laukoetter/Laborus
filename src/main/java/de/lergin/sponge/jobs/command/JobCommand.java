@@ -1,7 +1,5 @@
 package de.lergin.sponge.jobs.command;
 
-import de.lergin.sponge.jobs.JobsMain;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -19,27 +17,16 @@ import java.util.List;
  */
 public abstract class JobCommand {
     /**
-     * creates a new command
-     */
-    public JobCommand() {
-        Sponge.getCommandManager().register(
-                JobsMain.instance(),
-                getCommandSpec(),
-                getCommandAliases()
-        );
-    }
-
-    /**
      * creates the {@link org.spongepowered.api.command.spec.CommandSpec} for the command
      * @return the {@link org.spongepowered.api.command.spec.CommandSpec}
      */
-    protected abstract CommandSpec getCommandSpec();
+    public abstract CommandSpec getCommandSpec();
 
     /**
      * creates the list of possible aliases for the command
      * @return a list of aliases
      */
-    protected abstract List<String> getCommandAliases();
+    public abstract List<String> getCommandAliases();
 
     /**
      * @see org.spongepowered.api.command.spec.CommandExecutor#execute(CommandSource, CommandContext)

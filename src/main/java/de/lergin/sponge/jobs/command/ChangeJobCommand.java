@@ -23,7 +23,7 @@ import java.util.*;
  * changes the selected {@link Job}s
  */
 public class ChangeJobCommand extends JobCommand{
-    private final static ConfigurationNode configNode = ConfigHelper.getNode("commands", "changeJob");
+    private final static ConfigurationNode configNode = ConfigHelper.getNode("commands", "change");
 
     public ChangeJobCommand() {
         super();
@@ -35,7 +35,7 @@ public class ChangeJobCommand extends JobCommand{
      * @return the {@link CommandSpec}
      */
     @Override
-    protected CommandSpec getCommandSpec() {
+    public CommandSpec getCommandSpec() {
         CommandSpec.Builder builder = CommandSpec.builder();
 
         builder.description(Text.of(configNode.getNode("description").getString("MISSING DESCRIPTION")));
@@ -77,7 +77,7 @@ public class ChangeJobCommand extends JobCommand{
      * @return a list of aliases
      */
     @Override
-    protected List<String> getCommandAliases() {
+    public List<String> getCommandAliases() {
         List<String> aliases = new ArrayList<>();
         aliases.add(configNode.getNode("command").getString("changeJob"));
 

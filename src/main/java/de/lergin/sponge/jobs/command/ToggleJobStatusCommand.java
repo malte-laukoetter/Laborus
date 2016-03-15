@@ -28,7 +28,7 @@ public class ToggleJobStatusCommand extends JobCommand {
     }
 
     @Override
-    protected CommandSpec getCommandSpec() {
+    public CommandSpec getCommandSpec() {
         CommandSpec.Builder builder = CommandSpec.builder();
 
         builder.description(Text.of(configNode.getNode("description").getString()));
@@ -45,7 +45,7 @@ public class ToggleJobStatusCommand extends JobCommand {
     }
 
     @Override
-    protected List<String> getCommandAliases() {
+    public List<String> getCommandAliases() {
         List<String> aliases = new ArrayList<>();
         aliases.add(configNode.getNode("command").getString("toggleJobStatus"));
 

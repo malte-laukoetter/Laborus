@@ -38,7 +38,7 @@ public class AddXpCommand extends JobCommand {
      * @return the {@link CommandSpec}
      */
     @Override
-    protected CommandSpec getCommandSpec() {
+    public CommandSpec getCommandSpec() {
         CommandSpec.Builder builder = CommandSpec.builder();
 
         builder.description(Text.of(configNode.getNode("description").getString()));
@@ -84,7 +84,7 @@ public class AddXpCommand extends JobCommand {
      * @return a list of aliases
      */
     @Override
-    protected List<String> getCommandAliases() {
+    public List<String> getCommandAliases() {
         List<String> aliases = new ArrayList<>();
         aliases.add(configNode.getNode("command").getString("addJobXp"));
 
