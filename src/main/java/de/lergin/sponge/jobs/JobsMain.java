@@ -34,7 +34,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
 
-@Plugin(id = "Jobs", name = "Jobs", version = "0.1")
+@Plugin(id = "de.lergin.sponge.jobs", name = "Jobs", version = "0.1", description = "a job plugin", authors = {"Lergin"})
 public class JobsMain {
     @Inject
     @DefaultConfig(sharedRoot = false)
@@ -114,7 +114,7 @@ public class JobsMain {
             if(!node.hasMapChildren()){
                 try {
                     ConfigurationNode jobNode =
-                            HoconConfigurationLoader.builder().setPath(configDir.resolve(jobConfDir)).build().load();
+                            HoconConfigurationLoader.builder().setPath(configDir.getParent().resolve(jobConfDir)).build().load();
 
                     jobNode.getNode("id").setValue(node.getKey().toString());
 

@@ -6,7 +6,6 @@ import de.lergin.sponge.jobs.job.Job;
 import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.manipulator.DataManipulatorBuilder;
-import org.spongepowered.api.util.persistence.InvalidDataException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -46,7 +45,7 @@ public class JobDataManipulatorBuilder implements DataManipulatorBuilder<JobData
     }
 
     @Override
-    public Optional<JobData> build(DataView dataView) throws InvalidDataException {
+    public Optional<JobData> build(DataView dataView) {
         if(dataView.contains(JobKeys.JOB_DATA.getQuery())) {
 
             // the data needs to be parsed by hand because we are getting a list instead of a set

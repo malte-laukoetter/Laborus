@@ -31,7 +31,7 @@ public class EpDrop extends JobBonus {
                 Entity entity = itemEntity.get();
                 entity.offer(Keys.CONTAINED_EXPERIENCE, new Random().nextInt(maxEp - minEp) + minEp);
 
-                extent.spawnEntity(entity, Cause.of(player));
+                extent.spawnEntity(entity, Cause.builder().owner(player).build());
 
                 if(isSendMessage()){
                     player.sendMessage(getMessage());

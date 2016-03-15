@@ -48,7 +48,7 @@ public class ItemDrop extends JobBonus {
         if (!this.isHappening())
             return;
 
-        if(BonusHelper.dropItem(player.getLocation(), itemStack, Cause.of(player)) && isSendMessage()){
+        if(BonusHelper.dropItem(player.getLocation(), itemStack, Cause.builder().owner(player).build()) && isSendMessage()){
             player.sendMessage(getMessage());
         }
     }

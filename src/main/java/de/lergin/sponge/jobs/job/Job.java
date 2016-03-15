@@ -18,6 +18,7 @@ import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameMode;
+import org.spongepowered.api.text.channel.MessageChannel;
 import org.spongepowered.api.text.chat.ChatTypes;
 
 import java.lang.reflect.InvocationTargetException;
@@ -342,4 +343,16 @@ public class Job {
         return this.level.size();
     }
 
+    @Override
+    public String toString() {
+        return "Job{" +
+                "NAME='" + NAME + '\'' +
+                ", ID='" + ID + '\'' +
+                ", jobAbility=" + jobAbility +
+                ", jobActions=" + jobActions +
+                ", enabledGameModes=" + enabledGameModes +
+                ", jobBonuses=" + jobBonuses +
+                ", level=" + level +
+                '}';
+    }
 }
