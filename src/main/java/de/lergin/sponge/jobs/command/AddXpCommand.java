@@ -1,5 +1,6 @@
 package de.lergin.sponge.jobs.command;
 
+import com.google.common.collect.ImmutableMap;
 import de.lergin.sponge.jobs.JobsMain;
 import de.lergin.sponge.jobs.data.JobKeys;
 import de.lergin.sponge.jobs.job.Job;
@@ -16,11 +17,15 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.TextTemplate;
+import org.spongepowered.api.text.format.TextColors;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.spongepowered.api.text.TextTemplate.arg;
 
 /**
  * adds some xp to the {@link Player}
@@ -108,17 +113,74 @@ public class AddXpCommand extends JobCommand {
 
         Map<String, Double> jobData = player.get(JobKeys.JOB_DATA).orElse(new HashMap<>());
 
-        String jobId =
-                ((Job) args.getOne(configNode.getNode("params", "job", "description").getString("job")).get()).getId();
+        Job job =
+                ((Job) args.getOne(configNode.getNode("params", "job", "description").getString("job")).get());
         double addXp = (double) args.getOne(configNode.getNode("params", "xp", "description").getString("xp")).get();
-        double newXp = jobData.getOrDefault(jobId, 0.0) + addXp;
+        double newXp = jobData.getOrDefault(job.getId(), 0.0) + addXp;
 
 
-        jobData.put(jobId, newXp);
+        jobData.put(job.getId(), newXp);
 
         player.offer(JobKeys.JOB_DATA, jobData);
 
-        player.sendMessage(TranslationHelper.p(player, "player.info.job.add_xp", addXp, jobId, newXp));
+        if(!(commandSource instanceof Player) || !commandSource.equals(player) ){
+            commandSource.sendMessage(
+                    TranslationHelper.template(
+                            TextTemplate.of(
+                                    TextColors.AQUA, "You added ",
+                                    arg("addXp").color(TextColors.GREEN).build(),
+                                    Text.of(TextColors.GREEN, "xp"),
+                                    " to ", arg("playerName").color(TextColors.GREEN).build(),
+                                    " to the job ", arg("jobName").color(TextColors.GREEN).build(),
+                                    "."
+                            ),
+                            "messages", "default", "add_xp_other"
+                    ),
+                    ImmutableMap.of(
+                            "jobName", Text.of(job.getName()),
+                            "addXp", Text.of(addXp),
+                            "playerName", Text.of(player.getName())
+                    )
+            );
+
+            player.sendMessage(
+                    TranslationHelper.template(
+                            TextTemplate.of(
+                                    TextColors.AQUA,
+                                    arg("commandSource").color(TextColors.GREEN).build(),
+                                    " added ", arg("addXp").color(TextColors.GREEN).build(),
+                                    Text.of(TextColors.GREEN, "xp"),
+                                    " to your job ", arg("jobName").color(TextColors.GREEN).build(),
+                                    "."
+                            ),
+                            "messages", "default", "add_xp_other_get"
+                    ),
+                    ImmutableMap.of(
+                            "jobName", Text.of(job.getName()),
+                            "addXp", Text.of(addXp),
+                            "commandSource", Text.of(commandSource.getName())
+                    )
+            );
+        }else{
+            commandSource.sendMessage(
+                    TranslationHelper.template(
+                            TextTemplate.of(
+                                    TextColors.AQUA, "You added ",
+                                    arg("addXp").color(TextColors.GREEN).build(),
+                                    Text.of(TextColors.GREEN, "xp"),
+                                    " to ", arg("jobName").color(TextColors.GREEN).build(),
+                                    "."
+                            ),
+                            "messages", "default", "add_xp_self"
+                    ),
+                    ImmutableMap.of(
+                            "jobName", Text.of(job.getName()),
+                            "addXp", Text.of(addXp)
+                    )
+            );
+        }
+
+
 
         return CommandResult.success();
     }

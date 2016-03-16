@@ -34,7 +34,7 @@ public abstract class JobAbility {
                                 TextColors.AQUA, "You started the ability ",
                                 arg("abilityName").color(TextColors.GREEN).build(),
                                 " from ", arg("jobName").color(TextColors.GREEN).build(),
-                                ". You can again use it in ",
+                                ". You can use it again in ",
                                 arg("coolDown").color(TextColors.GREEN), "s."
                         ),
                         "messages", "default", "start_ability"
@@ -62,7 +62,7 @@ public abstract class JobAbility {
                 ImmutableMap.of(
                         "jobName", Text.of(job.getName()),
                         "abilityName", Text.of(this.getName()),
-                        "time", Text.of(this.getSecoundsTillEndOfCoolDown(player))
+                        "time", Text.of(this.getSecondsTillEndOfCoolDown(player))
                 )
         );
     }
@@ -90,10 +90,10 @@ public abstract class JobAbility {
         return coolDown;
     }
 
-    public long getSecoundsTillEndOfCoolDown(Player player) {
+    public long getSecondsTillEndOfCoolDown(Player player) {
         Map<String, Long> abilityUsed = player.get(JobKeys.JOB_ABILITY_USED).orElse(new HashMap<>());
 
-        return abilityUsed.getOrDefault(getJob().getId(), 0L + coolDown) + coolDown - Instant.now().getEpochSecond();
+        return abilityUsed.getOrDefault(getJob().getId(), (long) coolDown) + coolDown - Instant.now().getEpochSecond();
     }
 
     public String getName() {

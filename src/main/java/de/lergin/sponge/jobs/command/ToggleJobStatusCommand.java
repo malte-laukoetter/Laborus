@@ -1,5 +1,6 @@
 package de.lergin.sponge.jobs.command;
 
+import com.google.common.collect.ImmutableMap;
 import de.lergin.sponge.jobs.data.JobKeys;
 import de.lergin.sponge.jobs.util.ConfigHelper;
 import de.lergin.sponge.jobs.util.TranslationHelper;
@@ -11,9 +12,15 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.TextTemplate;
+import org.spongepowered.api.text.action.TextActions;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextStyles;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.spongepowered.api.text.TextTemplate.arg;
 
 // TODO: add a player argument 
 
@@ -63,7 +70,19 @@ public class ToggleJobStatusCommand extends JobCommand {
 
         player.offer(JobKeys.JOB_ENABLED, !jobsEnabled);
 
-        player.sendMessage(TranslationHelper.p(player, "player.info.job.toggle", !jobsEnabled));
+        player.sendMessage(
+                TranslationHelper.template(
+                        TextTemplate.of(
+                                TextColors.AQUA,
+                                "Toggled enabled status of jobSystem to: ",
+                                arg("status").color(TextColors.GREEN).build()
+                        ),
+                        "messages", "default", "job_toggle"
+                ),
+                ImmutableMap.of(
+                        "status", Text.of(!jobsEnabled)
+                )
+        );
 
         return CommandResult.success();
     }

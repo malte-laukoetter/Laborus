@@ -1,5 +1,6 @@
 package de.lergin.sponge.jobs.command;
 
+import com.google.common.collect.ImmutableMap;
 import de.lergin.sponge.jobs.JobsMain;
 import de.lergin.sponge.jobs.data.JobKeys;
 import de.lergin.sponge.jobs.job.Job;
@@ -16,8 +17,16 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.TextTemplate;
+import org.spongepowered.api.text.action.ClickAction;
+import org.spongepowered.api.text.action.TextActions;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextStyle;
+import org.spongepowered.api.text.format.TextStyles;
 
 import java.util.*;
+
+import static org.spongepowered.api.text.TextTemplate.arg;
 
 /**
  * changes the selected {@link Job}s
@@ -103,22 +112,68 @@ public class ChangeJobCommand extends JobCommand{
 
         Set<String> selectedJobs = player.get(JobKeys.JOB_SELECTED).orElse(new HashSet<>());
 
+        Job job =
+                ((Job) args.getOne(configNode.getNode("params", "job", "description").getString("job")).get());
+
 
         if(join){
-            if(selectedJobs.size() > ConfigHelper.getNode("setting", "max_selected_jobs").getInt(1)){
-                player.sendMessage(TranslationHelper.p(player, "player.warn.job.too_many_selected_jobs"));
+            if(!selectedJobs.contains(job.getId())){
+                final int maxJobs = ConfigHelper.getNode("setting", "max_selected_jobs").getInt(1);
 
-                return CommandResult.empty();
-            }
+                if(selectedJobs.size() > maxJobs){
+                    player.sendMessage(
+                            TranslationHelper.template(
+                                    TextTemplate.of(
+                                            TextColors.AQUA,
+                                            "You cannot join ", arg("jobName").color(TextColors.GREEN).build(),
+                                            ", due to the reach of the max. of jobs you can select (",
+                                            arg("maxJobs").color(TextColors.GREEN).build(),
+                                            "). If you want to join another job you first need to ",
+                                            Text.builder("leave")
+                                                    .onClick(TextActions.suggestCommand("/jobs change leave "))
+                                                    .onHover(TextActions.showText(Text.of("/jobs change leave ")))
+                                                    .style(TextStyles.UNDERLINE).build(),
+                                            " another one."
+                                    ),
+                                    "messages", "default", "job_join_too_many_jobs"
+                            ),
+                            ImmutableMap.of(
+                                    "jobName", Text.of(job.getName()),
+                                    "maxJobs", Text.of(maxJobs)
+                            )
+                    );
 
-            String jobId =
-                    ((Job) args.getOne(configNode.getNode("params", "job", "description").getString("job")).get()).getId();
+                    return CommandResult.empty();
+                }
 
-            if(selectedJobs.add(jobId)){
-                player.sendMessage(TranslationHelper.p(player, "player.info.job.select_job", jobId));
+                player.sendMessage(
+                        TranslationHelper.template(
+                                TextTemplate.of(
+                                        TextColors.AQUA,
+                                        "You have joined ", arg("jobName").color(TextColors.GREEN).build(), "."
+                                ),
+                                "messages", "default", "job_join_success"
+                        ),
+                        ImmutableMap.of(
+                                "jobName", Text.of(job.getName())
+                        )
+                );
+
                 return CommandResult.success();
             }else {
-                player.sendMessage(TranslationHelper.p(player, "player.warning.job.cant_select_job.already_selected", jobId));
+                player.sendMessage(
+                        TranslationHelper.template(
+                                TextTemplate.of(
+                                        TextColors.AQUA,
+                                        "You already joined ", arg("jobName").color(TextColors.GREEN).build(), "."
+                                ),
+                                "messages", "default", "job_join_already_selected"
+                        ),
+                        ImmutableMap.of(
+                                "jobName", Text.of(job.getName())
+                        )
+                );
+
                 return CommandResult.empty();
             }
         }else{
@@ -126,9 +181,31 @@ public class ChangeJobCommand extends JobCommand{
                     ((Job) args.getOne(configNode.getNode("params", "job", "description").getString("job")).get()).getId();
 
             if(selectedJobs.remove(jobId)){
-                player.sendMessage(TranslationHelper.p(player, "player.info.job.deselect_job", jobId));
+                player.sendMessage(
+                        TranslationHelper.template(
+                                TextTemplate.of(
+                                        TextColors.AQUA,
+                                        "You have leaved ", arg("jobName").color(TextColors.GREEN).build(), "."
+                                ),
+                                "messages", "default", "job_leave_success"
+                        ),
+                        ImmutableMap.of(
+                                "jobName", Text.of(job.getName())
+                        )
+                );
             }else{
-                player.sendMessage(TranslationHelper.p(player, "player.warning.job.cant_deselect_job.not_selected", jobId));
+                player.sendMessage(
+                        TranslationHelper.template(
+                                TextTemplate.of(
+                                        TextColors.AQUA,
+                                        "You don't had ", arg("jobName").color(TextColors.GREEN).build(), " selected."
+                                ),
+                                "messages", "default", "job_leave_not_selected"
+                        ),
+                        ImmutableMap.of(
+                                "jobName", Text.of(job.getName())
+                        )
+                );
             }
 
             return CommandResult.success();
