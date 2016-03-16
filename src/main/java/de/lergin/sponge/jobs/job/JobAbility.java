@@ -1,11 +1,18 @@
 package de.lergin.sponge.jobs.job;
 
+import com.google.common.collect.ImmutableMap;
 import de.lergin.sponge.jobs.data.JobKeys;
+import de.lergin.sponge.jobs.util.TranslationHelper;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.TextTemplate;
+import org.spongepowered.api.text.format.TextColors;
 
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.spongepowered.api.text.TextTemplate.arg;
 
 public abstract class JobAbility {
     private final Job job;
@@ -19,6 +26,46 @@ public abstract class JobAbility {
     }
 
     public abstract boolean startAbility(Player player);
+
+    public void sendStartMessage(Player player){
+        player.sendMessage(
+                TranslationHelper.template(
+                        TextTemplate.of(
+                                TextColors.AQUA, "You started the ability ",
+                                arg("abilityName").color(TextColors.GREEN).build(),
+                                " from ", arg("jobName").color(TextColors.GREEN).build(),
+                                ". You can again use it in ",
+                                arg("coolDown").color(TextColors.GREEN), "s."
+                        ),
+                        "messages", "default", "start_ability"
+                ),
+                ImmutableMap.of(
+                        "jobName", Text.of(job.getName()),
+                        "abilityName", Text.of(this.getName()),
+                        "coolDown", Text.of(this.getCoolDown())
+                )
+        );
+    }
+
+    public void sendCoolDownNotEndedMessage(Player player){
+        player.sendMessage(
+                TranslationHelper.template(
+                        TextTemplate.of(
+                                TextColors.AQUA, "You used the ability ", arg("abilityName").color(TextColors.GREEN).build(),
+                                " from ",
+                                arg("jobName").color(TextColors.GREEN).build(),
+                                " recently so you need to wait ",
+                                arg("time").color(TextColors.GREEN), "s until you can use it again."
+                        ),
+                        "messages", "default", "cannot_start_ability_coolDown"
+                ),
+                ImmutableMap.of(
+                        "jobName", Text.of(job.getName()),
+                        "abilityName", Text.of(this.getName()),
+                        "time", Text.of(this.getSecoundsTillEndOfCoolDown(player))
+                )
+        );
+    }
 
     public boolean canStartAbility(Player player){
         Map<String, Long> abilityUsed = player.get(JobKeys.JOB_ABILITY_USED).orElse(new HashMap<>());
@@ -41,6 +88,12 @@ public abstract class JobAbility {
 
     public int getCoolDown() {
         return coolDown;
+    }
+
+    public long getSecoundsTillEndOfCoolDown(Player player) {
+        Map<String, Long> abilityUsed = player.get(JobKeys.JOB_ABILITY_USED).orElse(new HashMap<>());
+
+        return abilityUsed.getOrDefault(getJob().getId(), 0L + coolDown) + coolDown - Instant.now().getEpochSecond();
     }
 
     public String getName() {

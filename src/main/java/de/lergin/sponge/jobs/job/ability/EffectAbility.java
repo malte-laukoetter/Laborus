@@ -38,14 +38,17 @@ public class EffectAbility extends JobAbility {
 
     @Override
     public boolean startAbility(Player player) {
-        if(!canStartAbility(player))
+        if(!canStartAbility(player)){
+            sendCoolDownNotEndedMessage(player);
             return false;
+        }
 
         List<PotionEffect> potionEffects = player.get(Keys.POTION_EFFECTS).orElse(new ArrayList<>());
         potionEffects.add(effect);
         player.offer(Keys.POTION_EFFECTS, potionEffects);
 
         startCoolDown(player);
+        sendStartMessage(player);
 
         return true;
     }

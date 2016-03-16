@@ -1,7 +1,6 @@
 package de.lergin.sponge.jobs.command;
 
 import de.lergin.sponge.jobs.JobsMain;
-import de.lergin.sponge.jobs.data.JobKeys;
 import de.lergin.sponge.jobs.job.Job;
 import de.lergin.sponge.jobs.util.ConfigHelper;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -77,11 +76,9 @@ public class AbilityStartCommand extends JobCommand {
         if(!(commandSource instanceof Player))
             return CommandResult.empty();
 
-        Player player = (Player) commandSource;
+        final Player player = (Player) commandSource;
 
-        Map<String, Double> jobData = player.get(JobKeys.JOB_DATA).orElse(new HashMap<>());
-
-        Job job =
+        final Job job =
                 (Job) args.getOne(configNode.getNode("params", "job", "description").getString("job")).get();
 
         job.getJobAbility().startAbility(player);

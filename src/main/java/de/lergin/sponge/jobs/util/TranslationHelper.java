@@ -1,9 +1,15 @@
 package de.lergin.sponge.jobs.util;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.reflect.TypeToken;
 import de.lergin.sponge.jobs.JobsMain;
+import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.SimpleConfigurationNode;
+import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.slf4j.Logger;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.TextTemplate;
 import org.spongepowered.api.text.translation.ResourceBundleTranslation;
 import org.spongepowered.api.text.translation.Translatable;
 
@@ -140,6 +146,25 @@ public final class TranslationHelper {
      */
     public static String l(String key, Object... args) {
         return s(logLanguage, key, args);
+    }
+
+    public static TextTemplate template(TextTemplate fallBack, String... path){
+        try {
+            // create a node from the template and replace the content with the stuff from the config so no one can mess
+            // with the args and the config is smaller
+            ConfigurationNode node = SimpleConfigurationNode.root();
+            node.setValue(TypeToken.of(TextTemplate.class), fallBack);
+
+            if(ConfigHelper.getNode((Object[]) path).hasMapChildren()){
+                node.getNode("content").setValue(ConfigHelper.getNode((Object[]) path).getValue());
+            }
+
+            return node.getValue(TypeToken.of(TextTemplate.class));
+        } catch (ObjectMappingException e) {
+            JobsMain.instance().getLogger().warn(TranslationHelper.l("message.error_with_load_of_text_template", (Object[]) path));
+
+            return fallBack;
+        }
     }
 
     /**
