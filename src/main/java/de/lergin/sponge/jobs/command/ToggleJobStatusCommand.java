@@ -13,9 +13,7 @@ import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.TextTemplate;
-import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.text.format.TextStyles;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +75,7 @@ public class ToggleJobStatusCommand extends JobCommand {
                                 "Toggled enabled status of jobSystem to: ",
                                 arg("status").color(TextColors.GREEN).build()
                         ),
-                        "messages", "default", "job_toggle"
+                        "job_toggle"
                 ),
                 ImmutableMap.of(
                         "status", Text.of(!jobsEnabled)

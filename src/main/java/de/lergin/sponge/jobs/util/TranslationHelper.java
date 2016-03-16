@@ -1,6 +1,5 @@
 package de.lergin.sponge.jobs.util;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.reflect.TypeToken;
 import de.lergin.sponge.jobs.JobsMain;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -14,10 +13,7 @@ import org.spongepowered.api.text.translation.ResourceBundleTranslation;
 import org.spongepowered.api.text.translation.Translatable;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.MissingFormatArgumentException;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -148,22 +144,27 @@ public final class TranslationHelper {
         return s(logLanguage, key, args);
     }
 
-    public static TextTemplate template(TextTemplate fallBack, String... path){
+    public static TextTemplate template(TextTemplate baseTemplate, String... path){
         try {
             // create a node from the template and replace the content with the stuff from the config so no one can mess
             // with the args and the config is smaller
             ConfigurationNode node = SimpleConfigurationNode.root();
-            node.setValue(TypeToken.of(TextTemplate.class), fallBack);
+            node.setValue(TypeToken.of(TextTemplate.class), baseTemplate);
 
-            if(ConfigHelper.getNode((Object[]) path).hasMapChildren()){
-                node.getNode("content").setValue(ConfigHelper.getNode((Object[]) path).getValue());
+            List<Object> path2 = new ArrayList<>();
+            path2.add("messages");
+            path2.add("default"); //TODO: multi lang support
+            Collections.addAll(path2, path);
+
+            if(ConfigHelper.getNode(path2.toArray()).hasMapChildren()){
+                node.getNode("content").setValue(ConfigHelper.getNode(path2.toArray()).getValue());
             }
 
             return node.getValue(TypeToken.of(TextTemplate.class));
         } catch (ObjectMappingException e) {
-            JobsMain.instance().getLogger().warn(TranslationHelper.l("message.error_with_load_of_text_template", (Object[]) path));
+            JobsMain.instance().getLogger().warn(TranslationHelper.l("message.error_with_load_of_text_template", path));
 
-            return fallBack;
+            return baseTemplate;
         }
     }
 

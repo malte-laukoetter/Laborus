@@ -37,7 +37,7 @@ public abstract class JobAbility {
                                 ". You can use it again in ",
                                 arg("coolDown").color(TextColors.GREEN), "s."
                         ),
-                        "messages", "default", "start_ability"
+                        "start_ability"
                 ),
                 ImmutableMap.of(
                         "jobName", Text.of(job.getName()),
@@ -57,7 +57,7 @@ public abstract class JobAbility {
                                 " recently so you need to wait ",
                                 arg("time").color(TextColors.GREEN), "s until you can use it again."
                         ),
-                        "messages", "default", "cannot_start_ability_coolDown"
+                        "cannot_start_ability_coolDown"
                 ),
                 ImmutableMap.of(
                         "jobName", Text.of(job.getName()),

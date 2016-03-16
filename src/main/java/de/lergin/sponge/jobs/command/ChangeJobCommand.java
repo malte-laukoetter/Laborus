@@ -18,10 +18,8 @@ import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.TextTemplate;
-import org.spongepowered.api.text.action.ClickAction;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.text.format.TextStyle;
 import org.spongepowered.api.text.format.TextStyles;
 
 import java.util.*;
@@ -135,7 +133,7 @@ public class ChangeJobCommand extends JobCommand{
                                                     .style(TextStyles.UNDERLINE).build(),
                                             " another one."
                                     ),
-                                    "messages", "default", "job_join_too_many_jobs"
+                                    "job_join_too_many_jobs"
                             ),
                             ImmutableMap.of(
                                     "jobName", Text.of(job.getName()),
@@ -152,7 +150,7 @@ public class ChangeJobCommand extends JobCommand{
                                         TextColors.AQUA,
                                         "You have joined ", arg("jobName").color(TextColors.GREEN).build(), "."
                                 ),
-                                "messages", "default", "job_join_success"
+                                "job_join_success"
                         ),
                         ImmutableMap.of(
                                 "jobName", Text.of(job.getName())
@@ -167,7 +165,7 @@ public class ChangeJobCommand extends JobCommand{
                                         TextColors.AQUA,
                                         "You already joined ", arg("jobName").color(TextColors.GREEN).build(), "."
                                 ),
-                                "messages", "default", "job_join_already_selected"
+                                "job_join_already_selected"
                         ),
                         ImmutableMap.of(
                                 "jobName", Text.of(job.getName())
@@ -187,7 +185,7 @@ public class ChangeJobCommand extends JobCommand{
                                         TextColors.AQUA,
                                         "You have leaved ", arg("jobName").color(TextColors.GREEN).build(), "."
                                 ),
-                                "messages", "default", "job_leave_success"
+                                "job_leave_success"
                         ),
                         ImmutableMap.of(
                                 "jobName", Text.of(job.getName())
@@ -200,7 +198,7 @@ public class ChangeJobCommand extends JobCommand{
                                         TextColors.AQUA,
                                         "You don't had ", arg("jobName").color(TextColors.GREEN).build(), " selected."
                                 ),
-                                "messages", "default", "job_leave_not_selected"
+                                "job_leave_not_selected"
                         ),
                         ImmutableMap.of(
                                 "jobName", Text.of(job.getName())

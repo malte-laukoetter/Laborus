@@ -134,7 +134,7 @@ public class AddXpCommand extends JobCommand {
                                     " to the job ", arg("jobName").color(TextColors.GREEN).build(),
                                     "."
                             ),
-                            "messages", "default", "add_xp_other"
+                            "add_xp_other"
                     ),
                     ImmutableMap.of(
                             "jobName", Text.of(job.getName()),
@@ -153,7 +153,7 @@ public class AddXpCommand extends JobCommand {
                                     " to your job ", arg("jobName").color(TextColors.GREEN).build(),
                                     "."
                             ),
-                            "messages", "default", "add_xp_other_get"
+                            "add_xp_other_get"
                     ),
                     ImmutableMap.of(
                             "jobName", Text.of(job.getName()),
@@ -171,7 +171,7 @@ public class AddXpCommand extends JobCommand {
                                     " to ", arg("jobName").color(TextColors.GREEN).build(),
                                     "."
                             ),
-                            "messages", "default", "add_xp_self"
+                            "add_xp_self"
                     ),
                     ImmutableMap.of(
                             "jobName", Text.of(job.getName()),

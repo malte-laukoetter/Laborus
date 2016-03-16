@@ -7,7 +7,6 @@ import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.action.InteractEvent;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.text.Text;
 
 import java.util.List;
 
@@ -25,10 +24,7 @@ public class InteractListener extends JobListener<ItemType> {
                 player.getItemInHand().isPresent()) {
             final ItemType ITEM_TYPE = player.getItemInHand().get().getItem();
 
-
             if (JOB_ITEM_TYPES.contains(ITEM_TYPE)) {
-                player.sendMessage(Text.of(ITEM_TYPE.getName()));
-
                 event.setCancelled(
                         !JOB.onJobListener(ITEM_TYPE, player, JobAction.ITEM_USE)
                 );

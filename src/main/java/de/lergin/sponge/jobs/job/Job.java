@@ -1,5 +1,6 @@
 package de.lergin.sponge.jobs.job;
 
+import com.google.common.collect.ImmutableMap;
 import de.lergin.sponge.jobs.JobsMain;
 import de.lergin.sponge.jobs.data.JobKeys;
 import de.lergin.sponge.jobs.data.jobs.JobDataManipulatorBuilder;
@@ -18,12 +19,16 @@ import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameMode;
-import org.spongepowered.api.text.channel.MessageChannel;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.TextTemplate;
 import org.spongepowered.api.text.chat.ChatTypes;
+import org.spongepowered.api.text.format.TextColors;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static org.spongepowered.api.text.TextTemplate.arg;
 
 /**
  * class for Jobs
@@ -151,15 +156,40 @@ public class Job {
         this.level.stream().filter(level -> level > oldXp && level <= newXp).forEach(level -> {
             //TODO: setting
             player.sendMessage(
-                    TranslationHelper.p(player, "player.info.job.level_up", getName(), this.level.indexOf(level))
+                    TranslationHelper.template(
+                            TextTemplate.of(
+                                    TextColors.AQUA,
+                                    "You have reached level ",
+                                    arg("level").color(TextColors.GREEN).build(),
+                                    " in the job ",
+                                    arg("jobName").color(TextColors.GREEN).build()
+                            ),
+                            "job_level_up"
+                    ),
+                    ImmutableMap.of(
+                            "level", Text.of(this.level.indexOf(level)),
+                            "jobName", Text.of(this.getName())
+                    )
             );
         });
 
-
-        if(newXp != 0){
+        if(amount != 0){
             //TODO: setting
-            player.sendMessage(ChatTypes.ACTION_BAR,
-                    TranslationHelper.p(player, "player.info.job.xp.action_bar", getName(), getXp(player))
+            player.sendMessage(
+                    ChatTypes.ACTION_BAR,
+                    TranslationHelper.template(
+                            TextTemplate.of(
+                                    arg("jobName").build(),
+                                    ": ",
+                                    arg("xp").build()
+                            ),
+                            "job_xp_action_bar"
+                    ).apply(
+                        ImmutableMap.of(
+                                "xp", Text.of(newXp),
+                                "jobName", Text.of(this.getName())
+                        )
+                    ).build()
             );
         }
     }
@@ -201,8 +231,14 @@ public class Job {
 
                     return true;
                 }else{
-                    player.sendMessage(ChatTypes.ACTION_BAR,
-                            TranslationHelper.p(player, "player.warning.job.not_enough_xp")
+                    player.sendMessage(
+                            ChatTypes.ACTION_BAR,
+                            TranslationHelper.template(
+                                    TextTemplate.of(
+                                            "Your level is too low to do this."
+                                    ),
+                                    "job_not_enough_level_action_bar"
+                            ).apply().build()
                     );
                     return false;
                 }
