@@ -39,9 +39,76 @@ jobs: {
 ## Configuration
 
 ### Jobs
+
+##### General settings
+
+|Name|Description|Default value|
+|----|-----------|-------------|
+|name|the display name of the job|""|
+|description|a description of the job|""|
+|use_default_level|does the job uses the default levels|true|
+|level|the levels of the job <br> see Level|[]|
+|bonus|a list of jobBoni|[]|
+|ability|the ability of this job||
+|ACTION_NAME <br>-> needs to be replaced by the name of the setting|the settings for the action|{}|
+
 #### Actions
+
+##### Settings for JobItems
+
+|Name|Description|Default value|
+|----|-----------|-------------|
+|xp|the amount of xp the player gets if he does the action with this item|0.0|
+|needLevel|the level the player needs to have to do this action|0|
+
+##### Possible actions:
+
+|Name|Desctription|info|
+|----|------------|----|
+|destroyBlocks|for the destruction of blocks
+|placeBlocks|placing of blocks
+|killEntities|killing of entities|can't be canceled -> no needLevel
+|damageEntities|damaging of entities
+|useItems|interaction with the item in the hand (right and left click)
+|tameEntities|when an entity is tamed
+
 #### Boni
+
+
+##### Settings
+
+|Name|Description|Default value|
+|----|-----------|-------------|
+|probability|the probability the boni will be used at an action|0.05|
+|sendMessage|should a message be send to the player if the boni is rewarded|false|
+|message|the message that will be send if sendMessage is true|""|
+|condition.minLevel|the min. level the player need to have to get this boni|Integer.MIN_VALUE|
+|condition.maxLevel|the max. level the player is allowed to have to get this boni|Integer.MAX_VALUE|
+|condition.onlySelected|only reward the boni if the job is selected|true|
+
+##### Possible actions:
+
+|Name|Works with Jobactions|Desctription|special config settings
+|----|------------|---|---|
+|multiDrop|destroyBlocks, placeBlocks|drops the item of the action another time|itemMultiplier -> amount of items that should be droped extra
+|ep|all|drops some ep (not job xp)|minEp -> minimum of ep droped <br> maxEp -> maximum of ep droped
+|itemRepair|all, needs an item in the hand slot with durability|repairs the item by a given percentage|minPercentage -> minimum the item gets repaired <br> maxPercentage -> maximum the item gets repaired
+|itemDrop|all|drops an extra item|itemType -> the itemType of the item <br> amount -> the amount of items that should be droped
+
 #### Ability
+
+##### Settings
+
+|Name|Description|Default value|
+|----|-----------|-------------|
+|name|the name of the ability|none|
+|coolDown|amount of seconds between uses|60|
+
+##### Possible abilities:
+
+|Name|Desctription|special config settings|
+|----|------------|---|
+|effect|adds a potion effect to the player|amplifier -> effect level<br>duration -> amount of seconds the effect holds on<br>type -> potion type<br>particles -> should the particles not be hidden<br>ambience -> the ambience setting of a effect
 
 ### Commands
 

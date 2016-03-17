@@ -57,7 +57,7 @@ public class Job {
 
         List<? extends ConfigurationNode> levelConfig;
 
-        if(jobConfig.getNode("use_default_level").getBoolean(false)){
+        if(jobConfig.getNode("use_default_level").getBoolean(true)){
             levelConfig = ConfigHelper.getNode("level").getChildrenList();
         }else{
             levelConfig = jobConfig.getNode("level").getChildrenList();
