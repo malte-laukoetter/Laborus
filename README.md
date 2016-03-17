@@ -1,4 +1,4 @@
-# Jobs
+# Laborus
 a Minecraft job plugin for [Sponge](https://Spongepowered.org "SpongePowered.org")
 
 1. Features
