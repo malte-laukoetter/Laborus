@@ -36,6 +36,33 @@ jobs: {
 }
 ```
 
+### Commands
+
+#### /jobs addXP <job> <xp> [player]
+
+This command adds the given amount of xp to the xp of the job.
+
+Permission: `laborus.commands.addXp`
+Permission for player arg: `laborus.commands.addXp.outher_player`
+
+#### /jobs change <join|leave> <job>
+
+Joins or leaves the job. A job that is joined can give more xp for actions and special boni. The amount of jobs that can be joined can be limited.
+
+Permission: none / can be set in the config
+
+#### /jobs toggle
+
+Activates or deactivates the job system for the player that executes this command.
+
+Permission: `laborus.commands.toggle`
+
+#### /jobs ability <job>
+
+Starts the ability of the job.
+
+Permission: `laborus.commands.ability`
+
 ## Configuration
 
 ### Jobs
