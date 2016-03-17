@@ -4,6 +4,7 @@ import com.google.common.reflect.TypeToken;
 import de.lergin.sponge.laborus.JobsMain;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.SimpleConfigurationNode;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.slf4j.Logger;
 import org.spongepowered.api.entity.living.player.Player;
@@ -13,6 +14,7 @@ import org.spongepowered.api.text.translation.ResourceBundleTranslation;
 import org.spongepowered.api.text.translation.Translatable;
 
 import javax.annotation.Nullable;
+import java.io.IOException;
 import java.util.*;
 import java.util.function.Function;
 
@@ -144,20 +146,31 @@ public final class TranslationHelper {
         return s(logLanguage, key, args);
     }
 
-    public static TextTemplate template(TextTemplate baseTemplate, String... path){
+
+    private static Map<String, ConfigurationNode> translationNodes = new HashMap<>();
+
+    public static TextTemplate template(TextTemplate baseTemplate, String lang, String... path){
         try {
             // create a node from the template and replace the content with the stuff from the config so no one can mess
             // with the args and the config is smaller
             ConfigurationNode node = SimpleConfigurationNode.root();
             node.setValue(TypeToken.of(TextTemplate.class), baseTemplate);
 
-            List<Object> path2 = new ArrayList<>();
-            path2.add("messages");
-            path2.add("default"); //TODO: multi lang support
-            Collections.addAll(path2, path);
-
-            if(ConfigHelper.getNode(path2.toArray()).hasMapChildren()){
-                node.getNode("content").setValue(ConfigHelper.getNode(path2.toArray()).getValue());
+            if(translationNodes.containsKey(lang) &&
+                    translationNodes.get(lang).getNode((Object[]) path).hasMapChildren()){
+                node.getNode("content").setValue(
+                        translationNodes.get(lang).getNode((Object[]) path).getValue()
+                );
+            }else if(translationNodes.containsKey(lang.split("-")[0]) &&
+                    translationNodes.get(lang.split("-")[0]).getNode((Object[]) path).hasMapChildren()){
+                node.getNode("content").setValue(
+                        translationNodes.get(lang.split("-")[0]).getNode((Object[]) path).getValue()
+                );
+            }else if(translationNodes.containsKey("default") &&
+                    translationNodes.get("default").getNode((Object[]) path).hasMapChildren()){
+                node.getNode("content").setValue(
+                        translationNodes.get("default").getNode((Object[]) path).getValue()
+                );
             }
 
             return node.getValue(TypeToken.of(TextTemplate.class));
@@ -165,6 +178,39 @@ public final class TranslationHelper {
             JobsMain.instance().getLogger().warn(TranslationHelper.l("message.error_with_load_of_text_template", (Object[]) path));
 
             return baseTemplate;
+        }
+    }
+
+    public static void init(){
+        for(ConfigurationNode node : ConfigHelper.getNode("messages").getChildrenMap().values()){
+            System.out.println(node.getKey());
+
+            if(node.hasMapChildren()){
+                translationNodes.put((String) node.getKey(), node);
+                JobsMain.instance().getLogger().info(
+                        TranslationHelper.l("info.translation.init", (String) node.getKey())
+                );
+            }else{
+                String path = node.getString("");
+
+                if(!path.equals("")){
+                    try {
+                        HoconConfigurationLoader loader =
+                                HoconConfigurationLoader.builder()
+                                        .setPath(JobsMain.instance().configDir.getParent().resolve(path))
+                                        .build();
+
+                        translationNodes.put((String) node.getKey(), loader.load());
+                        JobsMain.instance().getLogger().info(
+                                TranslationHelper.l("info.translation.init", (String) node.getKey())
+                        );
+                    } catch (IOException e) {
+                        JobsMain.instance().getLogger().warn("warn.config.could_not_load.translation", node.getKey());
+                    }
+                }else{
+                    JobsMain.instance().getLogger().warn("warn.config.could_not_load.translation", node.getKey());
+                }
+            }
         }
     }
 

@@ -37,6 +37,7 @@ public abstract class JobAbility {
                                 ". You can use it again in ",
                                 arg("coolDown").color(TextColors.GREEN), "s."
                         ),
+                        player.getLocale().toLanguageTag(),
                         "start_ability"
                 ),
                 ImmutableMap.of(
@@ -57,6 +58,7 @@ public abstract class JobAbility {
                                 " recently so you need to wait ",
                                 arg("time").color(TextColors.GREEN), "s until you can use it again."
                         ),
+                        player.getLocale().toLanguageTag(),
                         "cannot_start_ability_coolDown"
                 ),
                 ImmutableMap.of(

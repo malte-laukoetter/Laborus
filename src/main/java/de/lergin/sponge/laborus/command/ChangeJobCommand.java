@@ -133,6 +133,7 @@ public class ChangeJobCommand extends JobCommand{
                                                     .style(TextStyles.UNDERLINE).build(),
                                             " another one."
                                     ),
+                                    player.getLocale().toLanguageTag(),
                                     "job_join_too_many_jobs"
                             ),
                             ImmutableMap.of(
@@ -150,6 +151,7 @@ public class ChangeJobCommand extends JobCommand{
                                         TextColors.AQUA,
                                         "You have joined ", arg("jobName").color(TextColors.GREEN).build(), "."
                                 ),
+                                player.getLocale().toLanguageTag(),
                                 "job_join_success"
                         ),
                         ImmutableMap.of(
@@ -165,6 +167,7 @@ public class ChangeJobCommand extends JobCommand{
                                         TextColors.AQUA,
                                         "You already joined ", arg("jobName").color(TextColors.GREEN).build(), "."
                                 ),
+                                player.getLocale().toLanguageTag(),
                                 "job_join_already_selected"
                         ),
                         ImmutableMap.of(
@@ -185,6 +188,7 @@ public class ChangeJobCommand extends JobCommand{
                                         TextColors.AQUA,
                                         "You have leaved ", arg("jobName").color(TextColors.GREEN).build(), "."
                                 ),
+                                player.getLocale().toLanguageTag(),
                                 "job_leave_success"
                         ),
                         ImmutableMap.of(
@@ -198,6 +202,7 @@ public class ChangeJobCommand extends JobCommand{
                                         TextColors.AQUA,
                                         "You don't had ", arg("jobName").color(TextColors.GREEN).build(), " selected."
                                 ),
+                                player.getLocale().toLanguageTag(),
                                 "job_leave_not_selected"
                         ),
                         ImmutableMap.of(

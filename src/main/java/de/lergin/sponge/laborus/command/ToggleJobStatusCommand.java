@@ -75,6 +75,7 @@ public class ToggleJobStatusCommand extends JobCommand {
                                 "Toggled enabled status of jobSystem to: ",
                                 arg("status").color(TextColors.GREEN).build()
                         ),
+                        player.getLocale().toLanguageTag(),
                         "job_toggle"
                 ),
                 ImmutableMap.of(

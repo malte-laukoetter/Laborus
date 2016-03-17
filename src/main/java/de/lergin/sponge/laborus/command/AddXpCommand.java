@@ -134,6 +134,7 @@ public class AddXpCommand extends JobCommand {
                                     " to the job ", arg("jobName").color(TextColors.GREEN).build(),
                                     "."
                             ),
+                            commandSource.getLocale().toLanguageTag(),
                             "add_xp_other"
                     ),
                     ImmutableMap.of(
@@ -153,6 +154,7 @@ public class AddXpCommand extends JobCommand {
                                     " to your job ", arg("jobName").color(TextColors.GREEN).build(),
                                     "."
                             ),
+                            player.getLocale().toLanguageTag(),
                             "add_xp_other_get"
                     ),
                     ImmutableMap.of(
@@ -171,6 +173,7 @@ public class AddXpCommand extends JobCommand {
                                     " to ", arg("jobName").color(TextColors.GREEN).build(),
                                     "."
                             ),
+                            commandSource.getLocale().toLanguageTag(),
                             "add_xp_self"
                     ),
                     ImmutableMap.of(

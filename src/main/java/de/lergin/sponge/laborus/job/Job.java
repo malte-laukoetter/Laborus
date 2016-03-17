@@ -164,6 +164,7 @@ public class Job {
                                     " in the job ",
                                     arg("jobName").color(TextColors.GREEN).build()
                             ),
+                            player.getLocale().toLanguageTag(),
                             "job_level_up"
                     ),
                     ImmutableMap.of(
@@ -183,6 +184,7 @@ public class Job {
                                     ": ",
                                     arg("xp").build()
                             ),
+                            player.getLocale().toLanguageTag(),
                             "job_xp_action_bar"
                     ).apply(
                         ImmutableMap.of(
@@ -237,6 +239,7 @@ public class Job {
                                     TextTemplate.of(
                                             "Your level is too low to do this."
                                     ),
+                                    player.getLocale().toLanguageTag(),
                                     "job_not_enough_level_action_bar"
                             ).apply().build()
                     );

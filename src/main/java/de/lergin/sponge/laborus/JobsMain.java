@@ -72,6 +72,7 @@ public class JobsMain {
 
         //translation setup
         initTranslations();
+        TranslationHelper.init();
     }
 
     @Listener

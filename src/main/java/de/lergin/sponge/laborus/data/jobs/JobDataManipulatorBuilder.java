@@ -54,11 +54,27 @@ public class JobDataManipulatorBuilder implements DataManipulatorBuilder<JobData
                             .map(string -> (String) string)
                             .collect(Collectors.toSet());
 
+            Map<String,Double> jobData;
+            Optional<? extends Map<?,?>> optional = dataView.getMap(JobKeys.JOB_DATA.getQuery());
+            if(optional.isPresent()){
+                jobData = (Map<String,Double>) optional.get();
+            }else{
+                jobData = new HashMap<>();
+            }
+
+            Map<String, Long> jobAbilityUsed;
+            Optional<? extends Map<?,?>> optional2 = dataView.getMap(JobKeys.JOB_ABILITY_USED.getQuery());
+            if(optional2.isPresent()){
+                jobAbilityUsed = (Map<String, Long>) optional2.get();
+            }else{
+                jobAbilityUsed = new HashMap<>();
+            }
+
             return Optional.of(new JobData(
-                    (Map<String,Double>) dataView.getMap(JobKeys.JOB_DATA.getQuery()).get(),
+                    jobData,
                     dataView.getBoolean(JobKeys.JOB_ENABLED.getQuery()).orElse(true),
                     selectedJobs,
-                    (Map<String,Long>) dataView.getMap(JobKeys.JOB_ABILITY_USED.getQuery()).get()
+                    jobAbilityUsed
             ));
         }
         return Optional.empty();
