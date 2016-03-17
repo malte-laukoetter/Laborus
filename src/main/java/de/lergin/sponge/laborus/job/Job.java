@@ -164,7 +164,6 @@ public class Job {
         }
 
         this.level.stream().filter(level -> level > oldXp && level <= newXp).forEach(level -> {
-            //TODO: setting
             player.sendMessage(
                     TranslationHelper.template(
                             TextTemplate.of(
@@ -185,7 +184,6 @@ public class Job {
         });
 
         if(amount != 0){
-            //TODO: setting
             player.sendMessage(
                     ChatTypes.ACTION_BAR,
                     TranslationHelper.template(

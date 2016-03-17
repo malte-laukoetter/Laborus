@@ -33,7 +33,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
 
-@Plugin(id = "de.lergin.sponge.laborus", name = "Laborus", version = "0.1", description = "a job plugin", authors = {"Lergin"})
+@Plugin(id = "de.lergin.sponge.laborus", name = "Laborus", version = "1.0", description = "a job plugin", authors = {"Lergin"})
 public class JobsMain {
     @Inject
     @DefaultConfig(sharedRoot = false)
@@ -119,7 +119,7 @@ public class JobsMain {
             if(gameModeOptional.isPresent()){
                 this.enabledGameModes.add(gameModeOptional.get());
             }else{
-                //todo send a message to the log
+                logger.warn(TranslationHelper.l("warn.not_a_gamemode", gamemode));
             }
         }
     }

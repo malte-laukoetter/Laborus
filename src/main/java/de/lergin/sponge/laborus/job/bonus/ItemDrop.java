@@ -1,7 +1,9 @@
 package de.lergin.sponge.laborus.job.bonus;
 
+import de.lergin.sponge.laborus.JobsMain;
 import de.lergin.sponge.laborus.job.JobBonus;
 import de.lergin.sponge.laborus.job.JobItem;
+import de.lergin.sponge.laborus.util.TranslationHelper;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.CatalogTypes;
 import org.spongepowered.api.Sponge;
@@ -29,7 +31,7 @@ public class ItemDrop extends JobBonus {
                     config.getNode("amount").getInt(1)
             );
         }else{
-            //TODO: error message
+            JobsMain.instance().getLogger().warn(TranslationHelper.l("warn.not_a_item", config.getNode("item").getString()));
         }
     }
 

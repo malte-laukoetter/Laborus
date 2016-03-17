@@ -20,8 +20,6 @@ import java.util.List;
 
 import static org.spongepowered.api.text.TextTemplate.arg;
 
-// TODO: add a player argument 
-
 /**
  * command for enabling and disabling the job system for specific players
  */
