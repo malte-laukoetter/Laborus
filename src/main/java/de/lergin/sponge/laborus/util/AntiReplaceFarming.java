@@ -13,14 +13,14 @@ import java.sql.*;
  * and replacing of blocks
  */
 public final class AntiReplaceFarming {
-    final static boolean USE_ANTI_REPLACE = ConfigHelper.getNode("setting", "use_anti_replace").getBoolean(false);
+    private final static boolean USE_ANTI_REPLACE = ConfigHelper.getNode("setting", "use_anti_replace").getBoolean(false);
 
     /**
      * creates a connection with the database
      * @return the DB-Connection
      * @throws SQLException
      */
-    public static Connection getConnection() throws SQLException {
+    private static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(
                 "jdbc:h2:./" + JobsMain.instance().configDir.getParent().toString() + "/laborus",
                 "",
@@ -39,7 +39,7 @@ public final class AntiReplaceFarming {
         if(!USE_ANTI_REPLACE)
             return true;
 
-        Connection conn = null;
+        Connection conn;
         try {
             conn = getConnection();
 
@@ -79,7 +79,7 @@ public final class AntiReplaceFarming {
         if(!USE_ANTI_REPLACE)
             return;
 
-        Connection conn = null;
+        Connection conn;
         try {
             conn = getConnection();
             PreparedStatement getData = conn.prepareStatement("INSERT INTO anti_replace_farming(world, x, y, z, blockstate, jobaction) VALUES (?, ?, ?, ?, ?, ?)");

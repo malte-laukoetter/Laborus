@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EffectAbility extends JobAbility {
-    PotionEffect effect;
+    private final PotionEffect effect;
 
     public EffectAbility(Job job, ConfigurationNode node) {
         super(

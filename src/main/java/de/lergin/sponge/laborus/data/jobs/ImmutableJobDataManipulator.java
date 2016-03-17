@@ -12,10 +12,10 @@ import org.spongepowered.api.data.value.immutable.ImmutableValue;
 import java.util.*;
 
 public class ImmutableJobDataManipulator extends AbstractImmutableData<ImmutableJobDataManipulator, JobData> {
-    Map<String, Double> jobs = new HashMap<>();
-    boolean jobsEnabled = true;
-    Set<String> selectedJobs = new HashSet<>();
-    Map<String, Long> abilityUsed = new HashMap<>();
+    private Map<String, Double> jobs = new HashMap<>();
+    private boolean jobsEnabled = true;
+    private Set<String> selectedJobs = new HashSet<>();
+    private Map<String, Long> abilityUsed = new HashMap<>();
 
     protected ImmutableJobDataManipulator(Map<String, Double> jobs, boolean jobsEnabled, Set<String> selectedJobs, Map<String, Long> abilityUsed) {
         this.jobs.putAll(jobs);

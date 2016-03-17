@@ -5,7 +5,6 @@ import de.lergin.sponge.laborus.data.JobKeys;
 import de.lergin.sponge.laborus.util.BlockStateComparator;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
-import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
@@ -70,7 +69,7 @@ public abstract class JobBonus {
 
     /**
      * executes the bonus with the probability of {@link this.probability}
-     * @param item the item the {@link de.lergin.sponge.jobs.job.JobAction} is happening with
+     * @param item the item the {@link de.lergin.sponge.laborus.job.JobAction} is happening with
      */
     public abstract void useBonus(JobItem item, Player player);
 

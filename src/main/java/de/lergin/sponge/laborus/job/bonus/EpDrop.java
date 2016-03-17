@@ -8,7 +8,6 @@ import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.text.Text;
 import org.spongepowered.api.world.extent.Extent;
 
 import java.util.Optional;
@@ -18,8 +17,8 @@ import java.util.Random;
  * Bonus that drops some extra ep
  */
 public class EpDrop extends JobBonus {
-    int minEp;
-    int maxEp;
+    private final int minEp;
+    private final int maxEp;
 
     @Override
     public void useBonus(JobItem item, Player player) {

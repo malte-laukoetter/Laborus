@@ -10,7 +10,6 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.text.Text;
 
 import java.util.Optional;
 
@@ -18,7 +17,7 @@ import java.util.Optional;
  * bonus drop of the block
  */
 public class MultiDrop extends JobBonus {
-    int dropMultiplier;
+    private final int dropMultiplier;
 
     @Override
     public void useBonus(JobItem item, Player player) {

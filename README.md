@@ -15,14 +15,14 @@ a Minecraft job plugin for [Sponge](https://Spongepowered.org "SpongePowered.org
 ## Features
 
 * Jobs in Minecraft
-* reward the placing and destroying of Blocks, the using of items and the killing and thaming of mobs
-* Job Abilitys that eg. allow you to destroy blocks faster for 3 minutes every two hours
+* reward the placing and destroying of Blocks, the using of items and the killing and taming of mobs
+* Job Abilities that eg. allow you to destroy blocks faster for 3 minutes every two hours
 * anti replace farming system that blocks the rewarding of the placing and destroying of blocks on the same spot so the economy isn't as easily exploidable 
 * only allow doing the actions (eg. destroying of a block) after a specific level
 * Job Boni like special or multiple drops or repairing of items
 * completly configurable and translatable
 
-For full lists of all possible actions, boni and abilitys klick here 
+A full lists of all possible actions, boni and abilities you can find in the Configuration section.
 
 ## How to use
 To use this plugin you need a [Sponge](https://spongepowered.org) Server that is supporting the SpongeApi Version 4.0.
@@ -50,7 +50,7 @@ jobs: {
 |level|the levels of the job <br> see Level|[]|
 |bonus|a list of jobBoni|[]|
 |ability|the ability of this job||
-|ACTION_NAME <br>-> needs to be replaced by the name of the setting|the settings for the action|{}|
+|ACTION_NAME <br>-> needs to be replaced by the name of the action|the settings for the action|{}|
 
 #### Actions
 
@@ -63,7 +63,7 @@ jobs: {
 
 ##### Possible actions:
 
-|Name|Desctription|info|
+|Name|Description|info|
 |----|------------|----|
 |destroyBlocks|for the destruction of blocks
 |placeBlocks|placing of blocks
@@ -85,10 +85,12 @@ jobs: {
 |condition.minLevel|the min. level the player need to have to get this boni|Integer.MIN_VALUE|
 |condition.maxLevel|the max. level the player is allowed to have to get this boni|Integer.MAX_VALUE|
 |condition.onlySelected|only reward the boni if the job is selected|true|
+|condition.actions|only reward if the action that starts this boni is in this list. <br> A comma separated list of actionNames within []|[] -> all actions will start the boni|
+|condition.items|only reward if the item that starts this boni is in this list. <br> A comma separated list of itemNames within []|[] -> all items will start the boni|
 
 ##### Possible actions:
 
-|Name|Works with Jobactions|Desctription|special config settings
+|Name|Works with Jobactions|Description|special config settings
 |----|------------|---|---|
 |multiDrop|destroyBlocks, placeBlocks|drops the item of the action another time|itemMultiplier -> amount of items that should be droped extra
 |ep|all|drops some ep (not job xp)|minEp -> minimum of ep droped <br> maxEp -> maximum of ep droped

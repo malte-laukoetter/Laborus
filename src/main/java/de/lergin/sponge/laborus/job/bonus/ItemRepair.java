@@ -8,7 +8,6 @@ import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.text.Text;
 
 import java.util.Optional;
 
@@ -16,8 +15,8 @@ import java.util.Optional;
  * Bonus that repairs the item in the hand by a percentage between maxPercent and minPercent
  */
 public class ItemRepair extends JobBonus {
-    double maxPercent;
-    double minPercent;
+    private final double maxPercent;
+    private final double minPercent;
 
     @Override
     public void useBonus(JobItem item, Player player) {

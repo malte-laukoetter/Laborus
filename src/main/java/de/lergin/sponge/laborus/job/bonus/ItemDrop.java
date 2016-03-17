@@ -9,12 +9,11 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.text.Text;
 
 import java.util.Optional;
 
 public class ItemDrop extends JobBonus {
-    ItemStack itemStack;
+    private ItemStack itemStack;
 
     public ItemDrop(ConfigurationNode config) {
         super(config);

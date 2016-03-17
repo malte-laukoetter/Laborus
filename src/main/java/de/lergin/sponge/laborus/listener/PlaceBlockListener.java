@@ -6,7 +6,6 @@ import de.lergin.sponge.laborus.util.AntiReplaceFarming;
 import de.lergin.sponge.laborus.util.BlockStateComparator;
 import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.block.BlockState;
-import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;

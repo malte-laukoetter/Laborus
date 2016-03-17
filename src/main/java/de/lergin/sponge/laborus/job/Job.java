@@ -37,10 +37,10 @@ public class Job {
     private final String NAME;
     private final String ID;
     private final JobAbility jobAbility;
-    private Map<JobAction, List<JobItem>> jobActions = new HashMap<>();
-    private List<GameMode> enabledGameModes = JobsMain.instance().enabledGameModes;
-    private Set<JobBonus> jobBonuses = new HashSet<>();
-    private List<Integer> level = new ArrayList<>();
+    private final Map<JobAction, List<JobItem>> jobActions = new HashMap<>();
+    private final List<GameMode> enabledGameModes = JobsMain.instance().enabledGameModes;
+    private final Set<JobBonus> jobBonuses = new HashSet<>();
+    private final List<Integer> level = new ArrayList<>();
 
     /**
      * create a new Job from a config node
@@ -204,10 +204,10 @@ public class Job {
     }
 
     /**
-     * called by the {@link de.lergin.sponge.jobs.listener.JobListener} and handles the awarding of the player
+     * called by the {@link de.lergin.sponge.laborus.listener.JobListener} and handles the awarding of the player
      * @param item the item of the event
      * @param player the {@link Player} that has caused the event
-     * @param action the {@link JobAction} of the {@link de.lergin.sponge.jobs.listener.JobListener}
+     * @param action the {@link JobAction} of the {@link de.lergin.sponge.laborus.listener.JobListener}
      * @return true if the {@link Player} was awarded
      */
     public boolean onJobListener(Object item, Player player, JobAction action){
@@ -303,7 +303,7 @@ public class Job {
 
         jobActions.put(
                 action,
-                generateStringJobItemList(jobActionNode.getChildrenMap().values(), action.getCatalogType())
+                generateStringJobItemList(jobActionNode.getChildrenMap().values())
         );
 
         try {
@@ -350,10 +350,9 @@ public class Job {
     /**
      * generates a {@link List} of {@link JobItem}s from a {@link Collection} of {@link ConfigurationNode}s
      * @param nodes a {@link Collection} of {@link ConfigurationNode}s with the data for the {@link JobItem}s
-     * @param catalogType the {@link Class} of the {@link CatalogType} of the {@link JobItem}s
      * @return a {@link List} of the {@link JobItem}s that are created by the Config
      */
-    private List<JobItem> generateStringJobItemList(Collection<? extends ConfigurationNode> nodes, Class<? extends CatalogType> catalogType){
+    private List<JobItem> generateStringJobItemList(Collection<? extends ConfigurationNode> nodes){
         return nodes.stream().map(jobItemNode -> new JobItem(
                 jobItemNode.getNode("xp").getDouble(0.0),
                 jobItemNode.getNode("needLevel").getInt(0),

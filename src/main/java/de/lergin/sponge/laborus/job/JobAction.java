@@ -16,8 +16,8 @@ public enum JobAction {
     ITEM_USE(InteractListener.class, CatalogTypes.ITEM_TYPE),
     PLACE(PlaceBlockListener.class, CatalogTypes.BLOCK_TYPE);
 
-    Class listener;
-    Class<? extends CatalogType> catalogType;
+    final Class listener;
+    final Class<? extends CatalogType> catalogType;
 
     /**
      * creates a new JobAction

@@ -21,16 +21,12 @@ public class BlockStateComparator {
      * @param blockString the String of a {@link BlockState} that will be compared
      * @return true if the blockState has all data that the blockString has
      */
-    public static boolean compare(BlockState blockState, String blockString){
+    public static boolean compare(BlockState blockState, String blockString) {
         Optional<BlockType> optional = Sponge.getRegistry().getType(CatalogTypes.BLOCK_TYPE, blockString.split("\\[")[0]);
 
-        if(!optional.isPresent() || !blockState.getType().equals(optional.get()))
-            return false;
+        return !(!optional.isPresent() || !blockState.getType().equals(optional.get())) &&
+                (!blockString.contains("[") || compareData(blockString, blockState.toString()));
 
-        if(!blockString.contains("["))
-            return true;
-
-        return compareData(blockString, blockState.toString());
     }
 
     public static boolean compare(String blockString1, String blockString2) {

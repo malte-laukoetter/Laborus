@@ -6,16 +6,15 @@ import de.lergin.sponge.laborus.job.Job;
 import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.manipulator.DataManipulatorBuilder;
-import org.spongepowered.api.data.persistence.AbstractDataBuilder;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class JobDataManipulatorBuilder implements DataManipulatorBuilder<JobData, ImmutableJobDataManipulator> {
-    Map<String, Double> jobs = new HashMap<>();
-    boolean jobsEnabled = true;
-    Set<String> selectedJobs = new HashSet<>();
-    Map<String, Long> abilityUsed = new HashMap<>();
+    private Map<String, Double> jobs = new HashMap<>();
+    private boolean jobsEnabled = true;
+    private Set<String> selectedJobs = new HashSet<>();
+    private Map<String, Long> abilityUsed = new HashMap<>();
 
     @Override
     public JobData create() {

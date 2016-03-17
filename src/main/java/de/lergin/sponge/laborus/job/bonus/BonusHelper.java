@@ -11,7 +11,7 @@ import org.spongepowered.api.world.extent.Extent;
 
 import java.util.Optional;
 
-public class BonusHelper {
+class BonusHelper {
     public static boolean dropItem(Location<World> loc, ItemStack itemStack, Cause cause){
         Extent extent = loc.getExtent();
 
