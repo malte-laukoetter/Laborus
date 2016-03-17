@@ -183,8 +183,6 @@ public final class TranslationHelper {
 
     public static void init(){
         for(ConfigurationNode node : ConfigHelper.getNode("messages").getChildrenMap().values()){
-            System.out.println(node.getKey());
-
             if(node.hasMapChildren()){
                 translationNodes.put((String) node.getKey(), node);
                 JobsMain.instance().getLogger().info(
