@@ -145,6 +145,8 @@ public class ChangeJobCommand extends JobCommand{
                     return CommandResult.empty();
                 }
 
+                selectedJobs.add(job.getId());
+
                 player.sendMessage(
                         TranslationHelper.template(
                                 TextTemplate.of(
