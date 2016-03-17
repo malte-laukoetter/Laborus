@@ -43,6 +43,7 @@ jobs: {
 This command adds the given amount of xp to the xp of the job.
 
 Permission: `laborus.commands.addXp`
+
 Permission for player arg: `laborus.commands.addXp.outher_player`
 
 #### /jobs change <join|leave> <job>

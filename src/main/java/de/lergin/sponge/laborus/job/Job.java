@@ -36,6 +36,7 @@ import static org.spongepowered.api.text.TextTemplate.arg;
 public class Job {
     private final String NAME;
     private final String ID;
+    private final String DESCRIPTION;
     private final JobAbility jobAbility;
     private final Map<JobAction, List<JobItem>> jobActions = new HashMap<>();
     private final List<GameMode> enabledGameModes = JobsMain.instance().enabledGameModes;
@@ -48,6 +49,7 @@ public class Job {
      */
     public Job(ConfigurationNode jobConfig) {
         this.NAME = jobConfig.getNode("name").getString();
+        this.DESCRIPTION = jobConfig.getNode("description").getString();
 
         if(jobConfig.getNode("id").getString("").equals("")){
             this.ID = jobConfig.getKey().toString();
@@ -108,6 +110,14 @@ public class Job {
      */
     public String getName() {
         return NAME;
+    }
+
+    /**
+     * returns the description of the job
+     * @return the description
+     */
+    public String getDescription() {
+        return DESCRIPTION;
     }
 
     /**
@@ -391,6 +401,21 @@ public class Job {
 
     public int getLevel(Player player){
         return getCurrentLevel(getXp(player));
+    }
+
+
+    public double getXpTillNextLevel(double xp){
+        for(int testLevel : this.level) {
+            if (testLevel > xp) {
+                return testLevel - xp;
+            }
+        }
+
+        return 0.0;
+    }
+
+    public double getXpTillNextLevel(Player player){
+        return getXpTillNextLevel(getXp(player));
     }
 
     @Override

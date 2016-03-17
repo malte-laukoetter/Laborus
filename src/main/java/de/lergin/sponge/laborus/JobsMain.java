@@ -165,6 +165,9 @@ public class JobsMain {
         final JobCommand toggleJobStatusCommand = new ToggleJobStatusCommand();
         childCommands.put(toggleJobStatusCommand.getCommandAliases(), toggleJobStatusCommand.getCommandSpec());
 
+        final JobCommand infoCommand = new InfoCommand();
+        childCommands.put(infoCommand.getCommandAliases(), infoCommand.getCommandSpec());
+
         Sponge.getCommandManager().register(
                 JobsMain.instance(),
                 CommandSpec.builder().children(childCommands).build(),
