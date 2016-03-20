@@ -12,12 +12,12 @@ import org.spongepowered.api.world.extent.Extent;
 import java.util.Optional;
 
 class BonusHelper {
-    public static boolean dropItem(Location<World> loc, ItemStack itemStack, Cause cause){
+    public static boolean dropItem(Location<World> loc, ItemStack itemStack, Cause cause) {
         Extent extent = loc.getExtent();
 
         Optional<Entity> itemEntity = extent.createEntity(EntityTypes.ITEM, loc.getPosition());
 
-        if(itemEntity.isPresent()){
+        if (itemEntity.isPresent()) {
             Entity entity = itemEntity.get();
 
             entity.offer(Keys.REPRESENTED_ITEM, itemStack.createSnapshot());

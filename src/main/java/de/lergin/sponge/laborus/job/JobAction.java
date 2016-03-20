@@ -16,37 +16,41 @@ public enum JobAction {
     ITEM_USE(InteractListener.class, CatalogTypes.ITEM_TYPE),
     PLACE(PlaceBlockListener.class, CatalogTypes.BLOCK_TYPE);
 
-    final Class listener;
-    final Class<? extends CatalogType> catalogType;
+    private final Class listener;
+    private final Class<? extends CatalogType> catalogType;
 
     /**
      * creates a new JobAction
-     * @param listener the listener for this action
+     *
+     * @param listener    the listener for this action
      * @param catalogType the {@link CatalogType} that all actions of this {@link JobAction} have
      */
-    JobAction(Class listener, Class<? extends CatalogType> catalogType){
+    JobAction(Class listener, Class<? extends CatalogType> catalogType) {
         this.listener = listener;
         this.catalogType = catalogType;
     }
 
     /**
      * returns the {@link JobListener} of this {@link JobAction}
+     *
      * @return
      */
-    protected Class getListener(){
+    protected Class getListener() {
         return listener;
     }
 
     /**
      * gets the {@link CatalogType} of the {@link JobAction}
+     *
      * @return the {@link CatalogType}
      */
-    public Class<? extends CatalogType> getCatalogType(){
+    public Class<? extends CatalogType> getCatalogType() {
         return catalogType;
     }
 
     /**
      * returns the Constructor for the listener
+     *
      * @return the constructor
      * @throws NoSuchMethodException
      */

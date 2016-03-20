@@ -29,7 +29,7 @@ import static org.spongepowered.api.text.TextTemplate.arg;
 /**
  * changes the selected {@link Job}s
  */
-public class ChangeJobCommand extends JobCommand{
+public class ChangeJobCommand extends JobCommand {
     private final static ConfigurationNode configNode = ConfigHelper.getNode("commands", "change");
 
     public ChangeJobCommand() {
@@ -51,7 +51,7 @@ public class ChangeJobCommand extends JobCommand{
 
         final String permission = configNode.getNode("permission").getString("");
 
-        if(!"".equals(permission)){
+        if (!"".equals(permission)) {
             builder.permission(permission);
         }
 
@@ -70,7 +70,7 @@ public class ChangeJobCommand extends JobCommand{
         commandElements[1] =
                 GenericArguments.choices(
                         Text.of(configNode.getNode("params", "job", "description").getString("job")),
-                        JobsMain.instance().jobs
+                        JobsMain.instance().getJobs()
                 );
 
         builder.arguments(commandElements);
@@ -98,7 +98,7 @@ public class ChangeJobCommand extends JobCommand{
      */
     @Override
     protected CommandResult execute(CommandSource commandSource, CommandContext args) throws CommandException {
-        if(!(commandSource instanceof Player))
+        if (!(commandSource instanceof Player))
             return CommandResult.empty();
 
         Player player = (Player) args.getOne(
@@ -114,11 +114,11 @@ public class ChangeJobCommand extends JobCommand{
                 ((Job) args.getOne(configNode.getNode("params", "job", "description").getString("job")).get());
 
 
-        if(join){
-            if(!selectedJobs.contains(job.getId())){
+        if (join) {
+            if (!selectedJobs.contains(job.getId())) {
                 final int maxJobs = ConfigHelper.getNode("setting", "max_selected_jobs").getInt(1);
 
-                if(selectedJobs.size() > maxJobs){
+                if (selectedJobs.size() > maxJobs) {
                     player.sendMessage(
                             TranslationHelper.template(
                                     TextTemplate.of(
@@ -162,7 +162,7 @@ public class ChangeJobCommand extends JobCommand{
                 );
 
                 return CommandResult.success();
-            }else {
+            } else {
                 player.sendMessage(
                         TranslationHelper.template(
                                 TextTemplate.of(
@@ -179,11 +179,11 @@ public class ChangeJobCommand extends JobCommand{
 
                 return CommandResult.empty();
             }
-        }else{
+        } else {
             String jobId =
                     ((Job) args.getOne(configNode.getNode("params", "job", "description").getString("job")).get()).getId();
 
-            if(selectedJobs.remove(jobId)){
+            if (selectedJobs.remove(jobId)) {
                 player.sendMessage(
                         TranslationHelper.template(
                                 TextTemplate.of(
@@ -197,7 +197,7 @@ public class ChangeJobCommand extends JobCommand{
                                 "jobName", Text.of(job.getName())
                         )
                 );
-            }else{
+            } else {
                 player.sendMessage(
                         TranslationHelper.template(
                                 TextTemplate.of(

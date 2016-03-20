@@ -17,12 +17,13 @@ public final class AntiReplaceFarming {
 
     /**
      * creates a connection with the database
+     *
      * @return the DB-Connection
      * @throws SQLException
      */
     private static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(
-                "jdbc:h2:./" + JobsMain.instance().configDir.getParent().toString() + "/laborus",
+                "jdbc:h2:./" + JobsMain.instance().getConfigDir().getParent().toString() + "/laborus",
                 "",
                 ""
         );
@@ -30,13 +31,14 @@ public final class AntiReplaceFarming {
 
     /**
      * tests if the {@link Location<World>} has a database entry with the {@link BlockState} and {@link JobAction}
-     * @param loc the {@link Location<World>} that should be tested
+     *
+     * @param loc        the {@link Location<World>} that should be tested
      * @param blockState the {@link BlockState} that the {@link Location<World>} should have
-     * @param action the {@link JobAction} that should be tested
+     * @param action     the {@link JobAction} that should be tested
      * @return true if a database entry exist or antiReplaceFarming is deactivated
      */
-    public static boolean testLocation(Location<World> loc, BlockState blockState, JobAction action){
-        if(!USE_ANTI_REPLACE)
+    public static boolean testLocation(Location<World> loc, BlockState blockState, JobAction action) {
+        if (!USE_ANTI_REPLACE)
             return true;
 
         Connection conn;
@@ -51,14 +53,14 @@ public final class AntiReplaceFarming {
             getData.setInt(4, loc.getBlockZ());
             getData.setString(5, action.name());
             getData.setString(6, blockState.toString());
-            getData.setInt(7, - ConfigHelper.getNode("setting", "antiReplaceTime").getInt(48));
+            getData.setInt(7, -ConfigHelper.getNode("setting", "antiReplaceTime").getInt(48));
 
             ResultSet res = getData.executeQuery();
 
             if (res.next()) {
                 conn.close();
                 return false;
-            }else{
+            } else {
                 conn.close();
                 return true;
             }
@@ -71,12 +73,13 @@ public final class AntiReplaceFarming {
 
     /**
      * adds the {@link Location<World>} with the {@link BlockState} and {@link JobAction} to the antiReplaceFarming-DB
-     * @param loc the {@link Location<World>} that should be added
+     *
+     * @param loc        the {@link Location<World>} that should be added
      * @param blockState the {@link BlockState} that was/is at the position
-     * @param action the {@link JobAction} that has happened
+     * @param action     the {@link JobAction} that has happened
      */
-    public static void addLocation(Location<World> loc, BlockState blockState, JobAction action){
-        if(!USE_ANTI_REPLACE)
+    public static void addLocation(Location<World> loc, BlockState blockState, JobAction action) {
+        if (!USE_ANTI_REPLACE)
             return;
 
         Connection conn;
@@ -104,7 +107,7 @@ public final class AntiReplaceFarming {
     /**
      * creates the DataBase
      */
-    public static void setupDataBase(){
+    public static void setupDataBase() {
         Connection conn = null;
         try {
             conn = getConnection();

@@ -30,7 +30,7 @@ import static org.spongepowered.api.text.TextTemplate.arg;
 /**
  * prints infos about the job
  */
-public class InfoCommand extends JobCommand{
+public class InfoCommand extends JobCommand {
     private final static ConfigurationNode configNode = ConfigHelper.getNode("commands", "change");
 
     public InfoCommand() {
@@ -52,7 +52,7 @@ public class InfoCommand extends JobCommand{
 
         final String permission = configNode.getNode("permission").getString("");
 
-        if(!"".equals(permission)){
+        if (!"".equals(permission)) {
             builder.permission(permission);
         }
 
@@ -60,10 +60,10 @@ public class InfoCommand extends JobCommand{
 
         commandElements[0] =
                 GenericArguments.optional(
-                    GenericArguments.choices(
-                            Text.of(configNode.getNode("params", "job", "description").getString("job")),
-                            JobsMain.instance().jobs
-                    )
+                        GenericArguments.choices(
+                                Text.of(configNode.getNode("params", "job", "description").getString("job")),
+                                JobsMain.instance().getJobs()
+                        )
                 );
 
         builder.arguments(commandElements);
@@ -91,12 +91,12 @@ public class InfoCommand extends JobCommand{
      */
     @Override
     protected CommandResult execute(CommandSource commandSource, CommandContext args) throws CommandException {
-        if(!(commandSource instanceof Player))
+        if (!(commandSource instanceof Player))
             return CommandResult.empty();
 
         Player player = (Player) commandSource;
 
-        if(args.hasAny(configNode.getNode("params", "job", "description").getString("job"))){
+        if (args.hasAny(configNode.getNode("params", "job", "description").getString("job"))) {
             Job job =
                     ((Job) args.getOne(configNode.getNode("params", "job", "description").getString("job")).get());
 
@@ -128,7 +128,7 @@ public class InfoCommand extends JobCommand{
                     ),
                     ImmutableMap.copyOf(vars)
             );
-        }else{
+        } else {
             player.sendMessage(
                     TranslationHelper.template(
                             TextTemplate.of(
@@ -143,7 +143,7 @@ public class InfoCommand extends JobCommand{
                     )
             );
 
-            for(Job job : JobsMain.instance().jobs.values()) {
+            for (Job job : JobsMain.instance().getJobs().values()) {
                 player.sendMessage(
                         TranslationHelper.template(
                                 TextTemplate.of(

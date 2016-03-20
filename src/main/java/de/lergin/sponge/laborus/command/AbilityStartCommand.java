@@ -40,13 +40,13 @@ public class AbilityStartCommand extends JobCommand {
 
         final String permission = configNode.getNode("permission").getString();
 
-        if(!"".equals(permission)){
+        if (!"".equals(permission)) {
             builder.permission(permission);
         }
 
         //only add jobs that have a ability
         Map<String, Job> jobs = new HashMap<>();
-        JobsMain.instance().jobs.values().stream()
+        JobsMain.instance().getJobs().values().stream()
                 .filter(Job::hasJobAbility)
                 .forEach(job -> jobs.put(job.getId(), job));
 
@@ -73,7 +73,7 @@ public class AbilityStartCommand extends JobCommand {
 
     @Override
     protected CommandResult execute(CommandSource commandSource, CommandContext args) throws CommandException {
-        if(!(commandSource instanceof Player))
+        if (!(commandSource instanceof Player))
             return CommandResult.empty();
 
         final Player player = (Player) commandSource;

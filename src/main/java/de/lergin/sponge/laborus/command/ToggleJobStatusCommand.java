@@ -40,7 +40,7 @@ public class ToggleJobStatusCommand extends JobCommand {
 
         final String permission = configNode.getNode("permission").getString();
 
-        if(!"".equals(permission)){
+        if (!"".equals(permission)) {
             builder.permission(permission);
         }
 
@@ -57,7 +57,7 @@ public class ToggleJobStatusCommand extends JobCommand {
 
     @Override
     protected CommandResult execute(CommandSource commandSource, CommandContext commandContext) throws CommandException {
-        if(!(commandSource instanceof Player))
+        if (!(commandSource instanceof Player))
             return CommandResult.empty();
 
         Player player = (Player) commandSource;

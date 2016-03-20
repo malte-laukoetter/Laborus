@@ -11,13 +11,14 @@ public class BlockStateComparator {
     /**
      * Compares a {@link BlockState} and the result of the {@link BlockState} toString() method.
      * If the blockState has more dataValues than the blockString these will be ignored:
-     *
+     * <p>
      * blockState.toString() | blockString | result
      * minecraft:snow | minecraft:snow | true
      * minecraft:snow | minecraft:dirt | false
      * minecraft:stone | minecraft:stone[variant=granit] | false
      * minecraft:stone[variant=granit] | minecraft:stone | true
-     * @param blockState the {@link BlockState} that will be compared
+     *
+     * @param blockState  the {@link BlockState} that will be compared
      * @param blockString the String of a {@link BlockState} that will be compared
      * @return true if the blockState has all data that the blockString has
      */
@@ -35,11 +36,11 @@ public class BlockStateComparator {
 
         return !(!optional1.isPresent() || !optional2.isPresent() || optional1.get() != optional2.get()) &&
                 (!blockString1.contains("[") && !blockString2.contains("[") ||
-                compareData(blockString1, blockString2));
+                        compareData(blockString1, blockString2));
 
     }
 
-    private static boolean compareData(String dataString1, String dataString2){
+    private static boolean compareData(String dataString1, String dataString2) {
         String[] dataStrings = dataString1.split("\\[")[1].split("\\]")[0].split(",");
         String[] dataStrings2 = dataString2.split("\\[")[1].split("\\]")[0].split(",");
 

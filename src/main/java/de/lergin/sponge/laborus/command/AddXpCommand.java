@@ -52,7 +52,7 @@ public class AddXpCommand extends JobCommand {
 
         final String permission = configNode.getNode("permission").getString();
 
-        if(!"".equals(permission)){
+        if (!"".equals(permission)) {
             builder.permission(permission);
         }
 
@@ -61,7 +61,7 @@ public class AddXpCommand extends JobCommand {
         commandElements[0] =
                 GenericArguments.choices(
                         Text.of(configNode.getNode("params", "job", "description").getString("job")),
-                        JobsMain.instance().jobs
+                        JobsMain.instance().getJobs()
                 );
 
         commandElements[1] =
@@ -103,7 +103,7 @@ public class AddXpCommand extends JobCommand {
      */
     @Override
     protected CommandResult execute(CommandSource commandSource, CommandContext args) throws CommandException {
-        if(!(commandSource instanceof Player ||
+        if (!(commandSource instanceof Player ||
                 args.hasAny(configNode.getNode("params", "player", "description").getString("player"))))
             return CommandResult.empty();
 
@@ -123,7 +123,7 @@ public class AddXpCommand extends JobCommand {
 
         player.offer(JobKeys.JOB_DATA, jobData);
 
-        if(!(commandSource instanceof Player) || !commandSource.equals(player) ){
+        if (!(commandSource instanceof Player) || !commandSource.equals(player)) {
             commandSource.sendMessage(
                     TranslationHelper.template(
                             TextTemplate.of(
@@ -163,7 +163,7 @@ public class AddXpCommand extends JobCommand {
                             "commandSource", Text.of(commandSource.getName())
                     )
             );
-        }else{
+        } else {
             commandSource.sendMessage(
                     TranslationHelper.template(
                             TextTemplate.of(
@@ -182,7 +182,6 @@ public class AddXpCommand extends JobCommand {
                     )
             );
         }
-
 
 
         return CommandResult.success();

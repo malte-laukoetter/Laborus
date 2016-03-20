@@ -27,7 +27,7 @@ public abstract class JobAbility {
 
     public abstract boolean startAbility(Player player);
 
-    public void sendStartMessage(Player player){
+    public void sendStartMessage(Player player) {
         player.sendMessage(
                 TranslationHelper.template(
                         TextTemplate.of(
@@ -48,7 +48,7 @@ public abstract class JobAbility {
         );
     }
 
-    public void sendCoolDownNotEndedMessage(Player player){
+    public void sendCoolDownNotEndedMessage(Player player) {
         player.sendMessage(
                 TranslationHelper.template(
                         TextTemplate.of(
@@ -69,15 +69,15 @@ public abstract class JobAbility {
         );
     }
 
-    public boolean canStartAbility(Player player){
+    public boolean canStartAbility(Player player) {
         Map<String, Long> abilityUsed = player.get(JobKeys.JOB_ABILITY_USED).orElse(new HashMap<>());
 
         return (abilityUsed.getOrDefault(getJob().getId(), 0L) + coolDown) < Instant.now().getEpochSecond();
     }
 
-    public void startCoolDown(Player player){
+    public void startCoolDown(Player player) {
         Map<String, Long> abilityUsed = player.get(JobKeys.JOB_ABILITY_USED).orElse(new HashMap<>());
-        Map<String,  Long> tempMap = new HashMap<>();
+        Map<String, Long> tempMap = new HashMap<>();
         tempMap.putAll(abilityUsed);
         tempMap.put(this.getJob().getId(), Instant.now().getEpochSecond());
 

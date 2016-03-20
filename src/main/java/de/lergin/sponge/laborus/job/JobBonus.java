@@ -27,38 +27,39 @@ public abstract class JobBonus {
     /**
      * @return true with the probability of probability
      */
-    public boolean isHappening(){
+    public boolean isHappening() {
         return random.nextFloat() < probability;
     }
 
     /**
      * decides if the bonus can happen with the {@link JobItem}, {@link JobAction} and {@link Player}
+     *
      * @param jobAction the {@link JobAction} that should be tested
-     * @param jobItem the {@link JobItem} that should be tested
-     * @param player the {@link Player} that should be tested
+     * @param jobItem   the {@link JobItem} that should be tested
+     * @param player    the {@link Player} that should be tested
      * @return true if the bonus can happen
      */
-    public boolean canHappen(Job job, JobAction jobAction, JobItem jobItem, Player player){
+    public boolean canHappen(Job job, JobAction jobAction, JobItem jobItem, Player player) {
         return testConditions(job, jobAction, jobItem, player);
     }
 
-    public boolean testConditions(Job job, JobAction jobAction, JobItem jobItem, Player player){
-        if(minLevel > job.getLevel(player))
+    public boolean testConditions(Job job, JobAction jobAction, JobItem jobItem, Player player) {
+        if (minLevel > job.getLevel(player))
             return false;
 
-        if(maxLevel < job.getLevel(player))
+        if (maxLevel < job.getLevel(player))
             return false;
 
-        if(!(this.onlySelected && player.get(JobKeys.JOB_SELECTED).orElse(new HashSet<>()).contains(job.getId())))
+        if (!(this.onlySelected && player.get(JobKeys.JOB_SELECTED).orElse(new HashSet<>()).contains(job.getId())))
             return false;
 
-        if(!(this.jobActions.isEmpty() || this.jobActions.contains(jobAction)))
+        if (!(this.jobActions.isEmpty() || this.jobActions.contains(jobAction)))
             return false;
 
-        if(this.jobItems.isEmpty())
+        if (this.jobItems.isEmpty())
             return true;
 
-        for(String item : this.jobItems){
+        for (String item : this.jobItems) {
             if (jobItem.getItem().equals(item) || jobItem.getItem() instanceof String &&
                     BlockStateComparator.compare(item, (String) jobItem.getItem()))
                 return true;
@@ -69,15 +70,17 @@ public abstract class JobBonus {
 
     /**
      * executes the bonus with the probability of {@link this.probability}
+     *
      * @param item the item the {@link de.lergin.sponge.laborus.job.JobAction} is happening with
      */
     public abstract void useBonus(JobItem item, Player player);
 
     /**
      * creates a new JobBonus
+     *
      * @param config the {@link ConfigurationNode} with the data for the Bonus
      */
-    public JobBonus(ConfigurationNode config){
+    public JobBonus(ConfigurationNode config) {
         this.probability = config.getNode("probability").getDouble(0.05);
         this.sendMessage = config.getNode("sendMessage").getBoolean(false);
         this.message = Text.of(config.getNode("message").getString(""));
@@ -97,6 +100,7 @@ public abstract class JobBonus {
 
     /**
      * returns the probability with that the {@link JobBonus} will happen
+     *
      * @return the probability
      */
     public double getProbability() {
@@ -105,6 +109,7 @@ public abstract class JobBonus {
 
     /**
      * returns if a message should be send to the {@link Player} when this action happens
+     *
      * @return true if a message should be send
      */
     public boolean isSendMessage() {
@@ -113,6 +118,7 @@ public abstract class JobBonus {
 
     /**
      * returns the {@link Text} of the message that may be send when this {@link JobAction} is happening
+     *
      * @return the {@link Text} of the message
      */
     public Text getMessage() {

@@ -25,12 +25,12 @@ public class ItemDrop extends JobBonus {
                 config.getNode("item").getString("")
         );
 
-        if(optional.isPresent()){
+        if (optional.isPresent()) {
             itemStack = ItemStack.of(
                     optional.get(),
                     config.getNode("amount").getInt(1)
             );
-        }else{
+        } else {
             JobsMain.instance().getLogger().warn(TranslationHelper.l("warn.not_a_item", config.getNode("item").getString()));
         }
     }
@@ -40,7 +40,7 @@ public class ItemDrop extends JobBonus {
         if (!this.isHappening())
             return;
 
-        if(BonusHelper.dropItem(player.getLocation(), itemStack, Cause.builder().owner(player).build()) && isSendMessage()){
+        if (BonusHelper.dropItem(player.getLocation(), itemStack, Cause.builder().owner(player).build()) && isSendMessage()) {
             player.sendMessage(getMessage());
         }
     }

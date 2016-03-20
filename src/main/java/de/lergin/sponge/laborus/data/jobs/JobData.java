@@ -21,26 +21,26 @@ public class JobData extends AbstractData<JobData, ImmutableJobDataManipulator> 
 
     protected JobData(Map<String, Double> jobs, boolean jobsEnabled, Set<String> selectedJobs, Map<String, Long> abilityUsed) {
         this.jobs.putAll(jobs);
-        this.jobsEnabled  = jobsEnabled;
+        this.jobsEnabled = jobsEnabled;
         this.selectedJobs = selectedJobs;
         this.abilityUsed = abilityUsed;
 
         registerGettersAndSetters();
     }
 
-    public MapValue<String, Double> jobs(){
+    public MapValue<String, Double> jobs() {
         return Sponge.getRegistry().getValueFactory().createMapValue(JobKeys.JOB_DATA, this.jobs);
     }
 
-    public Value<Boolean> jobsEnabled(){
+    public Value<Boolean> jobsEnabled() {
         return Sponge.getRegistry().getValueFactory().createValue(JobKeys.JOB_ENABLED, this.jobsEnabled);
     }
 
-    public SetValue<String> selectedJobs(){
+    public SetValue<String> selectedJobs() {
         return Sponge.getRegistry().getValueFactory().createSetValue(JobKeys.JOB_SELECTED, this.selectedJobs);
     }
 
-    public MapValue<String, Long> abilityUsed(){
+    public MapValue<String, Long> abilityUsed() {
         return Sponge.getRegistry().getValueFactory().createMapValue(JobKeys.JOB_ABILITY_USED, this.abilityUsed);
     }
 

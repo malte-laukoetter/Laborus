@@ -15,7 +15,7 @@ import java.io.IOException;
  */
 public final class ConfigHelper {
     private static final ConfigurationLoader<CommentedConfigurationNode> LOADER =
-            JobsMain.instance().configManager;
+            JobsMain.instance().getConfigManager();
 
     private static final Logger LOGGER = JobsMain.instance().getLogger();
 
@@ -24,10 +24,10 @@ public final class ConfigHelper {
     /**
      * loads the config file
      */
-    public static void loadConfig(){
+    public static void loadConfig() {
         try {
             rootNode = LOADER.load();
-        } catch(IOException e) {
+        } catch (IOException e) {
             LOGGER.warn(TranslationHelper.l("warn.config.could_not_load"));
         }
 
@@ -44,21 +44,22 @@ public final class ConfigHelper {
     /**
      * saves the config
      */
-    public static void saveConfig(){
+    public static void saveConfig() {
         try {
             LOADER.save(rootNode);
             LOGGER.info(TranslationHelper.l("info.config.saved"));
-        } catch(IOException e) {
+        } catch (IOException e) {
             LOGGER.warn(TranslationHelper.l("warn.config.could_not_save"));
         }
     }
 
     /**
      * returns the configuration node of the given path
+     *
      * @param objects the path to the node
      * @return the configuration node
      */
-    public static ConfigurationNode getNode(Object... objects){
+    public static ConfigurationNode getNode(Object... objects) {
         return rootNode.getNode(objects);
     }
 }

@@ -11,10 +11,11 @@ public class JobItem {
 
     /**
      * creates a new {@link JobItem}
-     * @param xp the amount of xp someone gets when he is finishing an action with this item
+     *
+     * @param xp        the amount of xp someone gets when he is finishing an action with this item
      * @param needLevel the level that is needed for doing an action with this item
-     * @param job the {@link Job} that this item is related to
-     * @param item the {@link Object} of the item
+     * @param job       the {@link Job} that this item is related to
+     * @param item      the {@link Object} of the item
      */
     public JobItem(double xp, int needLevel, Job job, Object item) {
         this.XP = xp;
@@ -25,14 +26,16 @@ public class JobItem {
 
     /**
      * returns the amount of xp someone gets when he is finishing an action with this item
+     *
      * @return the amount of xp
      */
-    public double getXp(){
+    public double getXp() {
         return XP;
     }
 
     /**
      * returns the level that is needed to do an action with this item
+     *
      * @return the level
      */
     public double getNeedLevel() {
@@ -41,35 +44,39 @@ public class JobItem {
 
     /**
      * returns the item
+     *
      * @return the item
      */
-    public Object getItem(){
+    public Object getItem() {
         return ITEM;
     }
 
     /**
      * returns the {@link Job} that this item is related to
+     *
      * @return the {@link Job}
      */
-    public Job getJob(){
+    public Job getJob() {
         return JOB;
     }
 
     /**
      * decides if the given amount of xp is a height enough to do a action with this item
+     *
      * @param xp the xp that should be tested
      * @return true: can do the action, otherwise false
      */
-    public boolean canDo(double xp){
+    public boolean canDo(double xp) {
         return canDo(getJob().getCurrentLevel(xp));
     }
 
     /**
      * decides if the given level is a height enough to do a action with this item
+     *
      * @param level the level that should be tested
      * @return true: can do the action, otherwise false
      */
-    public boolean canDo(int level){
+    public boolean canDo(int level) {
         return (getNeedLevel() - level) <= 0;
     }
 }

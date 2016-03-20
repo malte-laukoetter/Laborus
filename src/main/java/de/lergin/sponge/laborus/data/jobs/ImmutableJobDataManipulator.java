@@ -26,19 +26,19 @@ public class ImmutableJobDataManipulator extends AbstractImmutableData<Immutable
         registerGetters();
     }
 
-    public ImmutableMapValue<String, Double> jobs(){
+    public ImmutableMapValue<String, Double> jobs() {
         return Sponge.getRegistry().getValueFactory().createMapValue(JobKeys.JOB_DATA, this.jobs).asImmutable();
     }
 
-    public ImmutableValue<Boolean> jobsEnabled(){
+    public ImmutableValue<Boolean> jobsEnabled() {
         return Sponge.getRegistry().getValueFactory().createValue(JobKeys.JOB_ENABLED, this.jobsEnabled).asImmutable();
     }
 
-    public ImmutableSetValue<String> selectedJobs(){
+    public ImmutableSetValue<String> selectedJobs() {
         return Sponge.getRegistry().getValueFactory().createSetValue(JobKeys.JOB_SELECTED, this.selectedJobs).asImmutable();
     }
 
-    public ImmutableMapValue<String, Long> abilityUsed(){
+    public ImmutableMapValue<String, Long> abilityUsed() {
         return Sponge.getRegistry().getValueFactory().createMapValue(JobKeys.JOB_ABILITY_USED, this.abilityUsed).asImmutable();
     }
 
@@ -59,7 +59,7 @@ public class ImmutableJobDataManipulator extends AbstractImmutableData<Immutable
 
     @Override
     public <E> Optional<ImmutableJobDataManipulator> with(Key<? extends BaseValue<E>> key, E e) {
-        if(this.supports(key)) {
+        if (this.supports(key)) {
             return Optional.of(asMutable().set(key, e).asImmutable());
         } else {
             return Optional.empty();

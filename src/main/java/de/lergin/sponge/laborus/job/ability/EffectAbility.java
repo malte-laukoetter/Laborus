@@ -38,7 +38,7 @@ public class EffectAbility extends JobAbility {
 
     @Override
     public boolean startAbility(Player player) {
-        if(!canStartAbility(player)){
+        if (!canStartAbility(player)) {
             sendCoolDownNotEndedMessage(player);
             return false;
         }

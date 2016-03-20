@@ -18,12 +18,14 @@ import java.util.List;
 public abstract class JobCommand {
     /**
      * creates the {@link org.spongepowered.api.command.spec.CommandSpec} for the command
+     *
      * @return the {@link org.spongepowered.api.command.spec.CommandSpec}
      */
     public abstract CommandSpec getCommandSpec();
 
     /**
      * creates the list of possible aliases for the command
+     *
      * @return a list of aliases
      */
     public abstract List<String> getCommandAliases();
@@ -35,9 +37,10 @@ public abstract class JobCommand {
 
     /**
      * creates a new JobCommandExecutor so the class can be private
+     *
      * @return a new CommandExecutor
      */
-    public CommandExecutor getExecutor(){
+    public CommandExecutor getExecutor() {
         return new JobCommandExecutor();
     }
 
@@ -52,10 +55,10 @@ public abstract class JobCommand {
         }
     }
 
-    static CommandElement getCommandElementWithPermission(CommandElement commandElement, String permission){
-        if(permission.equals("")){
+    static CommandElement getCommandElementWithPermission(CommandElement commandElement, String permission) {
+        if (permission.equals("")) {
             return commandElement;
-        }else{
+        } else {
             return GenericArguments.requiringPermission(
                     commandElement,
                     permission

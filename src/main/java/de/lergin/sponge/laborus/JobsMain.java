@@ -37,11 +37,11 @@ import java.util.*;
 public class JobsMain {
     @Inject
     @DefaultConfig(sharedRoot = false)
-    public ConfigurationLoader<CommentedConfigurationNode> configManager;
+    private ConfigurationLoader<CommentedConfigurationNode> configManager;
 
     @Inject
     @DefaultConfig(sharedRoot = false)
-    public Path configDir;
+    private Path configDir;
 
 
     @Inject
@@ -57,9 +57,25 @@ public class JobsMain {
         return instance;
     }
 
-    public List<GameMode> enabledGameModes = new ArrayList<>();
+    private List<GameMode> enabledGameModes = new ArrayList<>();
 
-    public Map<String, Job> jobs = new HashMap<>();
+    private Map<String, Job> jobs = new HashMap<>();
+
+    public ConfigurationLoader<CommentedConfigurationNode> getConfigManager() {
+        return configManager;
+    }
+
+    public Path getConfigDir() {
+        return configDir;
+    }
+
+    public List<GameMode> getEnabledGameModes() {
+        return enabledGameModes;
+    }
+
+    public Map<String, Job> getJobs() {
+        return jobs;
+    }
 
     @Listener
     public void gameConstruct(GameConstructionEvent event) {
@@ -95,11 +111,11 @@ public class JobsMain {
     }
 
     @Listener
-    public void onGameStoppedEvent(GameStoppedEvent event){
+    public void onGameStoppedEvent(GameStoppedEvent event) {
         ConfigHelper.saveConfig();
     }
 
-    private void initEnabledGameModes(){
+    private void initEnabledGameModes() {
         List<String> enabledGameModeStrings;
 
         try {
@@ -110,26 +126,26 @@ public class JobsMain {
             e.printStackTrace();
         }
 
-        for(String gamemode : enabledGameModeStrings){
+        for (String gamemode : enabledGameModeStrings) {
             Optional<GameMode> gameModeOptional = Sponge.getRegistry().getType(
                     CatalogTypes.GAME_MODE,
                     gamemode
             );
 
-            if(gameModeOptional.isPresent()){
+            if (gameModeOptional.isPresent()) {
                 this.enabledGameModes.add(gameModeOptional.get());
-            }else{
+            } else {
                 logger.warn(TranslationHelper.l("warn.not_a_gamemode", gamemode));
             }
         }
     }
 
-    private void initJobs(){
-        for(ConfigurationNode node : ConfigHelper.getNode("jobs").getChildrenMap().values()){
+    private void initJobs() {
+        for (ConfigurationNode node : ConfigHelper.getNode("jobs").getChildrenMap().values()) {
 
             String jobConfDir = node.getString("");
 
-            if(!node.hasMapChildren()){
+            if (!node.hasMapChildren()) {
                 try {
                     ConfigurationNode jobNode =
                             HoconConfigurationLoader.builder().setPath(configDir.getParent().resolve(jobConfDir)).build().load();
@@ -150,7 +166,7 @@ public class JobsMain {
         }
     }
 
-    private void initCommands(){
+    private void initCommands() {
         Map<List<String>, CommandCallable> childCommands = new HashMap<>();
 
         final JobCommand abilityStartCommand = new AbilityStartCommand();
@@ -175,7 +191,7 @@ public class JobsMain {
         );
     }
 
-    private void initTranslations(){
+    private void initTranslations() {
         Locale.setDefault(
                 Locale.forLanguageTag(
                         ConfigHelper.getNode("translation", "defaultLanguage").getString("en")

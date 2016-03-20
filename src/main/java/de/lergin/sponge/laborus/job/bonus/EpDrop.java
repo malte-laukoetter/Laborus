@@ -22,17 +22,17 @@ public class EpDrop extends JobBonus {
 
     @Override
     public void useBonus(JobItem item, Player player) {
-        if(this.isHappening()){
+        if (this.isHappening()) {
             Extent extent = player.getLocation().getExtent();
             Optional<Entity> itemEntity = extent.createEntity(EntityTypes.EXPERIENCE_ORB, player.getLocation().getPosition());
 
-            if(itemEntity.isPresent()){
+            if (itemEntity.isPresent()) {
                 Entity entity = itemEntity.get();
                 entity.offer(Keys.CONTAINED_EXPERIENCE, new Random().nextInt(maxEp - minEp) + minEp);
 
                 extent.spawnEntity(entity, Cause.builder().owner(player).build());
 
-                if(isSendMessage()){
+                if (isSendMessage()) {
                     player.sendMessage(getMessage());
                 }
             }

@@ -21,13 +21,13 @@ public class MultiDrop extends JobBonus {
 
     @Override
     public void useBonus(JobItem item, Player player) {
-        if(this.isHappening()){
+        if (this.isHappening()) {
             Optional<ItemType> optionalItemType = ((BlockType) item.getItem()).getItem();
 
-            if(optionalItemType.isPresent()){
+            if (optionalItemType.isPresent()) {
                 ItemStack itemStack = ItemStack.of(optionalItemType.get(), dropMultiplier);
 
-                if(BonusHelper.dropItem(player.getLocation(), itemStack, Cause.builder().owner(player).build()) && isSendMessage()){
+                if (BonusHelper.dropItem(player.getLocation(), itemStack, Cause.builder().owner(player).build()) && isSendMessage()) {
                     player.sendMessage(getMessage());
                 }
             }
