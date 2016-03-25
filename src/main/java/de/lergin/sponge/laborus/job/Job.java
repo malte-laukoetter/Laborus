@@ -5,10 +5,7 @@ import de.lergin.sponge.laborus.JobsMain;
 import de.lergin.sponge.laborus.data.JobKeys;
 import de.lergin.sponge.laborus.data.jobs.JobDataManipulatorBuilder;
 import de.lergin.sponge.laborus.job.ability.EffectAbility;
-import de.lergin.sponge.laborus.job.bonus.EpDrop;
-import de.lergin.sponge.laborus.job.bonus.ItemDrop;
-import de.lergin.sponge.laborus.job.bonus.ItemRepair;
-import de.lergin.sponge.laborus.job.bonus.MultiDrop;
+import de.lergin.sponge.laborus.job.bonus.*;
 import de.lergin.sponge.laborus.util.BlockStateComparator;
 import de.lergin.sponge.laborus.util.ConfigHelper;
 import de.lergin.sponge.laborus.util.TranslationHelper;
@@ -19,6 +16,7 @@ import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.gamemode.GameMode;
+import org.spongepowered.api.service.economy.EconomyService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.TextTemplate;
 import org.spongepowered.api.text.chat.ChatTypes;
@@ -90,6 +88,13 @@ public class Job {
                     break;
                 case "itemDrop":
                     jobBonuses.add(new ItemDrop(bonusNode));
+                    break;
+                case "economy":
+                    if(Sponge.getServiceManager().isRegistered(EconomyService.class)){
+                        jobBonuses.add(new EconomyReward(bonusNode));
+                    }else{
+                        JobsMain.instance().getLogger().warn("No economy Plugin -> do not init economy reward.");
+                    }
                     break;
             }
         }
