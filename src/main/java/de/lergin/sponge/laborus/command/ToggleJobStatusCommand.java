@@ -2,6 +2,7 @@ package de.lergin.sponge.laborus.command;
 
 import com.google.common.collect.ImmutableMap;
 import de.lergin.sponge.laborus.data.JobKeys;
+import de.lergin.sponge.laborus.data.jobs.JobDataManipulatorBuilder;
 import de.lergin.sponge.laborus.util.ConfigHelper;
 import de.lergin.sponge.laborus.util.TranslationHelper;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -64,7 +65,9 @@ public class ToggleJobStatusCommand extends JobCommand {
 
         Boolean jobsEnabled = player.get(JobKeys.JOB_ENABLED).orElse(true);
 
-        player.offer(JobKeys.JOB_ENABLED, !jobsEnabled);
+        if (!player.offer(JobKeys.JOB_ENABLED, !jobsEnabled).isSuccessful()) {
+            player.offer(new JobDataManipulatorBuilder().jobsEnabled(!jobsEnabled).create());
+        }
 
         player.sendMessage(
                 TranslationHelper.template(

@@ -39,6 +39,18 @@ public class JobDataManipulatorBuilder implements DataManipulatorBuilder<JobData
         return this;
     }
 
+    public JobDataManipulatorBuilder selectedJobs(Set<String> jobs) {
+        this.selectedJobs.addAll(jobs);
+
+        return this;
+    }
+
+    public JobDataManipulatorBuilder abilityUsed(Map<String, Long> abilityUsed) {
+        this.abilityUsed.putAll(abilityUsed);
+
+        return this;
+    }
+
     @Override
     public Optional<JobData> createFrom(DataHolder dataHolder) {
         return Optional.of(dataHolder.get(JobData.class).orElse(new JobData(jobs, jobsEnabled, selectedJobs, abilityUsed)));

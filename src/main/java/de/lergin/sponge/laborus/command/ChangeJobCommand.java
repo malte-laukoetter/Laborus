@@ -3,6 +3,7 @@ package de.lergin.sponge.laborus.command;
 import com.google.common.collect.ImmutableMap;
 import de.lergin.sponge.laborus.JobsMain;
 import de.lergin.sponge.laborus.data.JobKeys;
+import de.lergin.sponge.laborus.data.jobs.JobDataManipulatorBuilder;
 import de.lergin.sponge.laborus.job.Job;
 import de.lergin.sponge.laborus.util.ConfigHelper;
 import de.lergin.sponge.laborus.util.TranslationHelper;
@@ -146,6 +147,10 @@ public class ChangeJobCommand extends JobCommand {
                 }
 
                 selectedJobs.add(job.getId());
+
+                if (!player.supports(JobKeys.JOB_SELECTED)) {
+                    player.offer(new JobDataManipulatorBuilder().selectedJobs(selectedJobs).create());
+                }
 
                 player.sendMessage(
                         TranslationHelper.template(

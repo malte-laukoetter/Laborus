@@ -2,6 +2,7 @@ package de.lergin.sponge.laborus.job;
 
 import com.google.common.collect.ImmutableMap;
 import de.lergin.sponge.laborus.data.JobKeys;
+import de.lergin.sponge.laborus.data.jobs.JobDataManipulatorBuilder;
 import de.lergin.sponge.laborus.util.TranslationHelper;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
@@ -81,7 +82,9 @@ public abstract class JobAbility {
         tempMap.putAll(abilityUsed);
         tempMap.put(this.getJob().getId(), Instant.now().getEpochSecond());
 
-        player.offer(JobKeys.JOB_ABILITY_USED, tempMap);
+        if(!player.offer(JobKeys.JOB_ABILITY_USED, tempMap).isSuccessful()){
+            player.offer(new JobDataManipulatorBuilder().abilityUsed(tempMap).create());
+        }
     }
 
     public Job getJob() {
