@@ -85,6 +85,7 @@ public class JobsMain {
     @Listener
     public void onGamePreInitialization(GamePreInitializationEvent event) {
         ConfigHelper.loadConfig();
+        ConfigHelper.saveConfig();
 
         //translation setup
         initTranslations();
