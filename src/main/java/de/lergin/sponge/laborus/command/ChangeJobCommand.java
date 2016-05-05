@@ -87,7 +87,7 @@ public class ChangeJobCommand extends JobCommand {
     @Override
     public List<String> getCommandAliases() {
         List<String> aliases = new ArrayList<>();
-        aliases.add(configNode.getNode("command").getString("changeJob"));
+        aliases.add(configNode.getNode("command").getString("change"));
 
         return aliases;
     }

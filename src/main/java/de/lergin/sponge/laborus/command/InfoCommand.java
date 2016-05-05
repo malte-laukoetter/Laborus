@@ -31,7 +31,7 @@ import static org.spongepowered.api.text.TextTemplate.arg;
  * prints infos about the job
  */
 public class InfoCommand extends JobCommand {
-    private final static ConfigurationNode configNode = ConfigHelper.getNode("commands", "change");
+    private final static ConfigurationNode configNode = ConfigHelper.getNode("commands", "info");
 
     public InfoCommand() {
         super();
