@@ -1,14 +1,11 @@
-{
-  "modListVersion": 2,
-  "modList": [
-    {
-      "modid": "de.lergin.sponge.laborus",
-      "name": "Laborus",
-      "version": "1.0-SNAPSHOT",
-      "description": "a job plugin",
-      "authorList": [
-        "Lergin"
-      ]
-    }
-  ]
-}
+[
+  {
+    "modid": "de.lergin.sponge.laborus",
+    "name": "Laborus",
+    "version": "1.0.2",
+    "description": "a job plugin",
+    "authorList": [
+      "Lergin"
+    ]
+  }
+]
