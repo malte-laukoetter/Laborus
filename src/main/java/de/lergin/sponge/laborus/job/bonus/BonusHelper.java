@@ -15,18 +15,11 @@ class BonusHelper {
     public static boolean dropItem(Location<World> loc, ItemStack itemStack, Cause cause) {
         Extent extent = loc.getExtent();
 
-        Optional<Entity> itemEntity = extent.createEntity(EntityTypes.ITEM, loc.getPosition());
+        Entity itemEntity = extent.createEntity(EntityTypes.ITEM, loc.getPosition());
 
-        if (itemEntity.isPresent()) {
-            Entity entity = itemEntity.get();
+        itemEntity.offer(Keys.REPRESENTED_ITEM, itemStack.createSnapshot());
+        extent.spawnEntity(itemEntity, cause);
 
-            entity.offer(Keys.REPRESENTED_ITEM, itemStack.createSnapshot());
-            extent.spawnEntity(entity, cause);
-
-            return true;
-        }
-
-        return false;
+        return true;
     }
-
 }

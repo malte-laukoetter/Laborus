@@ -2,6 +2,7 @@ package de.lergin.sponge.laborus.listener;
 
 import de.lergin.sponge.laborus.job.Job;
 import de.lergin.sponge.laborus.job.JobAction;
+import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.action.InteractEvent;
@@ -21,8 +22,8 @@ public class InteractListener extends JobListener<ItemType> {
     @Listener
     public void onEvent(InteractEvent event, @First Player player) {
         if (event.getCause().get("Source", Player.class).isPresent() && JOB.enabled(player) &&
-                player.getItemInHand().isPresent()) {
-            final ItemType ITEM_TYPE = player.getItemInHand().get().getItem();
+                player.getItemInHand(HandTypes.MAIN_HAND).isPresent()) {
+            final ItemType ITEM_TYPE = player.getItemInHand(HandTypes.MAIN_HAND).get().getItem();
 
             if (JOB_ITEM_TYPES.contains(ITEM_TYPE)) {
                 event.setCancelled(

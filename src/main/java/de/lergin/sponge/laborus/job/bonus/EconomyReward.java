@@ -1,6 +1,8 @@
 package de.lergin.sponge.laborus.job.bonus;
 
+import com.google.common.collect.Sets;
 import de.lergin.sponge.laborus.JobsMain;
+import de.lergin.sponge.laborus.job.JobAction;
 import de.lergin.sponge.laborus.job.JobBonus;
 import de.lergin.sponge.laborus.job.JobItem;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -20,7 +22,7 @@ public class EconomyReward extends JobBonus{
     private final Cause cause = Cause.of(NamedCause.source(Sponge.getPluginManager().fromInstance(JobsMain.instance())));
 
     public EconomyReward(ConfigurationNode config) {
-        super(config);
+        super(config, Sets.newHashSet(JobAction.BREAK, JobAction.ENTITY_KILL));
 
         amountMax = BigDecimal.valueOf(config.getNode("maxAmount").getDouble());
         amountMin = BigDecimal.valueOf(config.getNode("minAmount").getDouble());

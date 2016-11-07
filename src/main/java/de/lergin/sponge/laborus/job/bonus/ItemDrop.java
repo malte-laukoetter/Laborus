@@ -1,6 +1,8 @@
 package de.lergin.sponge.laborus.job.bonus;
 
+import com.google.common.collect.Sets;
 import de.lergin.sponge.laborus.JobsMain;
+import de.lergin.sponge.laborus.job.JobAction;
 import de.lergin.sponge.laborus.job.JobBonus;
 import de.lergin.sponge.laborus.job.JobItem;
 import de.lergin.sponge.laborus.util.TranslationHelper;
@@ -18,7 +20,7 @@ public class ItemDrop extends JobBonus {
     private ItemStack itemStack;
 
     public ItemDrop(ConfigurationNode config) {
-        super(config);
+        super(config, Sets.newHashSet(JobAction.BREAK, JobAction.ENTITY_KILL));
 
         Optional<ItemType> optional = Sponge.getRegistry().getType(
                 CatalogTypes.ITEM_TYPE,

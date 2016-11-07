@@ -1,5 +1,6 @@
 package de.lergin.sponge.laborus.job.bonus;
 
+import com.google.common.collect.Sets;
 import de.lergin.sponge.laborus.job.Job;
 import de.lergin.sponge.laborus.job.JobAction;
 import de.lergin.sponge.laborus.job.JobBonus;
@@ -40,7 +41,7 @@ public class MultiDrop extends JobBonus {
     }
 
     public MultiDrop(ConfigurationNode config) {
-        super(config);
+        super(config, Sets.newHashSet(JobAction.BREAK, JobAction.ENTITY_KILL));
 
         //we only need to do the extra drop
         this.dropMultiplier = config.getNode("itemMultiplier").getInt(2) - 1;

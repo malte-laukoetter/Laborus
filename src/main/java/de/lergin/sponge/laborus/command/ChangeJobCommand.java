@@ -56,25 +56,20 @@ public class ChangeJobCommand extends JobCommand {
             builder.permission(permission);
         }
 
-        CommandElement[] commandElements = new CommandElement[2];
-
         Map<String, Boolean> actions = new HashMap<>();
         actions.put(configNode.getNode("params", "join", "description").getString("join"), true);
         actions.put(configNode.getNode("params", "leave", "description").getString("leave"), false);
 
-        commandElements[0] =
+        builder.arguments(
                 GenericArguments.choices(
                         Text.of(configNode.getNode("params", "action", "description").getString("action")),
                         actions
-                );
-
-        commandElements[1] =
+                ),
                 GenericArguments.choices(
                         Text.of(configNode.getNode("params", "job", "description").getString("job")),
                         JobsMain.instance().getJobs()
-                );
-
-        builder.arguments(commandElements);
+                )
+        );
 
         return builder.build();
     }
@@ -100,7 +95,7 @@ public class ChangeJobCommand extends JobCommand {
     @Override
     protected CommandResult execute(CommandSource commandSource, CommandContext args) throws CommandException {
         if (!(commandSource instanceof Player))
-            return CommandResult.empty();
+            throw new CommandException(Text.of("Only Players can use this command", false));
 
         Player player = (Player) args.getOne(
                 configNode.getNode("params", "player", "description").getString("player")

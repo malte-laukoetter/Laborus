@@ -94,11 +94,6 @@ public class JobData extends AbstractData<JobData, ImmutableJobDataManipulator> 
     }
 
     @Override
-    public int compareTo(JobData o) {
-        return 0;
-    }
-
-    @Override
     public int getContentVersion() {
         return 8;
     }

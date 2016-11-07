@@ -72,11 +72,6 @@ public class ImmutableJobDataManipulator extends AbstractImmutableData<Immutable
     }
 
     @Override
-    public int compareTo(ImmutableJobDataManipulator o) {
-        return 0;
-    }
-
-    @Override
     public int getContentVersion() {
         return 8;
     }

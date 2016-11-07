@@ -56,29 +56,23 @@ public class AddXpCommand extends JobCommand {
             builder.permission(permission);
         }
 
-        CommandElement[] commandElements = new CommandElement[3];
-
-        commandElements[0] =
+        builder.arguments(
                 GenericArguments.choices(
                         Text.of(configNode.getNode("params", "job", "description").getString("job")),
                         JobsMain.instance().getJobs()
-                );
-
-        commandElements[1] =
+                ),
                 GenericArguments.doubleNum(
                         Text.of(configNode.getNode("params", "xp", "description").getString("xp"))
-                );
-
-        commandElements[2] = GenericArguments.optional(
-                getCommandElementWithPermission(
-                        GenericArguments.player(Text.of(
-                                configNode.getNode("params", "player", "description").getString("player")
-                        )),
-                        configNode.getNode("params", "player", "permission").getString("")
+                ),
+                GenericArguments.optional(
+                        getCommandElementWithPermission(
+                                GenericArguments.player(Text.of(
+                                        configNode.getNode("params", "player", "description").getString("player")
+                                )),
+                                configNode.getNode("params", "player", "permission").getString("")
+                        )
                 )
         );
-
-        builder.arguments(commandElements);
 
         return builder.build();
     }
@@ -105,7 +99,7 @@ public class AddXpCommand extends JobCommand {
     protected CommandResult execute(CommandSource commandSource, CommandContext args) throws CommandException {
         if (!(commandSource instanceof Player ||
                 args.hasAny(configNode.getNode("params", "player", "description").getString("player"))))
-            return CommandResult.empty();
+            throw new CommandException(Text.of("Only Players can use this command without a player parameter", true));
 
         Player player = (Player) args.getOne(
                 configNode.getNode("params", "player", "description").getString("player")

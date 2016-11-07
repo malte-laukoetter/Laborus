@@ -33,7 +33,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
 
-@Plugin(id = "de.lergin.sponge.laborus", name = "Laborus", version = "1.0", description = "a job plugin", authors = {"Lergin"})
+@Plugin(id = "laborus", name = "Laborus", version = "1.0", description = "a job plugin", authors = {"Lergin"})
 public class JobsMain {
     @Inject
     @DefaultConfig(sharedRoot = false)

@@ -6,6 +6,7 @@ import de.lergin.sponge.laborus.data.JobKeys;
 import de.lergin.sponge.laborus.job.Job;
 import de.lergin.sponge.laborus.util.ConfigHelper;
 import de.lergin.sponge.laborus.util.TranslationHelper;
+import javafx.scene.control.Pagination;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -16,6 +17,7 @@ import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.TextTemplate;
 import org.spongepowered.api.text.action.TextActions;
@@ -24,6 +26,7 @@ import org.spongepowered.api.text.format.TextFormat;
 import org.spongepowered.api.text.format.TextStyles;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.spongepowered.api.text.TextTemplate.arg;
 
@@ -56,17 +59,12 @@ public class InfoCommand extends JobCommand {
             builder.permission(permission);
         }
 
-        CommandElement[] commandElements = new CommandElement[1];
-
-        commandElements[0] =
-                GenericArguments.optional(
-                        GenericArguments.choices(
-                                Text.of(configNode.getNode("params", "job", "description").getString("job")),
-                                JobsMain.instance().getJobs()
-                        )
-                );
-
-        builder.arguments(commandElements);
+        builder.arguments(GenericArguments.optional(
+                GenericArguments.choices(
+                        Text.of(configNode.getNode("params", "job", "description").getString("job")),
+                        JobsMain.instance().getJobs()
+                )
+        ));
 
         return builder.build();
     }
@@ -92,7 +90,7 @@ public class InfoCommand extends JobCommand {
     @Override
     protected CommandResult execute(CommandSource commandSource, CommandContext args) throws CommandException {
         if (!(commandSource instanceof Player))
-            return CommandResult.empty();
+            throw new CommandException(Text.of("Only Players can use this command", false));
 
         Player player = (Player) commandSource;
 
@@ -108,7 +106,6 @@ public class InfoCommand extends JobCommand {
             vars.put("level", Text.of(job.getLevel(player)));
             vars.put("description", Text.of(job.getDescription()));
             vars.put("selected", Text.of(job.isSelected(player)));
-
 
             player.sendMessage(
                     TranslationHelper.template(
@@ -129,7 +126,7 @@ public class InfoCommand extends JobCommand {
                     ImmutableMap.copyOf(vars)
             );
         } else {
-            player.sendMessage(
+            PaginationList.Builder builder = PaginationList.builder().header(
                     TranslationHelper.template(
                             TextTemplate.of(
                                     TextColors.AQUA,
@@ -140,37 +137,36 @@ public class InfoCommand extends JobCommand {
                             ),
                             player.getLocale().toLanguageTag(),
                             "job_info_pre"
-                    )
+                    ).toText()
             );
 
-            for (Job job : JobsMain.instance().getJobs().values()) {
-                player.sendMessage(
-                        TranslationHelper.template(
-                                TextTemplate.of(
-                                        TextActions.runCommand("/jobs info " + job.getId()),
-                                        TextColors.AQUA,
-                                        arg("name").color(TextColors.GREEN).style(TextStyles.BOLD).build(),
-                                        "   ", arg("level").build(), "   ", arg("xp"), "   ", arg("selected").build()
-                                ),
-                                player.getLocale().toLanguageTag(),
-                                "job_info_jobitem"
-                        ),
-                        ImmutableMap.of(
-                                "name", Text.of(job.getName()),
-                                "level", Text.of(job.getLevel(player)),
-                                "xp", Text.of(job.getXp(player)),
-                                "selected", Text.of(job.isSelected(player))
-                        )
-                );
-            }
+            builder.contents(JobsMain.instance().getJobs().values().stream()
+                            .map(job -> TranslationHelper.template(
+                                     TextTemplate.of(
+                                            TextActions.runCommand("/jobs info " + job.getId()),
+                                            TextColors.AQUA,
+                                            arg("name").color(TextColors.GREEN).style(TextStyles.BOLD).build(),
+                                            "   ", arg("level").build(), "   ", arg("xp"), "   ", arg("selected").build()
+                                    ),
+                                    player.getLocale().toLanguageTag(),
+                                    "job_info_jobitem"
+                                ).apply(ImmutableMap.of(
+                                        "name", Text.of(job.getName()),
+                                        "level", Text.of(job.getLevel(player)),
+                                        "xp", Text.of(job.getXp(player)),
+                                        "selected", Text.of(job.isSelected(player))
+                                )).toText())
+                            .collect(Collectors.toCollection(ArrayList::new)));
 
-            player.sendMessage(TranslationHelper.template(
+            builder.footer(TranslationHelper.template(
                     TextTemplate.of(
                             ""
                     ),
                     player.getLocale().toLanguageTag(),
                     "job_info_post"
-            ));
+            ).toText());
+
+            builder.build().sendTo(player);
         }
 
         return CommandResult.success();

@@ -1,5 +1,7 @@
 package de.lergin.sponge.laborus.job.bonus;
 
+import com.google.common.collect.Sets;
+import de.lergin.sponge.laborus.job.JobAction;
 import de.lergin.sponge.laborus.job.JobBonus;
 import de.lergin.sponge.laborus.job.JobItem;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -10,6 +12,7 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.world.extent.Extent;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Random;
 
@@ -24,23 +27,20 @@ public class EpDrop extends JobBonus {
     public void useBonus(JobItem item, Player player) {
         if (this.isHappening()) {
             Extent extent = player.getLocation().getExtent();
-            Optional<Entity> itemEntity = extent.createEntity(EntityTypes.EXPERIENCE_ORB, player.getLocation().getPosition());
+            Entity itemEntity = extent.createEntity(EntityTypes.EXPERIENCE_ORB, player.getLocation().getPosition());
 
-            if (itemEntity.isPresent()) {
-                Entity entity = itemEntity.get();
-                entity.offer(Keys.CONTAINED_EXPERIENCE, new Random().nextInt(maxEp - minEp) + minEp);
+            itemEntity.offer(Keys.CONTAINED_EXPERIENCE, new Random().nextInt(maxEp - minEp) + minEp);
 
-                extent.spawnEntity(entity, Cause.builder().owner(player).build());
+            extent.spawnEntity(itemEntity, Cause.builder().owner(player).build());
 
-                if (isSendMessage()) {
-                    player.sendMessage(getMessage());
-                }
+            if (isSendMessage()) {
+                player.sendMessage(getMessage());
             }
         }
     }
 
     public EpDrop(ConfigurationNode config) {
-        super(config);
+        super(config, Sets.newHashSet(JobAction.BREAK, JobAction.ENTITY_KILL));
 
         this.minEp = config.getNode("minEp").getInt(1);
         this.maxEp = config.getNode("maxEp").getInt(1);

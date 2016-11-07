@@ -21,8 +21,8 @@ public abstract class JobBonus {
     private final int minLevel;
     private final int maxLevel;
     private final boolean onlySelected;
-    private final List<String> jobItems;// = new ArrayList<>();
-    private final Set<JobAction> jobActions = new HashSet<>();
+    private final List<String> jobItems;
+    private final Set<JobAction> jobActions;
 
     /**
      * @return true with the probability of probability
@@ -80,7 +80,7 @@ public abstract class JobBonus {
      *
      * @param config the {@link ConfigurationNode} with the data for the Bonus
      */
-    public JobBonus(ConfigurationNode config) {
+    public JobBonus(ConfigurationNode config, Set<JobAction> jobActions) {
         this.probability = config.getNode("probability").getDouble(0.05);
         this.sendMessage = config.getNode("sendMessage").getBoolean(false);
         this.message = Text.of(config.getNode("message").getString(""));
@@ -96,6 +96,8 @@ public abstract class JobBonus {
             e.printStackTrace();
         }
         this.jobItems = jobItems1;
+
+        this.jobActions = jobActions;
     }
 
     /**
