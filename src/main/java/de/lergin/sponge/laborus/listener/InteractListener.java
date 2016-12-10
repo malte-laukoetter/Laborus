@@ -21,8 +21,7 @@ public class InteractListener extends JobListener<ItemType> {
 
     @Listener
     public void onEvent(InteractEvent event, @First Player player) {
-        if (event.getCause().get("Source", Player.class).isPresent() && JOB.enabled(player) &&
-                player.getItemInHand(HandTypes.MAIN_HAND).isPresent()) {
+        if (JOB.enabled(player) && player.getItemInHand(HandTypes.MAIN_HAND).isPresent()) {
             final ItemType ITEM_TYPE = player.getItemInHand(HandTypes.MAIN_HAND).get().getItem();
 
             if (JOB_ITEM_TYPES.contains(ITEM_TYPE)) {

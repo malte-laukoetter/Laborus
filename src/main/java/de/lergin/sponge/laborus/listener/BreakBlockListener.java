@@ -24,7 +24,7 @@ public class BreakBlockListener extends JobListener<String> {
 
     @Listener
     public void onEvent(ChangeBlockEvent.Break event, @First Player player) {
-        if (event.getCause().get("Source", Player.class).isPresent() && JOB.enabled(player)) {
+        if (JOB.enabled(player)) {
             for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
                 final BlockSnapshot ORIGINAL_BLOCK = transaction.getOriginal();
                 final BlockState BLOCK_STATE = ORIGINAL_BLOCK.getState();

@@ -20,8 +20,7 @@ public class EntityTameListener extends JobListener<EntityType> {
 
     @Listener
     public void onEvent(TameEntityEvent event, @First Player player) {
-        if (event.getCause().get("Source", Player.class).isPresent() &&
-                JOB.enabled(player)) {
+        if (JOB.enabled(player)) {
             final EntityType ENTITY_TYPE = event.getTargetEntity().getType();
 
             if (JOB_ITEM_TYPES.contains(ENTITY_TYPE)) {

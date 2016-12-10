@@ -24,7 +24,7 @@ public class PlaceBlockListener extends JobListener<String> {
 
     @Listener
     public void onEvent(ChangeBlockEvent.Place event, @First Player player) {
-        if (event.getCause().get("Source", Player.class).isPresent() && JOB.enabled(player)) {
+        if (JOB.enabled(player)) {
             for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
                 final BlockSnapshot FINAL_BLOCK = transaction.getFinal();
                 final BlockState BLOCK_STATE = FINAL_BLOCK.getState();
