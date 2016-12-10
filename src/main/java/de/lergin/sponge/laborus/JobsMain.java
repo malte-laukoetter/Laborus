@@ -23,17 +23,14 @@ import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.entity.living.player.gamemode.GameMode;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.game.state.GameConstructionEvent;
-import org.spongepowered.api.event.game.state.GameInitializationEvent;
-import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
-import org.spongepowered.api.event.game.state.GameStoppedEvent;
+import org.spongepowered.api.event.game.state.*;
 import org.spongepowered.api.plugin.Plugin;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
 
-@Plugin(id = "laborus", name = "Laborus", version = "1.0", description = "a job plugin", authors = {"Lergin"})
+@Plugin(id = "laborus", name = "Laborus", version = "1.1", description = "a job plugin", authors = {"Lergin"})
 public class JobsMain {
     @Inject
     @DefaultConfig(sharedRoot = false)
@@ -43,6 +40,8 @@ public class JobsMain {
     @DefaultConfig(sharedRoot = false)
     private Path configDir;
 
+    @Inject
+    private Metrics metrics;
 
     @Inject
     private Logger logger;
