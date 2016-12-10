@@ -23,7 +23,7 @@ public final class AntiReplaceFarming {
      */
     private static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(
-                "jdbc:h2:./" + JobsMain.instance().getConfigDir().getParent().toString() + "/laborus",
+                "jdbc:h2:" + JobsMain.instance().getConfigDir().getParent().toString() + "/laborus",
                 "",
                 ""
         );

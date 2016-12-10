@@ -6,15 +6,21 @@ import de.lergin.sponge.laborus.job.Job;
 import org.spongepowered.api.data.DataHolder;
 import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.manipulator.DataManipulatorBuilder;
+import org.spongepowered.api.data.persistence.AbstractDataBuilder;
+import org.spongepowered.api.data.persistence.InvalidDataException;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class JobDataManipulatorBuilder implements DataManipulatorBuilder<JobData, ImmutableJobDataManipulator> {
+public class JobDataManipulatorBuilder extends AbstractDataBuilder<JobData> implements DataManipulatorBuilder<JobData, ImmutableJobDataManipulator> {
     private Map<String, Double> jobs = new HashMap<>();
     private boolean jobsEnabled = true;
     private Set<String> selectedJobs = new HashSet<>();
     private Map<String, Long> abilityUsed = new HashMap<>();
+
+    public JobDataManipulatorBuilder() {
+        super(JobData.class, 8);
+    }
 
     @Override
     public JobData create() {
@@ -57,7 +63,7 @@ public class JobDataManipulatorBuilder implements DataManipulatorBuilder<JobData
     }
 
     @Override
-    public Optional<JobData> build(DataView dataView) {
+    protected Optional<JobData> buildContent(DataView dataView) {
         if (dataView.contains(JobKeys.JOB_DATA.getQuery())) {
 
             // the data needs to be parsed by hand because we are getting a list instead of a set

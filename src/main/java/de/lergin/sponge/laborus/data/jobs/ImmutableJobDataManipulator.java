@@ -2,6 +2,7 @@ package de.lergin.sponge.laborus.data.jobs;
 
 import de.lergin.sponge.laborus.data.JobKeys;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.key.Key;
 import org.spongepowered.api.data.manipulator.immutable.common.AbstractImmutableData;
 import org.spongepowered.api.data.value.BaseValue;
@@ -74,5 +75,11 @@ public class ImmutableJobDataManipulator extends AbstractImmutableData<Immutable
     @Override
     public int getContentVersion() {
         return 8;
+    }
+
+    @Override
+    public DataContainer toContainer() {
+        return super.toContainer().set(JobKeys.JOB_DATA, this.jobs).set(JobKeys.JOB_ENABLED, jobsEnabled)
+                .set(JobKeys.JOB_SELECTED, this.selectedJobs).set(JobKeys.JOB_ABILITY_USED, this.abilityUsed);
     }
 }
