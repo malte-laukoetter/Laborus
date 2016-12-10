@@ -50,7 +50,7 @@ public abstract class JobBonus {
         if (maxLevel < job.getLevel(player))
             return false;
 
-        if (!(this.onlySelected && player.get(JobKeys.JOB_SELECTED).orElse(new HashSet<>()).contains(job.getId())))
+        if (!(this.onlySelected && player.get(JobKeys.JOB_SELECTED).orElseGet(HashSet::new).contains(job.getId())))
             return false;
 
         if (!(this.jobActions.isEmpty() || this.jobActions.contains(jobAction)))

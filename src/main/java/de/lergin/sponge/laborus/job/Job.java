@@ -162,7 +162,7 @@ public class Job {
      * @param amount the amount of xp that should be added
      */
     public void addXp(Player player, double amount) {
-        Map<String, Double> jobData = player.get(JobKeys.JOB_DATA).orElse(new HashMap<>());
+        Map<String, Double> jobData = player.get(JobKeys.JOB_DATA).orElseGet(HashMap::new);
 
         double oldXp = jobData.getOrDefault(getId(), 0.0);
         double newXp = oldXp + amount;
@@ -223,7 +223,7 @@ public class Job {
      * @return the xp of the player
      */
     public double getXp(Player player) {
-        return player.get(JobKeys.JOB_DATA).orElse(new HashMap<>()).getOrDefault(getId(), 0.0);
+        return player.get(JobKeys.JOB_DATA).orElseGet(HashMap::new).getOrDefault(getId(), 0.0);
     }
 
     /**
@@ -290,7 +290,7 @@ public class Job {
      * @return true if the {@link Job} selected
      */
     public boolean isSelected(Player player) {
-        Set<String> selectedJobs = player.get(JobKeys.JOB_SELECTED).orElse(new HashSet<>());
+        Set<String> selectedJobs = player.get(JobKeys.JOB_SELECTED).orElseGet(HashSet::new);
 
         return selectedJobs.contains(getId());
     }

@@ -68,7 +68,7 @@ public class JobDataManipulatorBuilder extends AbstractDataBuilder<JobData> impl
 
             // the data needs to be parsed by hand because we are getting a list instead of a set
             Set<String> selectedJobs =
-                    ((ImmutableList<?>) dataView.get(JobKeys.JOB_SELECTED.getQuery()).orElse(new HashSet<>())).stream()
+                    ((ImmutableList<?>) dataView.get(JobKeys.JOB_SELECTED.getQuery()).orElseGet(HashSet::new)).stream()
                             .map(string -> (String) string)
                             .collect(Collectors.toSet());
 

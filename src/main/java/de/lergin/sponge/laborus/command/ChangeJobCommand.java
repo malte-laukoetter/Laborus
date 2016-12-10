@@ -104,7 +104,7 @@ public class ChangeJobCommand extends JobCommand {
         boolean join = (Boolean)
                 args.getOne(configNode.getNode("params", "action", "description").getString("action")).orElse(true);
 
-        Set<String> selectedJobs = player.get(JobKeys.JOB_SELECTED).orElse(new HashSet<>());
+        Set<String> selectedJobs = player.get(JobKeys.JOB_SELECTED).orElseGet(HashSet::new);
 
         Job job =
                 ((Job) args.getOne(configNode.getNode("params", "job", "description").getString("job")).get());

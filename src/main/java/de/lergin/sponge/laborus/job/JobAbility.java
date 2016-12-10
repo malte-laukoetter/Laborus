@@ -71,13 +71,13 @@ public abstract class JobAbility {
     }
 
     public boolean canStartAbility(Player player) {
-        Map<String, Long> abilityUsed = player.get(JobKeys.JOB_ABILITY_USED).orElse(new HashMap<>());
+        Map<String, Long> abilityUsed = player.get(JobKeys.JOB_ABILITY_USED).orElseGet(HashMap::new);
 
         return (abilityUsed.getOrDefault(getJob().getId(), 0L) + coolDown) < Instant.now().getEpochSecond();
     }
 
     public void startCoolDown(Player player) {
-        Map<String, Long> abilityUsed = player.get(JobKeys.JOB_ABILITY_USED).orElse(new HashMap<>());
+        Map<String, Long> abilityUsed = player.get(JobKeys.JOB_ABILITY_USED).orElseGet(HashMap::new);
         Map<String, Long> tempMap = new HashMap<>();
         tempMap.putAll(abilityUsed);
         tempMap.put(this.getJob().getId(), Instant.now().getEpochSecond());
@@ -96,7 +96,7 @@ public abstract class JobAbility {
     }
 
     public long getSecondsTillEndOfCoolDown(Player player) {
-        Map<String, Long> abilityUsed = player.get(JobKeys.JOB_ABILITY_USED).orElse(new HashMap<>());
+        Map<String, Long> abilityUsed = player.get(JobKeys.JOB_ABILITY_USED).orElseGet(HashMap::new);
 
         return abilityUsed.getOrDefault(getJob().getId(), (long) coolDown) + coolDown - Instant.now().getEpochSecond();
     }

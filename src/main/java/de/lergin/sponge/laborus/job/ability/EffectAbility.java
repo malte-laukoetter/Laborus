@@ -43,7 +43,7 @@ public class EffectAbility extends JobAbility {
             return false;
         }
 
-        List<PotionEffect> potionEffects = player.get(Keys.POTION_EFFECTS).orElse(new ArrayList<>());
+        List<PotionEffect> potionEffects = player.get(Keys.POTION_EFFECTS).orElseGet(ArrayList::new);
         potionEffects.add(effect);
         player.offer(Keys.POTION_EFFECTS, potionEffects);
 

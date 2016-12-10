@@ -105,7 +105,7 @@ public class AddXpCommand extends JobCommand {
                 configNode.getNode("params", "player", "description").getString("player")
         ).orElse(commandSource);
 
-        Map<String, Double> jobData = player.get(JobKeys.JOB_DATA).orElse(new HashMap<>());
+        Map<String, Double> jobData = player.get(JobKeys.JOB_DATA).orElseGet(HashMap::new);
 
         Job job =
                 ((Job) args.getOne(configNode.getNode("params", "job", "description").getString("job")).get());
