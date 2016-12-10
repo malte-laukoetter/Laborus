@@ -48,7 +48,7 @@ public class ChangeJobCommand extends JobCommand {
 
         builder.description(Text.of(configNode.getNode("description").getString("MISSING DESCRIPTION")));
 
-        builder.executor(getExecutor());
+        builder.executor(this);
 
         final String permission = configNode.getNode("permission").getString("");
 
@@ -93,7 +93,7 @@ public class ChangeJobCommand extends JobCommand {
      * @see CommandExecutor#execute(CommandSource, CommandContext)
      */
     @Override
-    protected CommandResult execute(CommandSource commandSource, CommandContext args) throws CommandException {
+    public CommandResult execute(CommandSource commandSource, CommandContext args) throws CommandException {
         if (!(commandSource instanceof Player))
             throw new CommandException(Text.of("Only Players can use this command", false));
 

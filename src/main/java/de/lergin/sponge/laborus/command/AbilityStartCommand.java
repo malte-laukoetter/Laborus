@@ -37,7 +37,7 @@ public class AbilityStartCommand extends JobCommand {
 
         builder.description(Text.of(configNode.getNode("description").getString()));
 
-        builder.executor(getExecutor());
+        builder.executor(this);
 
         final String permission = configNode.getNode("permission").getString();
 
@@ -73,7 +73,7 @@ public class AbilityStartCommand extends JobCommand {
     }
 
     @Override
-    protected CommandResult execute(CommandSource commandSource, CommandContext args) throws CommandException {
+    public CommandResult execute(CommandSource commandSource, CommandContext args) throws CommandException {
         if (!(commandSource instanceof Player))
             throw new CommandException(Text.of("Only Players can use this command", false));
 

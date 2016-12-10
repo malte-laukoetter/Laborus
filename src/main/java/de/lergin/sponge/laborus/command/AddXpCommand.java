@@ -48,7 +48,7 @@ public class AddXpCommand extends JobCommand {
 
         builder.description(Text.of(configNode.getNode("description").getString()));
 
-        builder.executor(getExecutor());
+        builder.executor(this);
 
         final String permission = configNode.getNode("permission").getString();
 
@@ -96,7 +96,7 @@ public class AddXpCommand extends JobCommand {
      * @see CommandExecutor#execute(CommandSource, CommandContext)
      */
     @Override
-    protected CommandResult execute(CommandSource commandSource, CommandContext args) throws CommandException {
+    public CommandResult execute(CommandSource commandSource, CommandContext args) throws CommandException {
         if (!(commandSource instanceof Player ||
                 args.hasAny(configNode.getNode("params", "player", "description").getString("player"))))
             throw new CommandException(Text.of("Only Players can use this command without a player parameter", true));
