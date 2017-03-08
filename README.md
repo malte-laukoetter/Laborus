@@ -1,4 +1,5 @@
-# Laborus
+![Laborus](https://lergin.de/img/plugins/Laborus_Banner.png)
+
 a Minecraft job plugin for [Sponge](https://Spongepowered.org "SpongePowered.org")
 
 1. Features
@@ -17,18 +18,18 @@ a Minecraft job plugin for [Sponge](https://Spongepowered.org "SpongePowered.org
 * Jobs in Minecraft
 * reward the placing and destroying of Blocks, the using of items and the killing and taming of mobs
 * Job Abilities that eg. allow you to destroy blocks faster for 3 minutes every two hours
-* anti replace farming system that blocks the rewarding of the placing and destroying of blocks on the same spot so the economy isn't as easily exploidable 
+* anti replace farming system that blocks the rewarding of the placing and destroying of blocks on the same spot so the economy isn't as easily exploitable 
 * only allow doing the actions (eg. destroying of a block) after a specific level
 * Job Boni like special or multiple drops or repairing of items
-* completly configurable and translatable
+* completely configurable and translatable
 
 A full lists of all possible actions, boni and abilities you can find in the Configuration section.
 
 ## How to use
 To use this plugin you need a [Sponge](https://spongepowered.org) Server that is supporting the SpongeApi Version 4.0.
 If you have a Server like this you only need to place the pluginfile into the mods folder. 
-When you have done this and you have started and stopped the server the default configuration file will automaticly be added, but you still need to add the jobs you want to have to this file due to the missing of jobs in the default configuration. 
-Some ready configuration files you can find in the [jobs folder in this repo](jobs). These files you can just copy and paste into the configuration folder of the plugin and link them in the configuration file (de.lergin.sponge.jobs.conf) like this:
+When you have done this and you have started and stopped the server the default configuration file will automatically be added, but you still need to add the jobs you want to have to this file due to the missing of jobs in the default configuration. 
+Some ready configuration files you can find in the [jobs folder in the Github repository](https://github.com/Lergin/Laborus/tree/master/jobs). These files you can just copy and paste into the configuration folder of the plugin and link them in the configuration file (de.lergin.sponge.jobs.conf) like this:
 ```Javascript
 jobs: {
   miner: "miner.conf"
@@ -121,9 +122,9 @@ Permission: `laborus.commands.ability`
 |Name|Works with Jobactions|Description|special config settings
 |----|------------|---|---|
 |multiDrop|destroyBlocks, placeBlocks|drops the item of the action another time|itemMultiplier -> amount of items that should be droped extra
-|ep|all|drops some ep (not job xp)|minEp -> minimum of ep droped <br> maxEp -> maximum of ep droped
+|ep|all|drops some ep (not job xp)|minEp -> minimum of ep dropped <br> maxEp -> maximum of ep dropped
 |itemRepair|all, needs an item in the hand slot with durability|repairs the item by a given percentage|minPercentage -> minimum the item gets repaired <br> maxPercentage -> maximum the item gets repaired
-|itemDrop|all|drops an extra item|itemType -> the itemType of the item <br> amount -> the amount of items that should be droped
+|itemDrop|all|drops an extra item|itemType -> the itemType of the item <br> amount -> the amount of items that should be dropped
 
 #### Ability
 
