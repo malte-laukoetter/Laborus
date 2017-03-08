@@ -35,6 +35,7 @@ public class Job {
     private final String NAME;
     private final String ID;
     private final String DESCRIPTION;
+    private final String PERMISSION;
     private final JobAbility jobAbility;
     private final Map<JobAction, List<JobItem>> jobActions = new HashMap<>();
     private final List<GameMode> enabledGameModes = JobsMain.instance().getEnabledGameModes();
@@ -49,6 +50,7 @@ public class Job {
     public Job(ConfigurationNode jobConfig) {
         this.NAME = jobConfig.getNode("name").getString();
         this.DESCRIPTION = jobConfig.getNode("description").getString();
+        this.PERMISSION = jobConfig.getNode("permission").getString();
 
         if (jobConfig.getNode("id").getString("").equals("")) {
             this.ID = jobConfig.getKey().toString();
@@ -417,6 +419,16 @@ public class Job {
         }
 
         return this.level.size();
+    }
+
+    /**
+     * tests if a player can join the job
+     *
+     * @param player the player
+     * @return has the player the permission to use the job
+     */
+    public boolean hasPermission(Player player) {
+        return this.PERMISSION.equals("") || player.hasPermission(this.PERMISSION);
     }
 
     public int getLevel(Player player) {

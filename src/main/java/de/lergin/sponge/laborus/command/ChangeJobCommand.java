@@ -139,6 +139,23 @@ public class ChangeJobCommand extends JobCommand {
                     );
 
                     return CommandResult.empty();
+                }else if(!job.hasPermission(player)){
+                    player.sendMessage(
+                            TranslationHelper.template(
+                                    TextTemplate.of(
+                                            TextColors.AQUA,
+                                            "You cannot join ", arg("jobName").color(TextColors.GREEN).build(),
+                                            " (missing permission)"
+                                    ),
+                                    player.getLocale().toLanguageTag(),
+                                    "job_join_missing_permission"
+                            ),
+                            ImmutableMap.of(
+                                    "jobName", Text.of(job.getName())
+                            )
+                    );
+
+                    return CommandResult.empty();
                 }
 
                 selectedJobs.add(job.getId());

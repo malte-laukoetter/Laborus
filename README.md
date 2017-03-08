@@ -75,6 +75,7 @@ Permission: `laborus.commands.ability`
 |----|-----------|-------------|
 |name|the display name of the job|""|
 |description|a description of the job|""|
+|permission|a permission needed to join the job|""|
 |use_default_level|does the job uses the default levels|true|
 |level|the levels of the job <br> see Level|[]|
 |bonus|a list of jobBoni|[]|
