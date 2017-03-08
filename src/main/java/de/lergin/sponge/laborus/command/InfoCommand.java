@@ -101,8 +101,8 @@ public class InfoCommand extends JobCommand {
             Map<String, Text> vars = new HashMap<>();
 
             vars.put("name", Text.of(job.getName()));
-            vars.put("xp", Text.of(job.getXp(player)));
-            vars.put("xpTillNextLevel", Text.of(job.getXpTillNextLevel(player)));
+            vars.put("xp", Text.of(String.format("%1$.2f", job.getXp(player))));
+            vars.put("xpTillNextLevel", Text.of(String.format("%1$.2f", job.getXpTillNextLevel(player))));
             vars.put("level", Text.of(job.getLevel(player)));
             vars.put("description", Text.of(job.getDescription()));
             vars.put("selected", Text.of(job.isSelected(player)));
@@ -146,14 +146,16 @@ public class InfoCommand extends JobCommand {
                                             TextActions.runCommand("/jobs info " + job.getId()),
                                             TextColors.AQUA,
                                             arg("name").color(TextColors.GREEN).style(TextStyles.BOLD).build(),
-                                            "   ", arg("level").build(), "   ", arg("xp"), "   ", arg("selected").build()
+                                            "   ", arg("level").build(), "   ", arg("xp"), " / ", arg("xpForNextLevel"),
+                                            "   ", arg("selected").build()
                                     ),
                                     player.getLocale().toLanguageTag(),
                                     "job_info_jobitem"
                                 ).apply(ImmutableMap.of(
                                         "name", Text.of(job.getName()),
                                         "level", Text.of(job.getLevel(player)),
-                                        "xp", Text.of(job.getXp(player)),
+                                        "xp", Text.of(String.format("%1$.2f",job.getXp(player))),
+                                        "xpForNextLevel", Text.of(String.format("%1$.2f", job.getXp(player) + job.getXpTillNextLevel(player))),
                                         "selected", Text.of(job.isSelected(player))
                                 )).toText())
                             .collect(Collectors.toCollection(ArrayList::new)));

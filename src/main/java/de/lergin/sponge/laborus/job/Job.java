@@ -208,7 +208,7 @@ public class Job {
                             "job_xp_action_bar"
                     ).apply(
                             ImmutableMap.of(
-                                    "xp", Text.of(newXp),
+                                    "xp", Text.of(String.format("%1$.2f",newXp)),
                                     "jobName", Text.of(this.getName())
                             )
                     ).build()
