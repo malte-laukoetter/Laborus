@@ -110,9 +110,8 @@ public class InfoCommand extends JobCommand {
             player.sendMessage(
                     TranslationHelper.template(
                             TextTemplate.of(
-                                    TextColors.AQUA,
-                                    "=================== ", arg("name").color(TextColors.GREEN).style(TextStyles.BOLD).build(),
-                                    " ===================", "\n",
+                                    "===================== ", arg("name").color(TextColors.GREEN).style(TextStyles.BOLD).build(),
+                                    " =====================", "\n",
                                     arg("description").build(), "\n",
                                     "Current XP: ", arg("xp").color(TextColors.GREEN).build(), "\n",
                                     "Current Level: ", arg("level").color(TextColors.GREEN).build(), "\n",
@@ -129,11 +128,9 @@ public class InfoCommand extends JobCommand {
             PaginationList.Builder builder = PaginationList.builder().header(
                     TranslationHelper.template(
                             TextTemplate.of(
-                                    TextColors.AQUA,
-                                    "=================== ",
+                                    "======================= ",
                                     Text.builder("Jobs").style(TextStyles.BOLD).color(TextColors.GREEN).build(),
-                                    " ===================", "\n",
-                                    "Name             Level          Xp           Selected"
+                                    " ========================"
                             ),
                             player.getLocale().toLanguageTag(),
                             "job_info_pre"
@@ -144,17 +141,16 @@ public class InfoCommand extends JobCommand {
                             .map(job -> TranslationHelper.template(
                                      TextTemplate.of(
                                             TextActions.runCommand("/jobs info " + job.getId()),
-                                            TextColors.AQUA,
                                             arg("name").color(TextColors.GREEN).style(TextStyles.BOLD).build(),
-                                            "   ", arg("level").build(), "   ", arg("xp"), " / ", arg("xpForNextLevel"),
-                                            "   ", arg("selected").build()
+                                            "  Level: ", arg("level").color(TextColors.GREEN).build(), "  Xp: ", arg("xp").color(TextColors.GREEN), " / ", arg("xpForNextLevel").color(TextColors.GREEN),
+                                            "  Selected: ", arg("selected").color(TextColors.GREEN).build()
                                     ),
                                     player.getLocale().toLanguageTag(),
                                     "job_info_jobitem"
                                 ).apply(ImmutableMap.of(
                                         "name", Text.of(job.getName()),
                                         "level", Text.of(job.getLevel(player)),
-                                        "xp", Text.of(String.format("%1$.2f",job.getXp(player))),
+                                        "xp", Text.of(String.format("%1$.2f", job.getXp(player))),
                                         "xpForNextLevel", Text.of(String.format("%1$.2f", job.getXp(player) + job.getXpTillNextLevel(player))),
                                         "selected", Text.of(job.isSelected(player))
                                 )).toText())
