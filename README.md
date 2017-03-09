@@ -4,42 +4,36 @@ a Minecraft job plugin for [Sponge](https://Spongepowered.org "SpongePowered.org
 
 1. Features
 2. How to use
+  1. Commands
 3. Configuration
-  1. Jobs
-     1. Actions
-     2. Boni
-     3. Ability
-  2. Commands
-  3. Translation
-4. Contribution
+  1. General
+  2. Jobs
+     1. General settings
+     2. JobActions
+     3. JobBoni
+     4. Ability
 
 ## Features
 
 * Jobs in Minecraft
 * reward the placing and destroying of Blocks, the using of items and the killing and taming of mobs
 * Job Abilities that eg. allow you to destroy blocks faster for 3 minutes every two hours
-* anti replace farming system that blocks the rewarding of the placing and destroying of blocks on the same spot so the economy isn't as easily exploitable 
+* anti replace farming system that blocks the rewarding of the placing and destroying of blocks on the same spot so the economy isn't as easily exploitable
 * only allow doing the actions (eg. destroying of a block) after a specific level
 * Job Boni like special or multiple drops or repairing of items
 * completely configurable and translatable
 
-A full lists of all possible actions, boni and abilities you can find in the Configuration section.
+A full lists of all possible actions, boni and abilities can be found in the Configuration section.
 
 ## How to use
-To use this plugin you need a [Sponge](https://spongepowered.org) Server that is supporting the SpongeApi Version 4.0.
-If you have a Server like this you only need to place the pluginfile into the mods folder. 
-When you have done this and you have started and stopped the server the default configuration file will automatically be added, but you still need to add the jobs you want to have to this file due to the missing of jobs in the default configuration. 
-Some ready configuration files you can find in the [jobs folder in the Github repository](https://github.com/Lergin/Laborus/tree/master/jobs). These files you can just copy and paste into the configuration folder of the plugin and link them in the configuration file (de.lergin.sponge.jobs.conf) like this:
-```Javascript
-jobs: {
-  miner: "miner.conf"
-  woodcutter: "woodcutter.conf"
-}
-```
+To use this plugin you need a [Sponge](https://spongepowered.org) Server that is supporting the SpongeApi Version 5.2.
+If you have a Server like this you only need to place the pluginfile into the mods folder.
+When you have done this and you have started the server the default configuration file will automatically be added, but you still need to add the jobs you want to have to this file due to the missing of jobs in the default configuration.
+Some ready configuration files with some jobs can be found in the [jobs folder in the Github repository](https://github.com/Lergin/Laborus/tree/master/jobs). These files can just be used to replace the automatically created config and will get all missing configuration keys after the next stop of the server.
 
 ### Commands
 
-#### /jobs addXP <job> <xp> [player]
+#### /jobs addXP [job] [xp] [player]
 
 This command adds the given amount of xp to the xp of the job.
 
@@ -47,7 +41,7 @@ Permission: `laborus.commands.addXp`
 
 Permission for player arg: `laborus.commands.addXp.outher_player`
 
-#### /jobs change <join|leave> <job>
+#### /jobs change [join|leave] [job]
 
 Joins or leaves the job. A job that is joined can give more xp for actions and special boni. The amount of jobs that can be joined can be limited.
 
@@ -59,13 +53,31 @@ Activates or deactivates the job system for the player that executes this comman
 
 Permission: `laborus.commands.toggle`
 
-#### /jobs ability <job>
+#### /jobs ability [job]
 
 Starts the ability of the job.
 
 Permission: `laborus.commands.ability`
 
+#### /jobs info [job]
+
+Shows information about the job if one is send with the command, otherwise a list of all jobs is shown.
+
 ## Configuration
+
+### General
+
+|Name|Description|Default value|
+|----|-----------|-------------|
+|enabledGamemodes|list of gamemodes the job system is activated in|[adventure, survival]|
+|antiReplaceActive|is the anti replace farming system active|false|
+|antiReplaceTime|the time in hours after that a block will again be rewarded if the anti replace farming system is active|48|
+|maxSelectedJobs|maximum amount of jobs that can be selected at the same time|1|
+|xpWithoutJob|the value the ep is multiplied by if the job is not selected|0.5|
+|level|the default ep borders for the next level|[0,50,100...]|
+|jobs|the list of the configuraitons for the jobs|[]|
+|commands|the settings for the commands|automatically generated, can be edited|
+|translations|the settings for the messages|automatically generated, can be edited|
 
 ### Jobs
 
@@ -76,13 +88,23 @@ Permission: `laborus.commands.ability`
 |name|the display name of the job|""|
 |description|a description of the job|""|
 |permission|a permission needed to join the job|""|
-|use_default_level|does the job uses the default levels|true|
-|level|the levels of the job <br> see Level|[]|
-|bonus|a list of jobBoni|[]|
-|ability|the ability of this job||
-|ACTION_NAME <br>-> needs to be replaced by the name of the action|the settings for the action|{}|
+|level|the levels of the job if it is empty the default jobs will be used|[]|
+|bonus|see JobBoni|{multiDrop=[], ep=[], itemRepair=[], itemDrop=[], economy=[]}|
+|ability|the ability of this job|{}|
+|actions|see JobActions|{break=[], place=[], kill=[], damage=[], use=[], tame=[]}|
 
-#### Actions
+#### JobActions
+
+All JobActions need a list of JobItems with the informations
+
+|Name|Description|Supported JobItem items|
+|----|------------|----|
+|break|for the destruction of blocks|blockstate
+|place|placing of blocks|blockstate
+|kill|killing of entities, can't be canceled -> no needLevel|entitytype
+|damage|damaging of entities|entitytype
+|use|interaction with the item in the hand (right and left click)|itemtype
+|tame|when an entity is tamed|entitytype
 
 ##### Settings for JobItems
 
@@ -90,61 +112,74 @@ Permission: `laborus.commands.ability`
 |----|-----------|-------------|
 |xp|the amount of xp the player gets if he does the action with this item|0.0|
 |needLevel|the level the player needs to have to do this action|0|
+|item|the item of the jobaction|""
 
-##### Possible actions:
+The items are strings like "minecraft:stone" for stone blocks or "minecraft:wooden_pickaxe" for wooden pickaxes.
 
-|Name|Description|info|
-|----|------------|----|
-|destroyBlocks|for the destruction of blocks
-|placeBlocks|placing of blocks
-|killEntities|killing of entities|can't be canceled -> no needLevel
-|damageEntities|damaging of entities
-|useItems|interaction with the item in the hand (right and left click)
-|tameEntities|when an entity is tamed
+#### JobBoni
 
-#### Boni
+The available boni types are:
 
+|Name|Works with Jobactions|Description|
+|----|------------|---|---|
+|multiDrop|destroyBlocks, placeBlocks|drops the item of the action another time
+|ep|all|drops some ep (not job xp)
+|itemRepair|all, needs an item in the hand slot with durability|repairs the item by a given percentage
+|itemDrop|all|drops an extra item
+|economy|all|awards economy money
 
-##### Settings
+Each of these Boni have a list of Boni Settings under them.
+
+##### Boni Settings
 
 |Name|Description|Default value|
 |----|-----------|-------------|
 |probability|the probability the boni will be used at an action|0.05|
 |sendMessage|should a message be send to the player if the boni is rewarded|false|
 |message|the message that will be send if sendMessage is true|""|
-|condition.minLevel|the min. level the player need to have to get this boni|Integer.MIN_VALUE|
-|condition.maxLevel|the max. level the player is allowed to have to get this boni|Integer.MAX_VALUE|
-|condition.onlySelected|only reward the boni if the job is selected|true|
-|condition.actions|only reward if the action that starts this boni is in this list. <br> A comma separated list of actionNames within []|[] -> all actions will start the boni|
-|condition.items|only reward if the item that starts this boni is in this list. <br> A comma separated list of itemNames within []|[] -> all items will start the boni|
+|minLevel|the min. level the player need to have to get this boni|0|
+|maxLevel|the max. level the player is allowed to have to get this boni|-1|
+|onlySelected|only reward the boni if the job is selected|true|
 
-##### Possible actions:
+Extra Settings for the different Boni Types:
 
-|Name|Works with Jobactions|Description|special config settings
-|----|------------|---|---|
-|multiDrop|destroyBlocks, placeBlocks|drops the item of the action another time|itemMultiplier -> amount of items that should be droped extra
-|ep|all|drops some ep (not job xp)|minEp -> minimum of ep dropped <br> maxEp -> maximum of ep dropped
-|itemRepair|all, needs an item in the hand slot with durability|repairs the item by a given percentage|minPercentage -> minimum the item gets repaired <br> maxPercentage -> maximum the item gets repaired
-|itemDrop|all|drops an extra item|itemType -> the itemType of the item <br> amount -> the amount of items that should be dropped
-
-#### Ability
-
-##### Settings
+###### multiDrop
 
 |Name|Description|Default value|
 |----|-----------|-------------|
-|name|the name of the ability|none|
-|coolDown|amount of seconds between uses|60|
+|extraDrops|the amount of extra items|0|
 
-##### Possible abilities:
+###### ep
 
-|Name|Desctription|special config settings|
-|----|------------|---|
-|effect|adds a potion effect to the player|amplifier -> effect level<br>duration -> amount of seconds the effect holds on<br>type -> potion type<br>particles -> should the particles not be hidden<br>ambience -> the ambience setting of a effect
+|Name|Description|Default value|
+|----|-----------|-------------|
+|minEp|the minimum amount of Ep|0|
+|maxEp|the maximum amount of Ep|0|
 
-### Commands
+###### itemRepair
 
-### Translations
+|Name|Description|Default value|
+|----|-----------|-------------|
+|minPercent|the minimum percent the item gets repaired|0|
+|maxPercent|the maximum percent the item gets repaired|0|
 
+###### itemDrop
 
-## Contribution
+|Name|Description|Default value|
+|----|-----------|-------------|
+|item|the itemstack that will be droped|{type="dirt", amount=1}|
+
+###### economy
+
+|Name|Description|Default value|
+|----|-----------|-------------|
+|amountMin|the minimum amount of money rewarded|0.0|
+|amountMax|the maximum amount of money rewarded|0.0|
+
+#### Ability
+
+|Name|Description|Default value|
+|----|-----------|-------------|
+|name|the name of the ability|""|
+|cooldown|amount of seconds between uses|0|
+|potionEffect|adds a potion effect to the player|{amplifier=0, duration=1, potionType="minecraft:speed", particles=true, ambiance=false}
