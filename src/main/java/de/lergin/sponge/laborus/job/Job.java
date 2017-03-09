@@ -1,116 +1,74 @@
 package de.lergin.sponge.laborus.job;
 
-import com.google.common.collect.ImmutableMap;
-import de.lergin.sponge.laborus.JobsMain;
+import com.google.common.collect.ImmutableList;
+import de.lergin.sponge.laborus.Laborus;
+import de.lergin.sponge.laborus.config.TranslationKeys;
 import de.lergin.sponge.laborus.data.JobKeys;
 import de.lergin.sponge.laborus.data.jobs.JobDataManipulatorBuilder;
 import de.lergin.sponge.laborus.job.ability.EffectAbility;
 import de.lergin.sponge.laborus.job.bonus.*;
+import de.lergin.sponge.laborus.job.items.EntityJobItem;
+import de.lergin.sponge.laborus.job.items.ItemJobItem;
+import de.lergin.sponge.laborus.job.items.StringJobItem;
 import de.lergin.sponge.laborus.util.BlockStateComparator;
-import de.lergin.sponge.laborus.util.ConfigHelper;
-import de.lergin.sponge.laborus.util.TranslationHelper;
-import ninja.leaping.configurate.ConfigurationNode;
-import org.spongepowered.api.CatalogType;
+import ninja.leaping.configurate.objectmapping.Setting;
+import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.entity.living.player.gamemode.GameMode;
-import org.spongepowered.api.service.economy.EconomyService;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.TextTemplate;
+import org.spongepowered.api.text.TextElement;
 import org.spongepowered.api.text.chat.ChatTypes;
-import org.spongepowered.api.text.format.TextColors;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.spongepowered.api.text.TextTemplate.arg;
-
 /**
  * class for Jobs
  */
+@ConfigSerializable
 public class Job {
-    private final String NAME;
-    private final String ID;
-    private final String DESCRIPTION;
-    private final String PERMISSION;
-    private final JobAbility jobAbility;
-    private final Map<JobAction, List<JobItem>> jobActions = new HashMap<>();
-    private final List<GameMode> enabledGameModes = JobsMain.instance().getEnabledGameModes();
-    private final Set<JobBonus> jobBonuses = new HashSet<>();
-    private final List<Integer> level = new ArrayList<>();
+    @Setting(value = "name")
+    private String NAME = "unknown";
 
-    /**
-     * create a new Job from a config node
-     *
-     * @param jobConfig a config node with all the information for the job
-     */
-    public Job(ConfigurationNode jobConfig) {
-        this.NAME = jobConfig.getNode("name").getString();
-        this.DESCRIPTION = jobConfig.getNode("description").getString();
-        this.PERMISSION = jobConfig.getNode("permission").getString();
+    @Setting(value = "id")
+    private String ID = "unknown";
 
-        if (jobConfig.getNode("id").getString("").equals("")) {
-            this.ID = jobConfig.getKey().toString();
-        } else {
-            this.ID = jobConfig.getNode("id").getString();
-        }
+    @Setting(value = "description")
+    private String DESCRIPTION = "unknown";
 
-        List<? extends ConfigurationNode> levelConfig;
+    @Setting(value = "permission")
+    private String PERMISSION = "";
 
-        if (jobConfig.getNode("use_default_level").getBoolean(true)) {
-            levelConfig = ConfigHelper.getNode("level").getChildrenList();
-        } else {
-            levelConfig = jobConfig.getNode("level").getChildrenList();
-        }
+    @Setting(value = "ability")
+    private EffectAbility jobAbility = null;
 
-        this.level.addAll(
-                levelConfig.stream().map(ConfigurationNode::getInt).collect(Collectors.toList())
-        );
+    @Setting(value = "bonus")
+    private JobBoni jobBoni = new JobBoni();
 
-        initStringJobAction(jobConfig.getNode("destroyBlocks"), JobAction.BREAK);
-        initStringJobAction(jobConfig.getNode("placeBlocks"), JobAction.PLACE);
-        initJobAction(jobConfig.getNode("killEntities"), JobAction.ENTITY_KILL);
-        initJobAction(jobConfig.getNode("damageEntities"), JobAction.ENTITY_DAMAGE);
-        initJobAction(jobConfig.getNode("useItems"), JobAction.ITEM_USE);
-        initJobAction(jobConfig.getNode("tameEntities"), JobAction.ENTITY_TAME);
+    @Setting(value = "actions")
+    private JobActions jobActions = new JobActions();
 
-        for (ConfigurationNode bonusNode : jobConfig.getNode("bonus").getChildrenList()) {
-            switch (bonusNode.getNode("id").getString()) {
-                case "multiDrop":
-                    jobBonuses.add(new MultiDrop(bonusNode));
-                    break;
-                case "ep":
-                    jobBonuses.add(new EpDrop(bonusNode));
-                    break;
-                case "itemRepair":
-                    jobBonuses.add(new ItemRepair(bonusNode));
-                    break;
-                case "itemDrop":
-                    jobBonuses.add(new ItemDrop(bonusNode));
-                    break;
-                case "economy":
-                    if(Sponge.getServiceManager().isRegistered(EconomyService.class)){
-                        jobBonuses.add(new EconomyReward(bonusNode));
-                    }else{
-                        JobsMain.instance().getLogger().warn("No economy Plugin -> do not init economy reward.");
-                    }
-                    break;
+    @Setting(value = "level")
+    private List<Long> level = null;
+
+    public void initJob(){
+        getJobActions().forEach((k,v) -> {
+            try {
+                Sponge.getEventManager().registerListeners(
+                        Laborus.instance(),
+                        k.getListenerConstructor().newInstance(this, v.stream().map(JobItem::getItem).collect(Collectors.toList()))
+                );
+            } catch (InstantiationException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                e.printStackTrace();
             }
-        }
+        });
 
-        ConfigurationNode abilityConfig = jobConfig.getNode("ability");
-
-        switch (abilityConfig.getNode("id").getString("")) {
-            case "effect":
-                this.jobAbility = new EffectAbility(this, jobConfig.getNode("ability"));
-                break;
-            default:
-                this.jobAbility = null;
-        }
     }
+
+    public Job() {}
 
     /**
      * returns the name of the job
@@ -157,6 +115,10 @@ public class Job {
         return jobAbility != null;
     }
 
+    public Map<JobAction, List<? extends JobItem>> getJobActions() {
+        return jobActions.get();
+    }
+
     /**
      * adds some xp to the {@link Player} in this job
      *
@@ -177,43 +139,23 @@ public class Job {
             player.offer(new JobDataManipulatorBuilder().jobs(jobData).create());
         }
 
-        this.level.stream().filter(level -> level > oldXp && level <= newXp).forEach(level -> {
+        this.getLevel().stream().filter(level -> level > oldXp && level <= newXp).forEach(level -> {
             player.sendMessage(
-                    TranslationHelper.template(
-                            TextTemplate.of(
-                                    TextColors.AQUA,
-                                    "You have reached level ",
-                                    arg("level").color(TextColors.GREEN).build(),
-                                    " in the job ",
-                                    arg("jobName").color(TextColors.GREEN).build()
-                            ),
-                            player.getLocale().toLanguageTag(),
-                            "job_level_up"
+                    Laborus.instance().translationHelper.get(
+                            TranslationKeys.JOB_LEVEL_UP,
+                            player
                     ),
-                    ImmutableMap.of(
-                            "level", Text.of(this.level.indexOf(level)),
-                            "jobName", Text.of(this.getName())
-                    )
+                    this.textArgs(player)
             );
         });
 
         if (amount != 0) {
             player.sendMessage(
                     ChatTypes.ACTION_BAR,
-                    TranslationHelper.template(
-                            TextTemplate.of(
-                                    arg("jobName").build(),
-                                    ": ",
-                                    arg("xp").build()
-                            ),
-                            player.getLocale().toLanguageTag(),
-                            "job_xp_action_bar"
-                    ).apply(
-                            ImmutableMap.of(
-                                    "xp", Text.of(String.format("%1$.2f",newXp)),
-                                    "jobName", Text.of(this.getName())
-                            )
-                    ).build()
+                    Laborus.instance().translationHelper.get(
+                            TranslationKeys.JOB_XP_ACTION_BAR,
+                            player
+                    ).apply(this.textArgs(player)).build()
             );
         }
     }
@@ -237,7 +179,7 @@ public class Job {
      * @return true if the {@link Player} was awarded
      */
     public boolean onJobListener(Object item, Player player, JobAction action) {
-        for (JobItem jobItem : jobActions.get(action)) {
+        for (JobItem jobItem : getJobActions().get(action)) {
             if (
                     jobItem.getItem().equals(item) ||
                             (
@@ -246,26 +188,23 @@ public class Job {
                                             BlockStateComparator.compare((BlockState) item, (String) jobItem.getItem())
                             )
                     ) {
-                if (jobItem.canDo(getXp((player)))) {
+                if (jobItem.canDo(this, getXp((player)))) {
                     double newXp = jobItem.getXp() *
-                            (isSelected(player) ? 1 : ConfigHelper.getNode("setting", "xp_without_job").getDouble(0.5));
+                            (isSelected(player) ? 1 : Laborus.instance().config.base.xpWithoutJob);
 
                     this.addXp(player, newXp);
-                    jobBonuses.stream()
+                    jobBoni().stream()
                             .filter(jobBonus -> jobBonus.canHappen(this, action, jobItem, player))
-                            .forEach(jobBonus -> jobBonus.useBonus(jobItem, player));
+                            .forEach(jobBonus -> jobBonus.useBonus(jobItem, player, item));
 
                     return true;
                 } else {
                     player.sendMessage(
                             ChatTypes.ACTION_BAR,
-                            TranslationHelper.template(
-                                    TextTemplate.of(
-                                            "Your level is too low to do this."
-                                    ),
-                                    player.getLocale().toLanguageTag(),
-                                    "job_not_enough_level_action_bar"
-                            ).apply().build()
+                            Laborus.instance().translationHelper.get(
+                                    TranslationKeys.JOB_LEVEL_NOT_HIGH_ENOUGH,
+                                    player
+                            ).apply(this.textArgs(player)).build()
                     );
                     return false;
                 }
@@ -282,7 +221,8 @@ public class Job {
      * @return true if it is enabled
      */
     public boolean enabled(Player player) {
-        return player.get(JobKeys.JOB_ENABLED).orElse(true) && enabledGameModes.contains(player.get(Keys.GAME_MODE).get());
+        return player.get(JobKeys.JOB_ENABLED).orElse(true) &&
+                Laborus.instance().config.base.enabledGamemodes.contains(player.get(Keys.GAME_MODE).get());
     }
 
     /**
@@ -298,127 +238,19 @@ public class Job {
     }
 
     /**
-     * initialize a {@link JobAction} for this {@link Job}
-     *
-     * @param jobActionNode a {@link ConfigurationNode} that has the settings for the {@link JobAction}
-     * @param action        the {@link JobAction} that should be initialized
-     */
-    private void initJobAction(ConfigurationNode jobActionNode, JobAction action) {
-        if (jobActionNode.getChildrenMap().isEmpty())
-            return;
-
-        jobActions.put(
-                action,
-                generateJobItemList(jobActionNode.getChildrenMap().values(), action.getCatalogType())
-        );
-
-        try {
-            Sponge.getEventManager().registerListeners(
-                    JobsMain.instance(),
-                    action.getListenerConstructor().newInstance(this, generateJobItemTypeList(jobActions.get(action)))
-            );
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * initialize a {@link JobAction} for this {@link Job}
-     *
-     * @param jobActionNode a {@link ConfigurationNode} that has the settings for the {@link JobAction}
-     * @param action        the {@link JobAction} that should be initialized
-     */
-    private void initStringJobAction(ConfigurationNode jobActionNode, JobAction action) {
-        if (jobActionNode.getChildrenMap().isEmpty())
-            return;
-
-        jobActions.put(
-                action,
-                generateStringJobItemList(jobActionNode.getChildrenMap().values())
-        );
-
-        try {
-            Sponge.getEventManager().registerListeners(
-                    JobsMain.instance(),
-                    action.getListenerConstructor().newInstance(this, generateJobItemTypeList(jobActions.get(action)))
-            );
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * generates a {@link List} of {@link JobItem}s from a {@link Collection} of {@link ConfigurationNode}s
-     *
-     * @param nodes       a {@link Collection} of {@link ConfigurationNode}s with the data for the {@link JobItem}s
-     * @param catalogType the {@link Class} of the {@link CatalogType} of the {@link JobItem}s
-     * @return a {@link List} of the {@link JobItem}s that are created by the Config
-     */
-    private List<JobItem> generateJobItemList(Collection<? extends ConfigurationNode> nodes, Class<? extends CatalogType> catalogType) {
-        List<JobItem> jobItems = new ArrayList<>();
-
-        for (ConfigurationNode jobItemNode : nodes) {
-
-            Optional<? extends CatalogType> optionalJobItemItem = Sponge.getRegistry().getType(
-                    catalogType,
-                    jobItemNode.getKey().toString()
-            );
-
-            if (optionalJobItemItem.isPresent()) {
-                jobItems.add(
-                        new JobItem(
-                                jobItemNode.getNode("xp").getDouble(0.0),
-                                jobItemNode.getNode("needLevel").getInt(0),
-                                this,
-                                optionalJobItemItem.get()
-                        )
-                );
-            }
-        }
-
-        return jobItems;
-    }
-
-    /**
-     * generates a {@link List} of {@link JobItem}s from a {@link Collection} of {@link ConfigurationNode}s
-     *
-     * @param nodes a {@link Collection} of {@link ConfigurationNode}s with the data for the {@link JobItem}s
-     * @return a {@link List} of the {@link JobItem}s that are created by the Config
-     */
-    private List<JobItem> generateStringJobItemList(Collection<? extends ConfigurationNode> nodes) {
-        return nodes.stream().map(jobItemNode -> new JobItem(
-                jobItemNode.getNode("xp").getDouble(0.0),
-                jobItemNode.getNode("needLevel").getInt(0),
-                this,
-                jobItemNode.getKey().toString()
-        )).collect(Collectors.toList());
-    }
-
-    /**
-     * creates a {@link List} of T (Type of the {@link JobItem}s) from the {@link List} of {@link JobItem}s
-     *
-     * @param jobItems the {@link JobItem}s
-     * @param <T>      the Type of the {@link JobItem}s
-     * @return a {@link List} of T
-     */
-    private static <T> List<T> generateJobItemTypeList(List<JobItem> jobItems) {
-        return jobItems.stream().map(jobItem -> (T) jobItem.getItem()).collect(Collectors.toList());
-    }
-
-    /**
      * returns the level that relates to the xp
      *
      * @param xp the xp
      * @return the level
      */
     public int getCurrentLevel(double xp) {
-        for (int testLevel : this.level) {
+        for (long testLevel : this.getLevel()) {
             if (testLevel > xp) {
-                return this.level.indexOf(testLevel) - 1;
+                return this.getLevel().indexOf(testLevel) - 1;
             }
         }
 
-        return this.level.size();
+        return this.getLevel().size();
     }
 
     /**
@@ -437,7 +269,7 @@ public class Job {
 
 
     public double getXpTillNextLevel(double xp) {
-        for (int testLevel : this.level) {
+        for (long testLevel : this.getLevel()) {
             if (testLevel > xp) {
                 return testLevel - xp;
             }
@@ -456,10 +288,118 @@ public class Job {
                 "NAME='" + NAME + '\'' +
                 ", ID='" + ID + '\'' +
                 ", jobAbility=" + jobAbility +
-                ", jobActions=" + jobActions +
-                ", enabledGameModes=" + enabledGameModes +
-                ", jobBonuses=" + jobBonuses +
-                ", level=" + level +
+                ", jobActions=" + getJobActions() +
+                ", jobBonuses=" + jobBoni() +
+                ", level=" + getLevel() +
                 '}';
+    }
+
+    public Map<String, TextElement> textArgs(Player player){
+        Map<String, TextElement> args = new HashMap<>();
+
+        args.put("job.xp", Text.of(String.format("%1$.2f", this.getXp(player))));
+        args.put("job.level", Text.of(this.getLevel(player)));
+        args.put("job.name", Text.of(this.getName()));
+        args.put("job.selected", Text.of(this.isSelected(player)));
+        args.put("job.description", Text.of(this.getDescription()));
+        args.put("job.xp_till_next_level", Text.of(String.format("%1$.2f", this.getXpTillNextLevel(player))));
+        args.put("job.xp_for_next_level", Text.of(String.format("%1$.2f", this.getXp(player) + this.getXpTillNextLevel(player))));
+
+        return args;
+    }
+
+    private List<JobBonus> jobBoni(){
+        return jobBoni.get();
+    }
+
+    public List<Long> getLevel() {
+        if(level == null){
+            level = Laborus.instance().config.base.levels;
+        }
+
+        return level;
+    }
+
+    @ConfigSerializable
+    private static class JobBoni {
+        @Setting(value = "multiDrop")
+        private List<MultiDrop> multiDropBonuses = ImmutableList.of();
+
+        @Setting(value = "ep")
+        private List<EpDrop> epBonuses = ImmutableList.of();
+
+        @Setting(value = "itemDrop")
+        private List<ItemDrop> itemDropBonuses = ImmutableList.of();
+
+        @Setting(value = "itemRepair")
+        private List<ItemRepair> itemRepairBonuses = ImmutableList.of();
+
+        @Setting(value = "economy")
+        private List<EconomyReward> economyBonuses = ImmutableList.of();
+
+        public List<JobBonus> get(){
+            List<JobBonus> jobBoni = new ArrayList<>();
+
+            jobBoni.addAll(multiDropBonuses);
+            jobBoni.addAll(epBonuses);
+            jobBoni.addAll(itemDropBonuses);
+            jobBoni.addAll(itemRepairBonuses);
+            jobBoni.addAll(economyBonuses);
+
+            return jobBoni;
+        }
+
+        public JobBoni(){}
+    }
+
+    @ConfigSerializable
+    private static class JobActions {
+        @Setting(value = "break")
+        private List<StringJobItem> breakJobItems = ImmutableList.of();
+
+        @Setting(value = "place")
+        private List<StringJobItem> placeJobItems = ImmutableList.of();
+
+        @Setting(value = "kill")
+        private List<EntityJobItem> killJobItems = ImmutableList.of();
+
+        @Setting(value = "damage")
+        private List<EntityJobItem> damageJobItems = ImmutableList.of();
+
+        @Setting(value = "tame")
+        private List<EntityJobItem> tameJobItems = ImmutableList.of();
+
+        @Setting(value = "use")
+        private List<ItemJobItem> useJobItems = ImmutableList.of();
+
+        private Map<JobAction, List<? extends JobItem>> jobActions;
+
+        public Map<JobAction, List<? extends JobItem>> get(){
+            if(jobActions == null){
+                jobActions = new HashMap<>();
+
+                if(!breakJobItems.isEmpty()){
+                    jobActions.put(JobAction.BREAK, breakJobItems);
+                }
+                if(!placeJobItems.isEmpty()){
+                    jobActions.put(JobAction.PLACE, placeJobItems);
+                }
+                if(!killJobItems.isEmpty()){
+                    jobActions.put(JobAction.ENTITY_KILL, killJobItems);
+                }
+                if(!damageJobItems.isEmpty()){
+                    jobActions.put(JobAction.ENTITY_DAMAGE, damageJobItems);
+                }
+                if(!tameJobItems.isEmpty()){
+                    jobActions.put(JobAction.ENTITY_TAME, tameJobItems);
+                }
+                if(!useJobItems.isEmpty()){
+                    jobActions.put(JobAction.ITEM_USE, useJobItems);
+                }
+            }
+            return jobActions;
+        }
+
+        public JobActions(){}
     }
 }

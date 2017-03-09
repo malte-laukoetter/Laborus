@@ -1,37 +1,50 @@
 package de.lergin.sponge.laborus.command;
 
-import com.google.common.collect.ImmutableMap;
-import de.lergin.sponge.laborus.JobsMain;
+import de.lergin.sponge.laborus.Laborus;
+import de.lergin.sponge.laborus.config.TranslationKeys;
 import de.lergin.sponge.laborus.data.JobKeys;
 import de.lergin.sponge.laborus.data.jobs.JobDataManipulatorBuilder;
 import de.lergin.sponge.laborus.job.Job;
-import de.lergin.sponge.laborus.util.ConfigHelper;
-import de.lergin.sponge.laborus.util.TranslationHelper;
-import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.objectmapping.Setting;
+import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
-import org.spongepowered.api.command.args.CommandElement;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.TextTemplate;
-import org.spongepowered.api.text.action.TextActions;
-import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.text.format.TextStyles;
+import org.spongepowered.api.text.TextElement;
 
 import java.util.*;
-
-import static org.spongepowered.api.text.TextTemplate.arg;
 
 /**
  * changes the selected {@link Job}s
  */
+@ConfigSerializable
 public class ChangeJobCommand extends JobCommand {
-    private final static ConfigurationNode configNode = ConfigHelper.getNode("commands", "change");
+    @Setting(value = "command", comment = "The command")
+    private String COMMAND = "change";
+
+    @Setting(value = "description", comment = "The description of the command")
+    private Text DESCRIPTION = Text.of("Changes the Job");
+
+    @Setting(value = "permission", comment = "The permission needed to use the command")
+    private String PERMISSION = "laborus.commands.change";
+
+    @Setting(value = "paramJobDescription", comment = "")
+    private String PARAM_JOB_DESCRIPTION = "Job";
+
+    @Setting(value = "paramJobDescription", comment = "")
+    private String PARAM_JOIN_DESCRIPTION = "Join";
+
+    @Setting(value = "paramJobDescription", comment = "")
+    private String PARAM_LEAVE_DESCRIPTION = "Leave";
+
+    @Setting(value = "paramJobDescription", comment = "")
+    private String PARAM_ACTION_DESCRIPTION = "Action";
 
     public ChangeJobCommand() {
         super();
@@ -46,28 +59,26 @@ public class ChangeJobCommand extends JobCommand {
     public CommandSpec getCommandSpec() {
         CommandSpec.Builder builder = CommandSpec.builder();
 
-        builder.description(Text.of(configNode.getNode("description").getString("MISSING DESCRIPTION")));
+        builder.description(this.DESCRIPTION);
 
         builder.executor(this);
 
-        final String permission = configNode.getNode("permission").getString("");
-
-        if (!"".equals(permission)) {
-            builder.permission(permission);
+        if (!"".equals(this.PERMISSION)) {
+            builder.permission(this.PERMISSION);
         }
 
         Map<String, Boolean> actions = new HashMap<>();
-        actions.put(configNode.getNode("params", "join", "description").getString("join"), true);
-        actions.put(configNode.getNode("params", "leave", "description").getString("leave"), false);
+        actions.put(this.PARAM_JOIN_DESCRIPTION, true);
+        actions.put(this.PARAM_LEAVE_DESCRIPTION, false);
 
         builder.arguments(
                 GenericArguments.choices(
-                        Text.of(configNode.getNode("params", "action", "description").getString("action")),
+                        Text.of(this.PARAM_ACTION_DESCRIPTION),
                         actions
                 ),
                 GenericArguments.choices(
-                        Text.of(configNode.getNode("params", "job", "description").getString("job")),
-                        JobsMain.instance().getJobs()
+                        Text.of(this.PARAM_JOB_DESCRIPTION),
+                        Laborus.instance().getJobs()
                 )
         );
 
@@ -82,7 +93,7 @@ public class ChangeJobCommand extends JobCommand {
     @Override
     public List<String> getCommandAliases() {
         List<String> aliases = new ArrayList<>();
-        aliases.add(configNode.getNode("command").getString("change"));
+        aliases.add(this.COMMAND);
 
         return aliases;
     }
@@ -97,62 +108,40 @@ public class ChangeJobCommand extends JobCommand {
         if (!(commandSource instanceof Player))
             throw new CommandException(Text.of("Only Players can use this command", false));
 
-        Player player = (Player) args.getOne(
-                configNode.getNode("params", "player", "description").getString("player")
-        ).orElse(commandSource);
+        Player player = (Player) commandSource;
 
-        boolean join = (Boolean)
-                args.getOne(configNode.getNode("params", "action", "description").getString("action")).orElse(true);
+        boolean join = (Boolean) args.getOne(this.PARAM_ACTION_DESCRIPTION).orElse(true);
 
         Set<String> selectedJobs = player.get(JobKeys.JOB_SELECTED).orElseGet(HashSet::new);
 
-        Job job =
-                ((Job) args.getOne(configNode.getNode("params", "job", "description").getString("job")).get());
+        Job job = ((Job) args.getOne(this.PARAM_JOB_DESCRIPTION).get());
 
 
         if (join) {
             if (!selectedJobs.contains(job.getId())) {
-                final int maxJobs = ConfigHelper.getNode("setting", "max_selected_jobs").getInt(1);
+                final int maxJobs = Laborus.instance().config.base.maxSelectedJobs;
 
                 if (selectedJobs.size() > maxJobs) {
+                    Map<String, TextElement> textArgs = job.textArgs(player);
+
+                    textArgs.put("maxjobs", Text.of(maxJobs));
+
                     player.sendMessage(
-                            TranslationHelper.template(
-                                    TextTemplate.of(
-                                            TextColors.AQUA,
-                                            "You cannot join ", arg("jobName").color(TextColors.GREEN).build(),
-                                            ", due to the reach of the max. of jobs you can select (",
-                                            arg("maxJobs").color(TextColors.GREEN).build(),
-                                            "). If you want to join another job you first need to ",
-                                            Text.builder("leave")
-                                                    .onClick(TextActions.suggestCommand("/jobs change leave "))
-                                                    .onHover(TextActions.showText(Text.of("/jobs change leave ")))
-                                                    .style(TextStyles.UNDERLINE).build(),
-                                            " another one."
-                                    ),
-                                    player.getLocale().toLanguageTag(),
-                                    "job_join_too_many_jobs"
+                            Laborus.instance().translationHelper.get(
+                                    TranslationKeys.COMMAND_CHANGE_TOO_MANY_SELECTED,
+                                    player
                             ),
-                            ImmutableMap.of(
-                                    "jobName", Text.of(job.getName()),
-                                    "maxJobs", Text.of(maxJobs)
-                            )
+                            textArgs
                     );
 
                     return CommandResult.empty();
                 }else if(!job.hasPermission(player)){
                     player.sendMessage(
-                            TranslationHelper.template(
-                                    TextTemplate.of(
-                                            TextColors.AQUA,
-                                            "You cannot join ", arg("jobName").color(TextColors.GREEN).build(),
-                                            " (missing permission)"
-                                    ),
-                                    player.getLocale().toLanguageTag(),
-                                    "job_join_missing_permission"
+                            Laborus.instance().translationHelper.get(
+                                    TranslationKeys.COMMAND_CHANGE_MISSING_JOB_PERMISSION,
+                                    player
                             ),
-                            ImmutableMap.of(
-                                    "jobName", Text.of(job.getName())
-                            )
+                            job.textArgs(player)
                     );
 
                     return CommandResult.empty();
@@ -165,68 +154,41 @@ public class ChangeJobCommand extends JobCommand {
                 }
 
                 player.sendMessage(
-                        TranslationHelper.template(
-                                TextTemplate.of(
-                                        TextColors.AQUA,
-                                        "You have joined ", arg("jobName").color(TextColors.GREEN).build(), "."
-                                ),
-                                player.getLocale().toLanguageTag(),
-                                "job_join_success"
+                        Laborus.instance().translationHelper.get(
+                                TranslationKeys.COMMAND_CHANGE_JOINED,
+                                player
                         ),
-                        ImmutableMap.of(
-                                "jobName", Text.of(job.getName())
-                        )
+                        job.textArgs(player)
                 );
 
                 return CommandResult.success();
             } else {
                 player.sendMessage(
-                        TranslationHelper.template(
-                                TextTemplate.of(
-                                        TextColors.AQUA,
-                                        "You already joined ", arg("jobName").color(TextColors.GREEN).build(), "."
-                                ),
-                                player.getLocale().toLanguageTag(),
-                                "job_join_already_selected"
+                        Laborus.instance().translationHelper.get(
+                                TranslationKeys.COMMAND_CHANGE_ALREADY_JOINED,
+                                player
                         ),
-                        ImmutableMap.of(
-                                "jobName", Text.of(job.getName())
-                        )
+                        job.textArgs(player)
                 );
 
                 return CommandResult.empty();
             }
         } else {
-            String jobId =
-                    ((Job) args.getOne(configNode.getNode("params", "job", "description").getString("job")).get()).getId();
-
-            if (selectedJobs.remove(jobId)) {
+            if (selectedJobs.remove(job.getId())) {
                 player.sendMessage(
-                        TranslationHelper.template(
-                                TextTemplate.of(
-                                        TextColors.AQUA,
-                                        "You have leaved ", arg("jobName").color(TextColors.GREEN).build(), "."
-                                ),
-                                player.getLocale().toLanguageTag(),
-                                "job_leave_success"
+                        Laborus.instance().translationHelper.get(
+                                TranslationKeys.COMMAND_CHANGE_LEAVED,
+                                player
                         ),
-                        ImmutableMap.of(
-                                "jobName", Text.of(job.getName())
-                        )
+                        job.textArgs(player)
                 );
             } else {
                 player.sendMessage(
-                        TranslationHelper.template(
-                                TextTemplate.of(
-                                        TextColors.AQUA,
-                                        "You don't had ", arg("jobName").color(TextColors.GREEN).build(), " selected."
-                                ),
-                                player.getLocale().toLanguageTag(),
-                                "job_leave_not_selected"
+                        Laborus.instance().translationHelper.get(
+                                TranslationKeys.COMMAND_CHANGE_NOT_SELECTED,
+                                player
                         ),
-                        ImmutableMap.of(
-                                "jobName", Text.of(job.getName())
-                        )
+                        job.textArgs(player)
                 );
             }
 

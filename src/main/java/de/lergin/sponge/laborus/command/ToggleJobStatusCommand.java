@@ -1,11 +1,11 @@
 package de.lergin.sponge.laborus.command;
 
-import com.google.common.collect.ImmutableMap;
+import de.lergin.sponge.laborus.Laborus;
+import de.lergin.sponge.laborus.config.TranslationKeys;
 import de.lergin.sponge.laborus.data.JobKeys;
 import de.lergin.sponge.laborus.data.jobs.JobDataManipulatorBuilder;
-import de.lergin.sponge.laborus.util.ConfigHelper;
-import de.lergin.sponge.laborus.util.TranslationHelper;
-import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.objectmapping.Setting;
+import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -13,19 +13,23 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.TextTemplate;
-import org.spongepowered.api.text.format.TextColors;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.spongepowered.api.text.TextTemplate.arg;
-
 /**
  * command for enabling and disabling the job system for specific players
  */
+@ConfigSerializable
 public class ToggleJobStatusCommand extends JobCommand {
-    private final static ConfigurationNode configNode = ConfigHelper.getNode("commands", "toggleJobStatus");
+    @Setting(value = "command", comment = "The command")
+    private String COMMAND = "toggle";
+
+    @Setting(value = "description", comment = "The description of the command")
+    private Text DESCRIPTION = Text.of("Toggles if the jobsystem is activated for the player");
+
+    @Setting(value = "permission", comment = "The permission needed to use the command")
+    private String PERMISSION = "laborus.commands.toggle";
 
     public ToggleJobStatusCommand() {
         super();
@@ -35,14 +39,12 @@ public class ToggleJobStatusCommand extends JobCommand {
     public CommandSpec getCommandSpec() {
         CommandSpec.Builder builder = CommandSpec.builder();
 
-        builder.description(Text.of(configNode.getNode("description").getString()));
+        builder.description(this.DESCRIPTION);
 
         builder.executor(this);
 
-        final String permission = configNode.getNode("permission").getString();
-
-        if (!"".equals(permission)) {
-            builder.permission(permission);
+        if (!"".equals(this.PERMISSION)) {
+            builder.permission(this.PERMISSION);
         }
 
         return builder.build();
@@ -51,7 +53,7 @@ public class ToggleJobStatusCommand extends JobCommand {
     @Override
     public List<String> getCommandAliases() {
         List<String> aliases = new ArrayList<>();
-        aliases.add(configNode.getNode("command").getString("toggleJobStatus"));
+        aliases.add(this.COMMAND);
 
         return aliases;
     }
@@ -69,20 +71,21 @@ public class ToggleJobStatusCommand extends JobCommand {
             player.offer(new JobDataManipulatorBuilder().jobsEnabled(!jobsEnabled).create());
         }
 
-        player.sendMessage(
-                TranslationHelper.template(
-                        TextTemplate.of(
-                                TextColors.AQUA,
-                                "Toggled enabled status of jobSystem to: ",
-                                arg("status").color(TextColors.GREEN).build()
-                        ),
-                        player.getLocale().toLanguageTag(),
-                        "job_toggle"
-                ),
-                ImmutableMap.of(
-                        "status", Text.of(!jobsEnabled)
-                )
-        );
+        if(jobsEnabled){
+            player.sendMessage(
+                    Laborus.instance().translationHelper.get(
+                            TranslationKeys.COMMAND_TOGGLE_ACTIVATED,
+                            player
+                    )
+            );
+        }else{
+            player.sendMessage(
+                    Laborus.instance().translationHelper.get(
+                            TranslationKeys.COMMAND_TOGGLE_DEACTIVATED,
+                            player
+                    )
+            );
+        }
 
         return CommandResult.success();
     }

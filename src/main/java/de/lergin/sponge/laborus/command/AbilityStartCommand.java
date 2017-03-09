@@ -1,15 +1,14 @@
 package de.lergin.sponge.laborus.command;
 
-import de.lergin.sponge.laborus.JobsMain;
+import de.lergin.sponge.laborus.Laborus;
 import de.lergin.sponge.laborus.job.Job;
-import de.lergin.sponge.laborus.util.ConfigHelper;
-import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.objectmapping.Setting;
+import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.args.GenericArguments;
-import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
@@ -19,8 +18,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@ConfigSerializable
 public class AbilityStartCommand extends JobCommand {
-    private final static ConfigurationNode configNode = ConfigHelper.getNode("commands", "abilityStart");
+    @Setting(value = "command", comment = "The description of the command")
+    private String COMMAND = "ability";
+
+    @Setting(value = "description", comment = "The description of the command")
+    private Text DESCRIPTION = Text.of("Activates the JobAbility");
+
+    @Setting(value = "permission", comment = "The permission needed to use the command")
+    private String PERMISSION = "laborus.commands.ability";
+
+    @Setting(value = "paramJobDescription", comment = "The permission needed to use the command")
+    private Text PARAM_JOB_DESCRIPTION = Text.of("job");
+
 
     public AbilityStartCommand() {
         super();
@@ -35,26 +46,21 @@ public class AbilityStartCommand extends JobCommand {
     public CommandSpec getCommandSpec() {
         CommandSpec.Builder builder = CommandSpec.builder();
 
-        builder.description(Text.of(configNode.getNode("description").getString()));
+        builder.description(this.DESCRIPTION);
 
         builder.executor(this);
 
-        final String permission = configNode.getNode("permission").getString();
-
-        if (!"".equals(permission)) {
-            builder.permission(permission);
+        if (!"".equals(this.PERMISSION)) {
+            builder.permission(this.PERMISSION);
         }
 
         //only add jobs that have a ability
         Map<String, Job> jobs = new HashMap<>();
-        JobsMain.instance().getJobs().values().stream()
+        Laborus.instance().getJobs().values().stream()
                 .filter(Job::hasJobAbility)
                 .forEach(job -> jobs.put(job.getId(), job));
 
-        builder.arguments(GenericArguments.choices(
-                Text.of(configNode.getNode("params", "job", "description").getString("job")),
-                jobs
-        ));
+        builder.arguments(GenericArguments.choices(this.PARAM_JOB_DESCRIPTION, jobs));
 
         return builder.build();
     }
@@ -67,7 +73,7 @@ public class AbilityStartCommand extends JobCommand {
     @Override
     public List<String> getCommandAliases() {
         List<String> aliases = new ArrayList<>();
-        aliases.add(configNode.getNode("command").getString("ability"));
+        aliases.add(this.COMMAND);
 
         return aliases;
     }
@@ -80,9 +86,9 @@ public class AbilityStartCommand extends JobCommand {
         final Player player = (Player) commandSource;
 
         final Job job =
-                (Job) args.getOne(configNode.getNode("params", "job", "description").getString("job")).get();
+                (Job) args.getOne(this.PARAM_JOB_DESCRIPTION).get();
 
-        job.getJobAbility().startAbility(player);
+        job.getJobAbility().startAbility(job, player);
 
         return CommandResult.success();
     }

@@ -5,7 +5,8 @@ import de.lergin.sponge.laborus.job.Job;
 import de.lergin.sponge.laborus.job.JobAction;
 import de.lergin.sponge.laborus.job.JobBonus;
 import de.lergin.sponge.laborus.job.JobItem;
-import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.objectmapping.Setting;
+import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
@@ -16,12 +17,15 @@ import java.util.Optional;
 /**
  * Bonus that repairs the item in the hand by a percentage between maxPercent and minPercent
  */
+@ConfigSerializable
 public class ItemRepair extends JobBonus {
-    private final double maxPercent;
-    private final double minPercent;
+    @Setting(value = "maxPercent")
+    private double maxPercent = 0;
+    @Setting(value = "minPercent")
+    private double minPercent = 0;
 
     @Override
-    public void useBonus(JobItem item, Player player) {
+    public void useBonus(JobItem item, Player player, Object i2) {
         if (this.isHappening()) {
             Optional<ItemStack> optional = player.getItemInHand(HandTypes.MAIN_HAND);
 
@@ -58,11 +62,8 @@ public class ItemRepair extends JobBonus {
 
     }
 
-    public ItemRepair(ConfigurationNode config) {
-        super(config, Sets.newHashSet(JobAction.BREAK, JobAction.ENTITY_KILL));
-
-        this.maxPercent = config.getNode("maxPercent").getDouble(0.1);
-        this.minPercent = config.getNode("minPercent").getDouble(0.1);
+    public ItemRepair() {
+        super(Sets.newHashSet(JobAction.BREAK, JobAction.ENTITY_KILL));
     }
 
 }

@@ -1,37 +1,52 @@
 package de.lergin.sponge.laborus.command;
 
-import com.google.common.collect.ImmutableMap;
-import de.lergin.sponge.laborus.JobsMain;
+import de.lergin.sponge.laborus.Laborus;
+import de.lergin.sponge.laborus.config.TranslationKeys;
 import de.lergin.sponge.laborus.data.JobKeys;
 import de.lergin.sponge.laborus.job.Job;
-import de.lergin.sponge.laborus.util.ConfigHelper;
-import de.lergin.sponge.laborus.util.TranslationHelper;
-import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.objectmapping.Setting;
+import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
-import org.spongepowered.api.command.args.CommandElement;
 import org.spongepowered.api.command.args.GenericArguments;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.TextTemplate;
-import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.TextElement;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.spongepowered.api.text.TextTemplate.arg;
-
 /**
  * adds some xp to the {@link Player}
  */
+@ConfigSerializable
 public class AddXpCommand extends JobCommand {
-    private final static ConfigurationNode configNode = ConfigHelper.getNode("commands", "addXp");
+    @Setting(value = "command", comment = "The description of the command")
+    private String COMMAND = "addJobXp";
+
+    @Setting(value = "description", comment = "The description of the command")
+    private Text DESCRIPTION = Text.of("adds some xp to the job");
+
+    @Setting(value = "permission", comment = "The permission needed to use the command")
+    private String PERMISSION = "laborus.commands.addXp";
+
+    @Setting(value = "paramJobDescription", comment = "")
+    private String PARAM_JOB_DESCRIPTION = "job";
+
+    @Setting(value = "paramXpDescription", comment = "")
+    private String PARAM_XP_DESCRIPTION = "xp";
+
+    @Setting(value = "paramPlayerDescription", comment = "")
+    private String PARAM_PLAYER_DESCRIPTION = "player";
+
+    @Setting(value = "paramPlayerPermission", comment = "")
+    private String PARAM_PLAYER_PERMISSION = "laborus.commands.addXp.outher_player";
 
     public AddXpCommand() {
         super();
@@ -46,30 +61,26 @@ public class AddXpCommand extends JobCommand {
     public CommandSpec getCommandSpec() {
         CommandSpec.Builder builder = CommandSpec.builder();
 
-        builder.description(Text.of(configNode.getNode("description").getString()));
+        builder.description(this.DESCRIPTION);
 
         builder.executor(this);
 
-        final String permission = configNode.getNode("permission").getString();
-
-        if (!"".equals(permission)) {
-            builder.permission(permission);
+        if (!"".equals(this.PERMISSION)) {
+            builder.permission(this.PERMISSION);
         }
 
         builder.arguments(
                 GenericArguments.choices(
-                        Text.of(configNode.getNode("params", "job", "description").getString("job")),
-                        JobsMain.instance().getJobs()
+                        Text.of(this.PARAM_JOB_DESCRIPTION),
+                        Laborus.instance().getJobs()
                 ),
                 GenericArguments.doubleNum(
-                        Text.of(configNode.getNode("params", "xp", "description").getString("xp"))
+                        Text.of(this.PARAM_XP_DESCRIPTION)
                 ),
                 GenericArguments.optional(
                         getCommandElementWithPermission(
-                                GenericArguments.player(Text.of(
-                                        configNode.getNode("params", "player", "description").getString("player")
-                                )),
-                                configNode.getNode("params", "player", "permission").getString("")
+                                GenericArguments.player(Text.of(this.PARAM_PLAYER_DESCRIPTION)),
+                                this.PARAM_PLAYER_PERMISSION
                         )
                 )
         );
@@ -85,7 +96,7 @@ public class AddXpCommand extends JobCommand {
     @Override
     public List<String> getCommandAliases() {
         List<String> aliases = new ArrayList<>();
-        aliases.add(configNode.getNode("command").getString("addJobXp"));
+        aliases.add(this.COMMAND);
 
         return aliases;
     }
@@ -97,19 +108,15 @@ public class AddXpCommand extends JobCommand {
      */
     @Override
     public CommandResult execute(CommandSource commandSource, CommandContext args) throws CommandException {
-        if (!(commandSource instanceof Player ||
-                args.hasAny(configNode.getNode("params", "player", "description").getString("player"))))
+        if (!(commandSource instanceof Player || args.hasAny(this.PARAM_PLAYER_DESCRIPTION)))
             throw new CommandException(Text.of("Only Players can use this command without a player parameter", true));
 
-        Player player = (Player) args.getOne(
-                configNode.getNode("params", "player", "description").getString("player")
-        ).orElse(commandSource);
+        Player player = (Player) args.getOne(this.PARAM_PLAYER_DESCRIPTION).orElse(commandSource);
 
         Map<String, Double> jobData = player.get(JobKeys.JOB_DATA).orElseGet(HashMap::new);
 
-        Job job =
-                ((Job) args.getOne(configNode.getNode("params", "job", "description").getString("job")).get());
-        double addXp = (double) args.getOne(configNode.getNode("params", "xp", "description").getString("xp")).get();
+        Job job = ((Job) args.getOne(this.PARAM_JOB_DESCRIPTION).get());
+        double addXp = (double) args.getOne(this.PARAM_XP_DESCRIPTION).get();
         double newXp = jobData.getOrDefault(job.getId(), 0.0) + addXp;
 
 
@@ -119,65 +126,42 @@ public class AddXpCommand extends JobCommand {
 
         if (!(commandSource instanceof Player) || !commandSource.equals(player)) {
             commandSource.sendMessage(
-                    TranslationHelper.template(
-                            TextTemplate.of(
-                                    TextColors.AQUA, "You added ",
-                                    arg("addXp").color(TextColors.GREEN).build(),
-                                    Text.of(TextColors.GREEN, "xp"),
-                                    " to ", arg("playerName").color(TextColors.GREEN).build(),
-                                    " to the job ", arg("jobName").color(TextColors.GREEN).build(),
-                                    "."
-                            ),
-                            commandSource.getLocale().toLanguageTag(),
-                            "add_xp_other"
+                    Laborus.instance().translationHelper.get(
+                            TranslationKeys.COMMAND_ADDXP_SEND_OTHER,
+                            commandSource
                     ),
-                    ImmutableMap.of(
-                            "jobName", Text.of(job.getName()),
-                            "addXp", Text.of(addXp),
-                            "playerName", Text.of(player.getName())
-                    )
+                    this.textArgs(job, player, commandSource, addXp)
             );
 
             player.sendMessage(
-                    TranslationHelper.template(
-                            TextTemplate.of(
-                                    TextColors.AQUA,
-                                    arg("commandSource").color(TextColors.GREEN).build(),
-                                    " added ", arg("addXp").color(TextColors.GREEN).build(),
-                                    Text.of(TextColors.GREEN, "xp"),
-                                    " to your job ", arg("jobName").color(TextColors.GREEN).build(),
-                                    "."
-                            ),
-                            player.getLocale().toLanguageTag(),
-                            "add_xp_other_get"
+                    Laborus.instance().translationHelper.get(
+                            TranslationKeys.COMMAND_ADDXP_RECEIVE_OTHER,
+                            player
                     ),
-                    ImmutableMap.of(
-                            "jobName", Text.of(job.getName()),
-                            "addXp", Text.of(addXp),
-                            "commandSource", Text.of(commandSource.getName())
-                    )
+                    this.textArgs(job,player,commandSource,addXp)
             );
         } else {
             commandSource.sendMessage(
-                    TranslationHelper.template(
-                            TextTemplate.of(
-                                    TextColors.AQUA, "You added ",
-                                    arg("addXp").color(TextColors.GREEN).build(),
-                                    Text.of(TextColors.GREEN, "xp"),
-                                    " to ", arg("jobName").color(TextColors.GREEN).build(),
-                                    "."
-                            ),
-                            commandSource.getLocale().toLanguageTag(),
-                            "add_xp_self"
+                    Laborus.instance().translationHelper.get(
+                            TranslationKeys.COMMAND_ADDXP_SELF,
+                            commandSource
                     ),
-                    ImmutableMap.of(
-                            "jobName", Text.of(job.getName()),
-                            "addXp", Text.of(addXp)
-                    )
+                    this.textArgs(job,player,commandSource,addXp)
             );
         }
 
-
         return CommandResult.success();
+    }
+
+    public Map<String, TextElement> textArgs(Job job, Player player, CommandSource source, double xp){
+        Map<String, TextElement> args = job.textArgs(player);
+
+        args.put("xp", Text.of(xp));
+        args.put("player.name", Text.of(player.getName()));
+        args.put("player.display_name", player.getDisplayNameData().displayName().get());
+        args.put("source", Text.of(source.getName()));
+        args.put("xp", Text.of(String.format("%1$f.2", xp)));
+
+        return args;
     }
 }

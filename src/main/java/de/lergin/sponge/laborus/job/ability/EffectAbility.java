@@ -2,8 +2,8 @@ package de.lergin.sponge.laborus.job.ability;
 
 import de.lergin.sponge.laborus.job.Job;
 import de.lergin.sponge.laborus.job.JobAbility;
-import ninja.leaping.configurate.ConfigurationNode;
-import org.spongepowered.api.Sponge;
+import ninja.leaping.configurate.objectmapping.Setting;
+import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.effect.potion.PotionEffect;
 import org.spongepowered.api.effect.potion.PotionEffectType;
@@ -13,43 +13,53 @@ import org.spongepowered.api.entity.living.player.Player;
 import java.util.ArrayList;
 import java.util.List;
 
+@ConfigSerializable
 public class EffectAbility extends JobAbility {
-    private final PotionEffect effect;
+    @Setting("potionEffect")
+    private PotionEffectConfig effectConfig = new PotionEffectConfig();
 
-    public EffectAbility(Job job, ConfigurationNode node) {
-        super(
-                job,
-                node.getNode("name").getString("EffectAbility"),
-                node.getNode("coolDown").getInt(60)
-        );
-
-        effect = PotionEffect.builder()
-                .amplifier(node.getNode("amplifier").getInt(1))
-                .duration(node.getNode("duration").getInt(200))
-                .potionType(
-                        Sponge.getRegistry()
-                                .getType(PotionEffectType.class, node.getNode("type").getString())
-                                .orElse(PotionEffectTypes.SPEED)
-                )
-                .particles(node.getNode("particles").getBoolean(true))
-                .ambience(node.getNode("ambience").getBoolean(false))
-                .build();
-    }
+    public EffectAbility() {}
 
     @Override
-    public boolean startAbility(Player player) {
-        if (!canStartAbility(player)) {
-            sendCoolDownNotEndedMessage(player);
+    public boolean startAbility(Job job, Player player) {
+        if (!canStartAbility(job, player)) {
+            sendCoolDownNotEndedMessage(job, player);
             return false;
         }
 
         List<PotionEffect> potionEffects = player.get(Keys.POTION_EFFECTS).orElseGet(ArrayList::new);
-        potionEffects.add(effect);
+        potionEffects.add(effectConfig.get());
         player.offer(Keys.POTION_EFFECTS, potionEffects);
 
-        startCoolDown(player);
-        sendStartMessage(player);
+        startCoolDown(job, player);
+        sendStartMessage(job, player);
 
         return true;
+    }
+
+    @ConfigSerializable
+    private static class PotionEffectConfig {
+        @Setting
+        int amplifier = 0;
+        @Setting
+        int duration = 1;
+        @Setting
+        boolean ambiance = false;
+        @Setting
+        boolean particles = true;
+        @Setting
+        PotionEffectType potionType = PotionEffectTypes.SPEED;
+
+        public PotionEffect get(){
+            return PotionEffect.builder()
+                    .amplifier(amplifier)
+                    .duration(duration)
+                    .particles(particles)
+                    .potionType(potionType)
+                    .ambience(ambiance)
+                    .build();
+        }
+
+        public PotionEffectConfig(){}
     }
 }

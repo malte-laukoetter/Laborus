@@ -1,6 +1,6 @@
 package de.lergin.sponge.laborus.util;
 
-import de.lergin.sponge.laborus.JobsMain;
+import de.lergin.sponge.laborus.Laborus;
 import de.lergin.sponge.laborus.job.JobAction;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.world.Location;
@@ -13,7 +13,7 @@ import java.sql.*;
  * and replacing of blocks
  */
 public final class AntiReplaceFarming {
-    private final static boolean USE_ANTI_REPLACE = ConfigHelper.getNode("setting", "use_anti_replace").getBoolean(false);
+    private final static boolean USE_ANTI_REPLACE = Laborus.instance().config.base.useAntiReplace;
 
     /**
      * creates a connection with the database
@@ -23,7 +23,7 @@ public final class AntiReplaceFarming {
      */
     private static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(
-                "jdbc:h2:" + JobsMain.instance().getConfigDir().getParent().toString() + "/laborus",
+                "jdbc:h2:" + Laborus.instance().getConfigDir().getParent().toString() + "/laborus",
                 "",
                 ""
         );
@@ -53,7 +53,7 @@ public final class AntiReplaceFarming {
             getData.setInt(4, loc.getBlockZ());
             getData.setString(5, action.name());
             getData.setString(6, blockState.toString());
-            getData.setInt(7, -ConfigHelper.getNode("setting", "antiReplaceTime").getInt(48));
+            getData.setInt(7, Laborus.instance().config.base.antiReplaceTime);
 
             ResultSet res = getData.executeQuery();
 
