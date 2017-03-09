@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
 
-@Plugin(id = "laborus", name = "Laborus", version = "1.2.1-dev", description = "a job plugin", authors = {"Lergin"})
+@Plugin(id = "laborus", name = "Laborus", version = "1.2.1", description = "a job plugin", authors = {"Lergin"})
 public class Laborus {
     @Inject
     @DefaultConfig(sharedRoot = false)
@@ -75,6 +75,7 @@ public class Laborus {
         config = new Config(this, loader);
 
         config.load();
+        config.save();
 
         translationHelper = new TranslationHelper(config.base.translationConfig);
     }
@@ -93,7 +94,7 @@ public class Laborus {
     }
 
     @Listener
-    public void onGameStoppedEvent(GameStoppedEvent event) {
+    public void onGameServerStopping(GameStoppingServerEvent event) {
         config.save();
     }
 }

@@ -28,10 +28,14 @@ public class Config {
      */
     public void save() {
         try {
+            node.setValue(TypeToken.of(BaseConfig.class), base);
             loader.save(node);
-            logger.info("Saved the base!");
+            logger.info("Saved the config!");
         } catch(IOException e) {
-            logger.warn("Could not save the base!");
+            logger.warn("Could not save the config!");
+        } catch (ObjectMappingException e) {
+            e.printStackTrace();
+            logger.warn("Could not save the config!");
         }
     }
 
@@ -45,7 +49,7 @@ public class Config {
             node = loader.load();
         } catch (IOException ex) {
             ex.printStackTrace();
-            logger.error("Could not load the base file!");
+            logger.error("Could not load the config file!");
         }
 
         loadConfig();
