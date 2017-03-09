@@ -58,7 +58,7 @@ public class Metrics {
     // A list with all custom charts
     private final List<CustomChart> charts = new ArrayList<>();
 
-    // The base path
+    // The config path
     private Path configDir;
 
     // The constructor is not meant to be called by the user himself.
@@ -80,7 +80,7 @@ public class Metrics {
             loadConfig();
         } catch (IOException e) {
             // Failed to load configuration
-            logger.warn("Failed to load bStats base!", e);
+            logger.warn("Failed to load bStats config!", e);
             return;
         }
 
@@ -259,7 +259,7 @@ public class Metrics {
     private void loadConfig() throws IOException {
         Path configPath = configDir.resolve("bStats");
         configPath.toFile().mkdirs();
-        File configFile = new File(configPath.toFile(), "base.conf");
+        File configFile = new File(configPath.toFile(), "config.conf");
         HoconConfigurationLoader configurationLoader = HoconConfigurationLoader.builder().setFile(configFile).build();
         CommentedConfigurationNode node;
         if (!configFile.exists()) {
