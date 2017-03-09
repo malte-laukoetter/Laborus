@@ -14,31 +14,31 @@ import java.util.Map;
 
 @ConfigSerializable
 public class BaseConfig {
-    @Setting(value = "commands")
+    @Setting(value = "commands", comment = "settings for the commands")
     public CommandsConfig commandsConfig = new CommandsConfig();
 
-    @Setting(value = "enabledGamemodes")
+    @Setting(value = "enabledGamemodes", comment = "the gamemodes the jobsystem is activated in")
     public List<GameMode> enabledGamemodes = ImmutableList.of(GameModes.ADVENTURE, GameModes.SURVIVAL);
 
-    @Setting(value = "maxSelectedJobs")
+    @Setting(value = "maxSelectedJobs", comment = "maximal amount of jobs selected at the same time")
     public int maxSelectedJobs = 1;
 
-    @Setting(value = "xpWithoutJob")
+    @Setting(value = "xpWithoutJob", comment = "the number all ep is multiplied by if a job is not selected")
     public double xpWithoutJob = 0.5;
 
-    @Setting(value = "antiReplaceActive")
+    @Setting(value = "antiReplaceActive", comment = "activated the anti replace farming system")
     public boolean useAntiReplace = false;
 
-    @Setting(value = "antiReplaceTime")
+    @Setting(value = "antiReplaceTime", comment = "the time after that a location is removed from the anit replace farming list")
     public int antiReplaceTime = 48;
 
-    @Setting(value = "level")
+    @Setting(value = "level", comment = "the amount of ep needed for each level")
     public List<Long> levels = defaultLevels();
 
-    @Setting(value = "translations")
+    @Setting(value = "translations", comment = "the localised messages of the plugin")
     public Map<String, TranslationConfig> translationConfig = ImmutableMap.of("en", new TranslationConfig());
 
-    @Setting(value = "jobs")
+    @Setting(value = "jobs", comment = "the jobs")
     public List<Job> jobs = ImmutableList.of();
 
     public BaseConfig() {}

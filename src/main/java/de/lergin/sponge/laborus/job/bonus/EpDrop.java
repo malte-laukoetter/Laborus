@@ -20,9 +20,9 @@ import java.util.Random;
  */
 @ConfigSerializable
 public class EpDrop extends JobBonus {
-    @Setting(value = "minEp")
+    @Setting(value = "minEp", comment = "minimal amount of minecraft ep")
     private int minEp = 0;
-    @Setting(value = "maxEp")
+    @Setting(value = "maxEp", comment = "maximal amount of minecraft ep")
     private int maxEp = 0;
 
     @Override

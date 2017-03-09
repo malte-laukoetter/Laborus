@@ -25,25 +25,25 @@ import java.util.*;
  */
 @ConfigSerializable
 public class ChangeJobCommand extends JobCommand {
-    @Setting(value = "command", comment = "The command")
+    @Setting(value = "command", comment = "command")
     private String COMMAND = "change";
 
-    @Setting(value = "description", comment = "The description of the command")
+    @Setting(value = "description", comment = "description of the command")
     private Text DESCRIPTION = Text.of("Changes the Job");
 
-    @Setting(value = "permission", comment = "The permission needed to use the command")
+    @Setting(value = "permission", comment = "permission needed to use the command")
     private String PERMISSION = "laborus.commands.change";
 
-    @Setting(value = "paramJobDescription", comment = "")
+    @Setting(value = "paramJobDescription", comment = "description of the job parameter")
     private String PARAM_JOB_DESCRIPTION = "Job";
 
-    @Setting(value = "paramJobDescription", comment = "")
+    @Setting(value = "paramJoinDescription", comment = "description of the join parameter")
     private String PARAM_JOIN_DESCRIPTION = "Join";
 
-    @Setting(value = "paramJobDescription", comment = "")
+    @Setting(value = "paramLeaveDescription", comment = "description of the leave parameter")
     private String PARAM_LEAVE_DESCRIPTION = "Leave";
 
-    @Setting(value = "paramJobDescription", comment = "")
+    @Setting(value = "paramActionDescription", comment = "description of the action parameter")
     private String PARAM_ACTION_DESCRIPTION = "Action";
 
     public ChangeJobCommand() {

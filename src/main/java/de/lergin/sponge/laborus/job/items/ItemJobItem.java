@@ -8,7 +8,7 @@ import org.spongepowered.api.item.ItemTypes;
 
 @ConfigSerializable
 public class ItemJobItem extends JobItem<ItemType> {
-    @Setting(value = "item")
+    @Setting(value = "item", comment = "an itemtype, see http://minecraft.gamepedia.com/Data_values#Item_IDs")
     private ItemType item = ItemTypes.DIRT;
 
     /**

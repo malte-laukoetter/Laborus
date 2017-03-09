@@ -26,16 +26,16 @@ import java.util.stream.Collectors;
  */
 @ConfigSerializable
 public class InfoCommand extends JobCommand {
-    @Setting(value = "command", comment = "The command")
+    @Setting(value = "command", comment = "command")
     private String COMMAND = "info";
 
-    @Setting(value = "description", comment = "The description of the command")
+    @Setting(value = "description", comment = "description of the command")
     private Text DESCRIPTION = Text.of("Infos about the Job");
 
-    @Setting(value = "permission", comment = "The permission needed to use the command")
+    @Setting(value = "permission", comment = "permission needed to use the command")
     private String PERMISSION = "laborus.commands.info";
 
-    @Setting(value = "paramJobDescription", comment = "")
+    @Setting(value = "paramJobDescription", comment = "description of the job parameter")
     private String PARAM_JOB_DESCRIPTION = "Job";
 
     public InfoCommand() {

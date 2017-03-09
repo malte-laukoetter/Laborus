@@ -8,7 +8,7 @@ import org.spongepowered.api.entity.EntityTypes;
 
 @ConfigSerializable
 public class EntityJobItem extends JobItem<EntityType> {
-    @Setting(value = "item")
+    @Setting(value = "item", comment = "an entitytype, see http://minecraft.gamepedia.com/Data_values#Entity_IDs")
     private EntityType item = EntityTypes.BAT;
 
     /**

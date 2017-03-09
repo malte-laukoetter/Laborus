@@ -6,7 +6,7 @@ import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
 @ConfigSerializable
 public class StringJobItem extends JobItem<String> {
-    @Setting(value = "item")
+    @Setting(value = "item", comment = "an blockstate or blocktype as a string, see http://minecraft.gamepedia.com/Data_values#Block_IDs it also supports blockdata")
     private String item = "";
 
     /**

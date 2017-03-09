@@ -13,7 +13,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 
 @ConfigSerializable
 public class ItemDrop extends JobBonus {
-    @Setting(value = "item")
+    @Setting(value = "item", comment = "an itemstack that will be droped")
     private ItemStack itemStack = ItemStack.of(ItemTypes.DIRT, 1);
 
     public ItemDrop() {

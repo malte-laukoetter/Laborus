@@ -14,18 +14,18 @@ import java.util.Map;
 
 @ConfigSerializable
 public class CommandsConfig {
-    @Setting(value = "ability")
+    @Setting(value = "ability", comment = "starts the job ability")
     private AbilityStartCommand abilityStartCommand = new AbilityStartCommand();
-    @Setting(value = "addXp")
+    @Setting(value = "addXp", comment = "adds job xp")
     private AddXpCommand addXpCommand = new AddXpCommand();
-    @Setting(value = "change")
+    @Setting(value = "change", comment = "changes the job")
     private ChangeJobCommand changeJobCommand = new ChangeJobCommand();
-    @Setting(value = "info")
+    @Setting(value = "info", comment = "shows information about jobs")
     private InfoCommand infoCommand = new InfoCommand();
-    @Setting(value = "toggle")
+    @Setting(value = "toggle", comment = "command to toggle the active status of the job system (only affects the player itself)")
     private ToggleJobStatusCommand toggleJobStatusCommand = new ToggleJobStatusCommand();
 
-    @Setting(value = "mainCommand")
+    @Setting(value = "mainCommand", comment = "command needed to place before each of the commands")
     public String command = "jobs";
 
     public void registerCommands(Laborus plugin){

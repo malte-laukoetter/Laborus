@@ -29,7 +29,7 @@ import java.util.Optional;
  */
 @ConfigSerializable
 public class MultiDrop extends JobBonus {
-    @Setting(value = "extraDrops")
+    @Setting(value = "extraDrops", comment = "amount of times the item gets dropped extra")
     private int extraDrops = 0;
 
     @Override

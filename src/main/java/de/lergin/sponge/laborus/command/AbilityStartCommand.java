@@ -20,16 +20,16 @@ import java.util.Map;
 
 @ConfigSerializable
 public class AbilityStartCommand extends JobCommand {
-    @Setting(value = "command", comment = "The description of the command")
+    @Setting(value = "command", comment = "command")
     private String COMMAND = "ability";
 
-    @Setting(value = "description", comment = "The description of the command")
+    @Setting(value = "description", comment = "description of the command")
     private Text DESCRIPTION = Text.of("Activates the JobAbility");
 
-    @Setting(value = "permission", comment = "The permission needed to use the command")
+    @Setting(value = "permission", comment = "permission needed to use the command")
     private String PERMISSION = "laborus.commands.ability";
 
-    @Setting(value = "paramJobDescription", comment = "The permission needed to use the command")
+    @Setting(value = "paramJobDescription", comment = "description of the job parameter")
     private Text PARAM_JOB_DESCRIPTION = Text.of("job");
 
 

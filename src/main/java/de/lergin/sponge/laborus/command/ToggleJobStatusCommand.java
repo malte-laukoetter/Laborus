@@ -22,13 +22,13 @@ import java.util.List;
  */
 @ConfigSerializable
 public class ToggleJobStatusCommand extends JobCommand {
-    @Setting(value = "command", comment = "The command")
+    @Setting(value = "command", comment = "command")
     private String COMMAND = "toggle";
 
-    @Setting(value = "description", comment = "The description of the command")
+    @Setting(value = "description", comment = "description of the command")
     private Text DESCRIPTION = Text.of("Toggles if the jobsystem is activated for the player");
 
-    @Setting(value = "permission", comment = "The permission needed to use the command")
+    @Setting(value = "permission", comment = "permission needed to use the command")
     private String PERMISSION = "laborus.commands.toggle";
 
     public ToggleJobStatusCommand() {

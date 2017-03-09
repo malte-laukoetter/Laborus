@@ -19,9 +19,9 @@ import java.util.Optional;
  */
 @ConfigSerializable
 public class ItemRepair extends JobBonus {
-    @Setting(value = "maxPercent")
+    @Setting(value = "maxPercent", comment = "maximal percent")
     private double maxPercent = 0;
-    @Setting(value = "minPercent")
+    @Setting(value = "minPercent", comment = "minimal percent")
     private double minPercent = 0;
 
     @Override

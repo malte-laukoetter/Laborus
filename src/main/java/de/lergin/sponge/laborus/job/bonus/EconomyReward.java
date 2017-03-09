@@ -19,9 +19,9 @@ import java.math.BigDecimal;
 public class EconomyReward extends JobBonus{
     private final EconomyService service =
             Sponge.getServiceManager().getRegistration(EconomyService.class).get().getProvider();
-    @Setting(value = "amountMax")
+    @Setting(value = "amountMax", comment = "maximal amount of money")
     private final BigDecimal amountMax = BigDecimal.valueOf(0.0);
-    @Setting(value = "amountMin")
+    @Setting(value = "amountMin", comment = "minimal amount of money")
     private final BigDecimal amountMin = BigDecimal.valueOf(0.0);
     private final Cause cause = Cause.of(NamedCause.source(Sponge.getPluginManager().fromInstance(Laborus.instance())));
 

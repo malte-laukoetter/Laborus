@@ -15,7 +15,7 @@ import java.util.List;
 
 @ConfigSerializable
 public class EffectAbility extends JobAbility {
-    @Setting("potionEffect")
+    @Setting(value = "potionEffect", comment = "the settings of the potion effect")
     private PotionEffectConfig effectConfig = new PotionEffectConfig();
 
     public EffectAbility() {}
@@ -39,15 +39,15 @@ public class EffectAbility extends JobAbility {
 
     @ConfigSerializable
     private static class PotionEffectConfig {
-        @Setting
+        @Setting(comment = "the amplifier of the effect, see http://minecraft.gamepedia.com/Commands#effect")
         int amplifier = 0;
-        @Setting
+        @Setting(comment = "the duration of the effect, see http://minecraft.gamepedia.com/Commands#effect")
         int duration = 1;
         @Setting
         boolean ambiance = false;
-        @Setting
+        @Setting(comment = "if particles are shown")
         boolean particles = true;
-        @Setting
+        @Setting(comment = "the name of the type of the potion, see http://minecraft.gamepedia.com/Data_values#Status_effects names")
         PotionEffectType potionType = PotionEffectTypes.SPEED;
 
         public PotionEffect get(){

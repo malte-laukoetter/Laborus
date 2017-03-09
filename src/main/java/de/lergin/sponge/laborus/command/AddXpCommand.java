@@ -27,25 +27,25 @@ import java.util.Map;
  */
 @ConfigSerializable
 public class AddXpCommand extends JobCommand {
-    @Setting(value = "command", comment = "The description of the command")
+    @Setting(value = "command", comment = "command")
     private String COMMAND = "addJobXp";
 
-    @Setting(value = "description", comment = "The description of the command")
+    @Setting(value = "description", comment = "description of the command")
     private Text DESCRIPTION = Text.of("adds some xp to the job");
 
-    @Setting(value = "permission", comment = "The permission needed to use the command")
+    @Setting(value = "permission", comment = "permission needed to use the command")
     private String PERMISSION = "laborus.commands.addXp";
 
-    @Setting(value = "paramJobDescription", comment = "")
+    @Setting(value = "paramJobDescription", comment = "description of the job parameter")
     private String PARAM_JOB_DESCRIPTION = "job";
 
-    @Setting(value = "paramXpDescription", comment = "")
+    @Setting(value = "paramXpDescription", comment = "description of the xp parameter")
     private String PARAM_XP_DESCRIPTION = "xp";
 
-    @Setting(value = "paramPlayerDescription", comment = "")
+    @Setting(value = "paramPlayerDescription", comment = "description of the player parameter")
     private String PARAM_PLAYER_DESCRIPTION = "player";
 
-    @Setting(value = "paramPlayerPermission", comment = "")
+    @Setting(value = "paramPlayerPermission", comment = "permission needed to use the player parameter")
     private String PARAM_PLAYER_PERMISSION = "laborus.commands.addXp.outher_player";
 
     public AddXpCommand() {

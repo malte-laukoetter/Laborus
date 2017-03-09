@@ -30,28 +30,28 @@ import java.util.stream.Collectors;
  */
 @ConfigSerializable
 public class Job {
-    @Setting(value = "name")
+    @Setting(value = "name", comment = "name of the job shown to the user")
     private String NAME = "unknown";
 
-    @Setting(value = "id")
+    @Setting(value = "id", comment = "id of the job used for the comments and to save the data to the player")
     private String ID = "unknown";
 
-    @Setting(value = "description")
+    @Setting(value = "description", comment = "description shown on the info comment")
     private String DESCRIPTION = "unknown";
 
-    @Setting(value = "permission")
+    @Setting(value = "permission", comment = "permission needed to join the job")
     private String PERMISSION = "";
 
-    @Setting(value = "ability")
+    @Setting(value = "ability", comment = "the special ability of the job")
     private EffectAbility jobAbility = null;
 
-    @Setting(value = "bonus")
+    @Setting(value = "bonus", comment = "the boni of the job")
     private JobBoni jobBoni = new JobBoni();
 
-    @Setting(value = "actions")
+    @Setting(value = "actions", comment = "the stuff that awards ep to the player")
     private JobActions jobActions = new JobActions();
 
-    @Setting(value = "level")
+    @Setting(value = "level", comment = "a list of ep points the player needs for each level, if not set it will use the default levels")
     private List<Long> level = null;
 
     public void initJob(){
@@ -322,19 +322,19 @@ public class Job {
 
     @ConfigSerializable
     private static class JobBoni {
-        @Setting(value = "multiDrop")
+        @Setting(value = "multiDrop", comment = "multiplies the drop of items")
         private List<MultiDrop> multiDropBonuses = ImmutableList.of();
 
-        @Setting(value = "ep")
+        @Setting(value = "ep", comment = "awards a random amount of minecraft ep")
         private List<EpDrop> epBonuses = ImmutableList.of();
 
-        @Setting(value = "itemDrop")
+        @Setting(value = "itemDrop", comment = "awards with the drop of an itemstack")
         private List<ItemDrop> itemDropBonuses = ImmutableList.of();
 
-        @Setting(value = "itemRepair")
+        @Setting(value = "itemRepair", comment = "repairs the tool in the mainhand slot by a random percentage")
         private List<ItemRepair> itemRepairBonuses = ImmutableList.of();
 
-        @Setting(value = "economy")
+        @Setting(value = "economy", comment = "awards a random amount of money via the economy api")
         private List<EconomyReward> economyBonuses = ImmutableList.of();
 
         public List<JobBonus> get(){
@@ -354,22 +354,22 @@ public class Job {
 
     @ConfigSerializable
     private static class JobActions {
-        @Setting(value = "break")
+        @Setting(value = "break", comment = "a list of JobItems that award if destroyed")
         private List<StringJobItem> breakJobItems = ImmutableList.of();
 
-        @Setting(value = "place")
+        @Setting(value = "place", comment = "a list of JobItems that award if placed")
         private List<StringJobItem> placeJobItems = ImmutableList.of();
 
-        @Setting(value = "kill")
+        @Setting(value = "kill", comment = "a list of JobItems that award if killed")
         private List<EntityJobItem> killJobItems = ImmutableList.of();
 
-        @Setting(value = "damage")
+        @Setting(value = "damage", comment = "a list of JobItems that award if damaged")
         private List<EntityJobItem> damageJobItems = ImmutableList.of();
 
-        @Setting(value = "tame")
+        @Setting(value = "tame", comment = "a list of JobItems that award if tamed")
         private List<EntityJobItem> tameJobItems = ImmutableList.of();
 
-        @Setting(value = "use")
+        @Setting(value = "use", comment = "a list of JobItems that award if used")
         private List<ItemJobItem> useJobItems = ImmutableList.of();
 
         private Map<JobAction, List<? extends JobItem>> jobActions;
