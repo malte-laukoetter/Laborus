@@ -24,6 +24,8 @@ public class CommandsConfig {
     private InfoCommand infoCommand = new InfoCommand();
     @Setting(value = "toggle", comment = "command to toggle the active status of the job system (only affects the player itself)")
     private ToggleJobStatusCommand toggleJobStatusCommand = new ToggleJobStatusCommand();
+    @Setting(value = "reload", comment = "command to reload the config")
+    private ReloadCommand reloadCommand = new ReloadCommand();
 
     @Setting(value = "mainCommand", comment = "command needed to place before each of the commands")
     public String command = "jobs";
@@ -36,6 +38,7 @@ public class CommandsConfig {
         childCommands.put(changeJobCommand.getCommandAliases(), changeJobCommand.getCommandSpec());
         childCommands.put(toggleJobStatusCommand.getCommandAliases(), toggleJobStatusCommand.getCommandSpec());
         childCommands.put(infoCommand.getCommandAliases(), infoCommand.getCommandSpec());
+        childCommands.put(reloadCommand.getCommandAliases(), reloadCommand.getCommandSpec());
 
         Sponge.getCommandManager().register(
                 plugin,

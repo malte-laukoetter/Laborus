@@ -13,7 +13,11 @@ import java.sql.*;
  * and replacing of blocks
  */
 public final class AntiReplaceFarming {
-    private final static boolean USE_ANTI_REPLACE = Laborus.instance().config.base.useAntiReplace;
+    private static boolean USE_ANTI_REPLACE = Laborus.instance().config.base.useAntiReplace;
+
+    public static void setUseAntiReplace(boolean useAntiReplace) {
+        USE_ANTI_REPLACE = useAntiReplace;
+    }
 
     /**
      * creates a connection with the database

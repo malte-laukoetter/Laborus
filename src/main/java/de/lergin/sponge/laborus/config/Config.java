@@ -2,11 +2,13 @@ package de.lergin.sponge.laborus.config;
 
 import com.google.common.reflect.TypeToken;
 import de.lergin.sponge.laborus.Laborus;
+import de.lergin.sponge.laborus.util.AntiReplaceFarming;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.slf4j.Logger;
+import org.spongepowered.api.Sponge;
 
 import java.io.IOException;
 import java.util.function.Supplier;
@@ -82,7 +84,18 @@ public class Config {
      * @throws ObjectMappingException
      */
     public void reload() throws IOException, ObjectMappingException {
+        logger.info("Started reloading the config!");
         load();
         save();
+
+        Sponge.getCommandManager().getOwnedBy(Laborus.instance()).forEach(Sponge.getCommandManager()::removeMapping);
+
+        AntiReplaceFarming.setUseAntiReplace(base.useAntiReplace);
+
+        base.initJobs();
+        base.commandsConfig.registerCommands(Laborus.instance());
+
+        Laborus.instance().translationHelper = new TranslationHelper(base.translationConfig);
+        logger.info("Finished reloading the config!");
     }
 }

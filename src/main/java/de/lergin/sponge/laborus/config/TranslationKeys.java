@@ -26,6 +26,10 @@ public enum TranslationKeys {
     COMMAND_INFO_LINE,
     COMMAND_INFO_FOOTER,
 
+    COMMAND_RELOAD_START,
+    COMMAND_RELOAD_SUCCESS,
+    COMMAND_RELOAD_ERROR,
+
     COMMAND_TOGGLE_ACTIVATED,
     COMMAND_TOGGLE_DEACTIVATED;
 
@@ -53,6 +57,10 @@ public enum TranslationKeys {
             case COMMAND_INFO_HEADER:                   return config.COMMAND_INFO_HEADER;
             case COMMAND_INFO_LINE:                     return config.COMMAND_INFO_LINE;
             case COMMAND_INFO_FOOTER:                   return config.COMMAND_INFO_FOOTER;
+
+            case COMMAND_RELOAD_START:                  return config.COMMAND_RELOAD_START;
+            case COMMAND_RELOAD_SUCCESS:                return config.COMMAND_RELOAD_SUCCESS;
+            case COMMAND_RELOAD_ERROR:                  return config.COMMAND_RELOAD_ERROR;
 
             case COMMAND_TOGGLE_ACTIVATED:              return config.COMMAND_TOGGLE_ACTIVATED;
             case COMMAND_TOGGLE_DEACTIVATED:            return config.COMMAND_TOGGLE_DEACTIVATED;

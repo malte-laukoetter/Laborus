@@ -80,10 +80,7 @@ public class Laborus {
     public void onGamePreInitialization(GamePreInitializationEvent event) throws IOException, ObjectMappingException {
         config = new Config(this, loader);
 
-        config.load();
-        config.save();
-
-        translationHelper = new TranslationHelper(config.base.translationConfig);
+        config.reload();
     }
 
     @Listener
@@ -94,9 +91,6 @@ public class Laborus {
         //init customData
         Sponge.getDataManager().register(JobData.class, ImmutableJobDataManipulator.class,
                 new JobDataManipulatorBuilder());
-
-        config.base.commandsConfig.registerCommands(this);
-        config.base.initJobs();
     }
 
     @Listener

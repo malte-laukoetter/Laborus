@@ -49,18 +49,18 @@ public class BaseConfig {
 
     @Setting(value = "translationFiles", comment = "a map of languages and files that each have a translation configuration for one language. The base path is this folder")
     private Map<String, String> translationFiles = ImmutableMap.of();
-    private Map<String, ConfigurationLoader> translationLoaders = new HashMap<>();
+    private Map<String, ConfigurationLoader> translationLoaders;
 
-    public Map<String, TranslationConfig> translationConfig = new HashMap<>();
+    public Map<String, TranslationConfig> translationConfig;
 
     @Setting(value = "jobs", comment = "the jobs")
     private List<Job> mainFileJobs = ImmutableList.of();
 
     @Setting(value = "jobFiles", comment = "a list of files that each have a job configuration. The base path is this folder")
     private List<String> jobFiles = ImmutableList.of();
-    private Map<String, ConfigurationLoader> jobLoaders = new HashMap<>();
+    private Map<String, ConfigurationLoader> jobLoaders;
 
-    public List<Job> jobs = new ArrayList<>();
+    public List<Job> jobs;
 
     public BaseConfig() {}
 
@@ -70,6 +70,9 @@ public class BaseConfig {
     }
 
     public void loadJobFiles(){
+        jobs = new ArrayList<>();
+        jobLoaders = new HashMap<>();
+
         jobFiles.forEach(file -> {
             Path path = Laborus.instance().configDir.getParent().resolve(file);
 
@@ -94,6 +97,9 @@ public class BaseConfig {
     }
 
     public void loadTranslationFiles(){
+        translationConfig = new HashMap<>();
+        translationLoaders = new HashMap<>();
+
         translationFiles.forEach((language, file) -> {
             Path path = Laborus.instance().configDir.getParent().resolve(file);
 

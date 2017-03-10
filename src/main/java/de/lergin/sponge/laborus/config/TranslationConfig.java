@@ -161,7 +161,16 @@ public class TranslationConfig {
     @Setting(value = "COMMAND_INFO_FOOTER", comment = "")
     TextTemplate COMMAND_INFO_FOOTER = TextTemplate.of("");
 
-    private Map<String, TextTemplate> additionalTranslations = new HashMap<>();
+    @Setting(value = "COMMAND_RELOAD_START", comment = "")
+    TextTemplate COMMAND_RELOAD_START = TextTemplate.of(TextColors.RED, "Started reloading the configuration!");
+
+    @Setting(value = "COMMAND_RELOAD_SUCCESS", comment = "")
+    TextTemplate COMMAND_RELOAD_SUCCESS = TextTemplate.of(TextColors.RED, "Reloaded the configuration!");
+
+    @Setting(value = "COMMAND_RELOAD_ERROR", comment = "")
+    TextTemplate COMMAND_RELOAD_ERROR = TextTemplate.of(TextColors.RED, "Couldn't reload the configuration!");
+
+    private Map<String, TextTemplate> additionalTranslations;
 
     public TranslationConfig(){}
 
@@ -178,6 +187,7 @@ public class TranslationConfig {
     }
 
     public void initJobSpecificMessages(ConfigurationNode node){
+        additionalTranslations = new HashMap<>();
         Map<Object, ? extends ConfigurationNode> nodes = node.getChildrenMap();
 
         Set<Object> keys = nodes.keySet();
@@ -194,7 +204,6 @@ public class TranslationConfig {
                 }
         ).forEach(key->{
             try {
-                System.out.println(key.toString());
                 additionalTranslations.put(key.toString(), nodes.get(key).getValue(TypeToken.of(TextTemplate.class)));
             } catch (ObjectMappingException e) {
                 e.printStackTrace();
