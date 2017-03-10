@@ -26,7 +26,7 @@ import java.util.*;
 public class Laborus {
     @Inject
     @DefaultConfig(sharedRoot = false)
-    private Path configDir;
+    public Path configDir;
 
     @Inject
     private Metrics metrics;

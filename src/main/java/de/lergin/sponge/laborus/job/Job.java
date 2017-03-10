@@ -313,7 +313,7 @@ public class Job {
     }
 
     public List<Long> getLevel() {
-        if(level == null){
+        if(level == null || level.isEmpty()){
             level = Laborus.instance().config.base.levels;
         }
 
@@ -360,7 +360,7 @@ public class Job {
         @Setting(value = "place", comment = "a list of JobItems that award if placed")
         private List<StringJobItem> placeJobItems = ImmutableList.of();
 
-        @Setting(value = "kill", comment = "a list of JobItems that award if killed")
+        @Setting(value = "kill", comment = "a list of JobItems that award if killed. needLevel has no effect")
         private List<EntityJobItem> killJobItems = ImmutableList.of();
 
         @Setting(value = "damage", comment = "a list of JobItems that award if damaged")

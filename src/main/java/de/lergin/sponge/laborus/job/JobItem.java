@@ -6,9 +6,9 @@ import ninja.leaping.configurate.objectmapping.Setting;
  * an object with that something can happen in a job
  */
 public abstract class JobItem<T> {
-    @Setting(value = "xp")
+    @Setting(value = "xp", comment = "amount of job xp gained after finishing the action with this item")
     private double XP = 0;
-    @Setting(value = "needLevel")
+    @Setting(value = "needLevel", comment = "level needed to use this item with the action")
     private int NEED_LEVEL = 0;
 
     /**

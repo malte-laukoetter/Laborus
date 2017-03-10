@@ -2,13 +2,22 @@ package de.lergin.sponge.laborus.config;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.reflect.TypeToken;
+import de.lergin.sponge.laborus.Laborus;
 import de.lergin.sponge.laborus.job.Job;
+import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
+import ninja.leaping.configurate.loader.ConfigurationLoader;
+import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.entity.living.player.gamemode.GameMode;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,15 +45,116 @@ public class BaseConfig {
     public List<Long> levels = defaultLevels();
 
     @Setting(value = "translations", comment = "the localised messages of the plugin")
-    public Map<String, TranslationConfig> translationConfig = ImmutableMap.of("en", new TranslationConfig());
+    private Map<String, TranslationConfig> mainFileTranslationConfig = ImmutableMap.of("en", new TranslationConfig());
+
+    @Setting(value = "translationFiles", comment = "a map of languages and files that each have a translation configuration for one language. The base path is this folder")
+    private Map<String, String> translationFiles = ImmutableMap.of();
+    private Map<String, ConfigurationLoader> translationLoaders = new HashMap<>();
+
+    public Map<String, TranslationConfig> translationConfig = new HashMap<>();
 
     @Setting(value = "jobs", comment = "the jobs")
-    public List<Job> jobs = ImmutableList.of();
+    private List<Job> mainFileJobs = ImmutableList.of();
+
+    @Setting(value = "jobFiles", comment = "a list of files that each have a job configuration. The base path is this folder")
+    private List<String> jobFiles = ImmutableList.of();
+    private Map<String, ConfigurationLoader> jobLoaders = new HashMap<>();
+
+    public List<Job> jobs = new ArrayList<>();
 
     public BaseConfig() {}
 
     public void initJobs(){
+        jobs.addAll(mainFileJobs);
         jobs.forEach(Job::initJob);
+    }
+
+    public void loadJobFiles(){
+        jobFiles.forEach(file -> {
+            Path path = Laborus.instance().configDir.getParent().resolve(file);
+
+            ConfigurationLoader loader = HoconConfigurationLoader.builder().setPath(path).build();
+
+            try {
+                Job job = loader.load().getValue(TypeToken.of(Job.class));
+
+                if(job == null){
+                    Laborus.instance().getLogger().warn("Error while loading JobFile %s", file);
+                }else{
+                    jobLoaders.put(job.getId(), loader);
+
+                    jobs.add(job);
+                }
+            } catch (IOException | ObjectMappingException e) {
+                Laborus.instance().getLogger().warn("Error while loading JobFile %s", file);
+
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public void loadTranslationFiles(){
+        translationFiles.forEach((language, file) -> {
+            Path path = Laborus.instance().configDir.getParent().resolve(file);
+
+            ConfigurationLoader loader = HoconConfigurationLoader.builder().setPath(path).build();
+
+            try {
+                TranslationConfig translation = loader.load().getValue(TypeToken.of(TranslationConfig.class));
+
+                if(translation == null){
+                    Laborus.instance().getLogger().warn("Error while loading translation file %s", file);
+                }else{
+                    translationLoaders.put(language, loader);
+
+                    translationConfig.put(language, translation);
+                }
+            } catch (IOException | ObjectMappingException e) {
+                Laborus.instance().getLogger().warn("Error while loading translation file %s", file);
+
+                e.printStackTrace();
+            }
+        });
+
+        mainFileTranslationConfig.forEach((lang, file)-> translationConfig.put(lang,file));
+    }
+
+    public void saveJobFiles(){
+        jobs.forEach(job -> jobLoaders.forEach((id, loader) -> {
+            if(job.getId().equals(id)){
+                ConfigurationNode node = loader.createEmptyNode();
+                try {
+                    node.setValue(TypeToken.of(Job.class), job);
+                } catch (ObjectMappingException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    loader.save(node);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }));
+    }
+
+    public void saveTranslationFiles(){
+        translationConfig.forEach((lang, translationConfig) -> translationLoaders.forEach((lang2, loader) -> {
+            if(lang.equals(lang2)){
+                ConfigurationNode node = loader.createEmptyNode();
+                try {
+                    node.setValue(TypeToken.of(TranslationConfig.class), translationConfig);
+                } catch (ObjectMappingException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    loader.save(node);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }));
     }
 
     private static List<Long> defaultLevels(){

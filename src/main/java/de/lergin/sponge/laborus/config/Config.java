@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.function.Supplier;
 
 public class Config {
-    public ConfigurationLoader<CommentedConfigurationNode> loader;
+    private ConfigurationLoader<CommentedConfigurationNode> loader;
     private Logger logger;
     private ConfigurationNode node;
 
@@ -28,6 +28,9 @@ public class Config {
      */
     public void save() {
         try {
+            base.saveJobFiles();
+            base.saveTranslationFiles();
+
             node.setValue(TypeToken.of(BaseConfig.class), base);
             loader.save(node);
             logger.info("Saved the config!");
@@ -62,6 +65,9 @@ public class Config {
             }else{
                 base = node.getValue(TypeToken.of(BaseConfig.class), (Supplier<BaseConfig>) BaseConfig::new);
             }
+
+            base.loadTranslationFiles();
+            base.loadJobFiles();
         } catch (ObjectMappingException e) {
             e.printStackTrace();
         }
