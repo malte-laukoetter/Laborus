@@ -17,10 +17,7 @@ import org.spongepowered.api.CatalogType;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.data.key.Keys;
-import org.spongepowered.api.entity.EntityType;
-import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.TextElement;
 import org.spongepowered.api.text.chat.ChatTypes;
@@ -149,7 +146,8 @@ public class Job {
             player.sendMessage(
                     Laborus.instance().translationHelper.get(
                             TranslationKeys.JOB_LEVEL_UP,
-                            player
+                            player,
+                            this.getId()
                     ),
                     this.textArgs(player)
             );
@@ -160,7 +158,8 @@ public class Job {
                     ChatTypes.ACTION_BAR,
                     Laborus.instance().translationHelper.get(
                             TranslationKeys.JOB_XP_ACTION_BAR,
-                            player
+                            player,
+                            this.getId()
                     ).apply(this.textArgs(player)).build()
             );
         }
@@ -219,7 +218,8 @@ public class Job {
                             ChatTypes.ACTION_BAR,
                             Laborus.instance().translationHelper.get(
                                     TranslationKeys.JOB_LEVEL_NOT_HIGH_ENOUGH,
-                                    player
+                                    player,
+                                    this.getId()
                             ).apply(args).build()
                     );
                     return false;

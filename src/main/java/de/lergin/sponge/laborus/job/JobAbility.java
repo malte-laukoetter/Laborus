@@ -27,7 +27,8 @@ public abstract class JobAbility {
         player.sendMessage(
                 Laborus.instance().translationHelper.get(
                         TranslationKeys.JOB_ABILITY_START,
-                        player
+                        player,
+                        job.getId()
                 ),
                 this.textArgs(job, player)
         );
@@ -37,7 +38,8 @@ public abstract class JobAbility {
         player.sendMessage(
                 Laborus.instance().translationHelper.get(
                         TranslationKeys.JOB_ABILITY_CANNOT_START_COOLDOWN,
-                        player
+                        player,
+                        job.getId()
                 ),
                 this.textArgs(job, player)
         );

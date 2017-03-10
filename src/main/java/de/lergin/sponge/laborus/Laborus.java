@@ -14,15 +14,21 @@ import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.DefaultConfig;
+import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.game.state.*;
+import org.spongepowered.api.event.item.inventory.AffectSlotEvent;
+import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.slot.OutputSlot;
 import org.spongepowered.api.plugin.Plugin;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
 
-@Plugin(id = "laborus", name = "Laborus", version = "1.2.1", description = "a job plugin", authors = {"Lergin"})
+@Plugin(id = "laborus", name = "Laborus", version = "1.2.2", description = "a job plugin", authors = {"Lergin"})
 public class Laborus {
     @Inject
     @DefaultConfig(sharedRoot = false)

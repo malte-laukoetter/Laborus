@@ -100,12 +100,16 @@ public class BaseConfig {
             ConfigurationLoader loader = HoconConfigurationLoader.builder().setPath(path).build();
 
             try {
-                TranslationConfig translation = loader.load().getValue(TypeToken.of(TranslationConfig.class));
+                ConfigurationNode node = loader.load();
+
+                TranslationConfig translation = node.getValue(TypeToken.of(TranslationConfig.class));
 
                 if(translation == null){
                     Laborus.instance().getLogger().warn("Error while loading translation file %s", file);
                 }else{
                     translationLoaders.put(language, loader);
+
+                    translation.initJobSpecificMessages(node);
 
                     translationConfig.put(language, translation);
                 }
@@ -116,7 +120,11 @@ public class BaseConfig {
             }
         });
 
-        mainFileTranslationConfig.forEach((lang, file)-> translationConfig.put(lang,file));
+        mainFileTranslationConfig.forEach((lang, config)-> {
+            translationConfig.put(lang, config);
+
+            config.initJobSpecificMessages(Laborus.instance().config.node.getNode("translations", lang));
+        });
     }
 
     public void saveJobFiles(){
@@ -144,6 +152,7 @@ public class BaseConfig {
                 ConfigurationNode node = loader.createEmptyNode();
                 try {
                     node.setValue(TypeToken.of(TranslationConfig.class), translationConfig);
+                    translationConfig.saveJobSpecificMessages(node);
                 } catch (ObjectMappingException e) {
                     e.printStackTrace();
                 }
@@ -155,6 +164,9 @@ public class BaseConfig {
                 }
             }
         }));
+
+        mainFileTranslationConfig.forEach((key, config) ->
+                config.saveJobSpecificMessages(Laborus.instance().config.node.getNode("translations", key)));
     }
 
     private static List<Long> defaultLevels(){

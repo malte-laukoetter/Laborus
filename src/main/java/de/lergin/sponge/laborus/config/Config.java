@@ -14,7 +14,9 @@ import java.util.function.Supplier;
 public class Config {
     private ConfigurationLoader<CommentedConfigurationNode> loader;
     private Logger logger;
-    private ConfigurationNode node;
+
+
+    public ConfigurationNode node;
 
     public BaseConfig base;
 

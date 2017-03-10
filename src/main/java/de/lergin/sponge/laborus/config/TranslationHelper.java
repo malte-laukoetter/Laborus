@@ -10,10 +10,18 @@ public class TranslationHelper {
     private final Map<String, TranslationConfig> translations;
 
     public TextTemplate get(TranslationKeys key, CommandSource src){
-        return get(key, src.getLocale());
+        return get(key, src.getLocale(), "");
+    }
+
+    public TextTemplate get(TranslationKeys key, CommandSource src, String additionalId){
+        return get(key, src.getLocale(), additionalId);
     }
 
     public TextTemplate get(TranslationKeys key, Locale locale){
+        return get(key, locale,"");
+    }
+
+    public TextTemplate get(TranslationKeys key, Locale locale, String additionalId){
         Locale matchingLocale = getMatchingLocal(locale);
 
         if(matchingLocale == null){
@@ -26,7 +34,7 @@ public class TranslationHelper {
             }
         }
 
-        return translations.get(matchingLocale.toLanguageTag()).get(key);
+        return translations.get(matchingLocale.toLanguageTag()).get(key, additionalId);
     }
 
     private Locale getMatchingLocal(Locale locale){
