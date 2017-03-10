@@ -52,6 +52,7 @@ public class Job {
     private JobActions jobActions = new JobActions();
 
     @Setting(value = "level", comment = "a list of ep points the player needs for each level, if not set it will use the default levels")
+    private List<Long> configLevel = null;
     private List<Long> level = null;
 
     public void initJob(){
@@ -314,7 +315,11 @@ public class Job {
 
     public List<Long> getLevel() {
         if(level == null || level.isEmpty()){
-            level = Laborus.instance().config.base.levels;
+            if(configLevel != null){
+                level = configLevel;
+            }else{
+                level = Laborus.instance().config.base.levels;
+            }
         }
 
         return level;
