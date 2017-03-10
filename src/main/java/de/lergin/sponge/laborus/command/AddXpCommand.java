@@ -156,7 +156,6 @@ public class AddXpCommand extends JobCommand {
     public Map<String, TextElement> textArgs(Job job, Player player, CommandSource source, double xp){
         Map<String, TextElement> args = job.textArgs(player);
 
-        args.put("xp", Text.of(xp));
         args.put("player.name", Text.of(player.getName()));
         args.put("player.display_name", player.getDisplayNameData().displayName().get());
         args.put("source", Text.of(source.getName()));

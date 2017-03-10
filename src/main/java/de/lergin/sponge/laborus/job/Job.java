@@ -13,13 +13,18 @@ import de.lergin.sponge.laborus.job.items.StringJobItem;
 import de.lergin.sponge.laborus.util.BlockStateComparator;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
+import org.spongepowered.api.CatalogType;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.entity.EntityType;
+import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.TextElement;
 import org.spongepowered.api.text.chat.ChatTypes;
+import org.spongepowered.api.text.translation.Translatable;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
@@ -200,12 +205,22 @@ public class Job {
 
                     return true;
                 } else {
+                    Map<String, TextElement> args = this.textArgs(player);
+
+                    if(item instanceof Translatable){
+                        args.put("item", Text.of(((Translatable) item).getTranslation().get(player.getLocale())));
+                    }else if(item instanceof CatalogType){
+                        args.put("item", Text.of(((CatalogType) item).getName()));
+                    }else{
+                        args.put("item", Text.of(item.toString()));
+                    }
+
                     player.sendMessage(
                             ChatTypes.ACTION_BAR,
                             Laborus.instance().translationHelper.get(
                                     TranslationKeys.JOB_LEVEL_NOT_HIGH_ENOUGH,
                                     player
-                            ).apply(this.textArgs(player)).build()
+                            ).apply(args).build()
                     );
                     return false;
                 }
