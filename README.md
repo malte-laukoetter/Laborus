@@ -70,15 +70,18 @@ Shows information about the job if one is send with the command, otherwise a lis
 
 |Name|Description|Default value|
 |----|-----------|-------------|
-|enabledGamemodes|list of gamemodes the job system is activated in|[adventure, survival]|
 |antiReplaceActive|is the anti replace farming system active|false|
 |antiReplaceTime|the time in hours after that a block will again be rewarded if the anti replace farming system is active|48|
+|enabledGamemodes|list of gamemodes the job system is activated in|[adventure, survival]|
 |maxSelectedJobs|maximum amount of jobs that can be selected at the same time|1|
 |xpWithoutJob|the value the ep is multiplied by if the job is not selected|0.5|
+|fallbackLanguage|the language to use if the language of the player is not available|"en"|
 |level|the default ep borders for the next level|[0,50,100...]|
 |jobs|the list of the configuraitons for the jobs|[]|
+|jobFiles|a list of files that each have a job configuration|[]|
 |commands|the settings for the commands|automatically generated, can be edited|
-|translations|the settings for the messages|automatically generated, can be edited|
+|translations|the settings for the messages|automatically generated, can be edited, if edited to [] it will stay empty|
+|translationFiles|a map of languages and files that each have a translation configuration for one language. The base path is this folder|{}|
 
 ### Jobs
 
