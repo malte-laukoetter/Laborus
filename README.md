@@ -179,6 +179,7 @@ Extra Settings for the different Boni Types:
 |----|-----------|-------------|
 |amountMin|the minimum amount of money rewarded|0.0|
 |amountMax|the maximum amount of money rewarded|0.0|
+|currency|the id of the currency to use, defaults to the default currency| |
 
 #### Ability
 
