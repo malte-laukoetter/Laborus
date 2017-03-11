@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.function.Supplier;
 
 public class Config {
@@ -95,7 +96,8 @@ public class Config {
         base.initJobs();
         base.commandsConfig.registerCommands(Laborus.instance());
 
-        Laborus.instance().translationHelper = new TranslationHelper(base.translationConfig);
+        Laborus.instance().translationHelper =
+                new TranslationHelper(base.translationConfig, Locale.forLanguageTag(base.fallbackLanguage));
         logger.info("Finished reloading the config!");
     }
 }

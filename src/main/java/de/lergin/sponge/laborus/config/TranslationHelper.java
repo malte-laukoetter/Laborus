@@ -6,6 +6,7 @@ import org.spongepowered.api.text.TextTemplate;
 import java.util.*;
 
 public class TranslationHelper {
+    private final Locale fallbackLocale;
     private final Collection<Locale> locales;
     private final Map<String, TranslationConfig> translations;
 
@@ -25,11 +26,14 @@ public class TranslationHelper {
         Locale matchingLocale = getMatchingLocal(locale);
 
         if(matchingLocale == null){
-            matchingLocale = getMatchingLocal(Locale.getDefault());
+            matchingLocale = getMatchingLocal(fallbackLocale);
             if(matchingLocale == null){
-                matchingLocale = locales.iterator().next();
-                if(matchingLocale == null) {
-                    return TextTemplate.of("ERROR NO TRANSLATIONS");
+                matchingLocale = getMatchingLocal(Locale.getDefault());
+                if(matchingLocale == null){
+                    matchingLocale = locales.iterator().next();
+                    if(matchingLocale == null) {
+                        return TextTemplate.of("ERROR NO TRANSLATIONS");
+                    }
                 }
             }
         }
@@ -43,11 +47,12 @@ public class TranslationHelper {
         return Locale.lookup(Collections.singletonList(range), locales);
     }
 
-    public TranslationHelper(Map<String, TranslationConfig> translations) {
+    public TranslationHelper(Map<String, TranslationConfig> translations, Locale fallbackLocale) {
         Collection<Locale> locales = new ArrayList<>();
 
         translations.keySet().forEach(k -> locales.add(Locale.forLanguageTag(k)));
 
+        this.fallbackLocale = fallbackLocale;
         this.locales = locales;
         this.translations = translations;
     }

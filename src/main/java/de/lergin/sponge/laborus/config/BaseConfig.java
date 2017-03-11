@@ -44,6 +44,9 @@ public class BaseConfig {
     @Setting(value = "level", comment = "the amount of ep needed for each level")
     public List<Long> levels = defaultLevels();
 
+    @Setting(value = "fallbackLanguage", comment = "the language used if the language of the player is not available")
+    public String fallbackLanguage = "en";
+
     @Setting(value = "translations", comment = "the localised messages of the plugin")
     private Map<String, TranslationConfig> mainFileTranslationConfig = ImmutableMap.of("en", new TranslationConfig());
 
