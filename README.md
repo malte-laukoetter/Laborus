@@ -12,6 +12,7 @@ a Minecraft job plugin for [Sponge](https://Spongepowered.org "SpongePowered.org
      2. JobActions
      3. JobBoni
      4. Ability
+  3. Translations
 
 ## Features
 
@@ -29,7 +30,7 @@ A full lists of all possible actions, boni and abilities can be found in the Con
 To use this plugin you need a [Sponge](https://spongepowered.org) Server that is supporting the SpongeApi Version 5.2.
 If you have a Server like this you only need to place the pluginfile into the mods folder.
 When you have done this and you have started the server the default configuration file will automatically be added, but you still need to add the jobs you want to have to this file due to the missing of jobs in the default configuration.
-Some ready configuration files with some jobs can be found in the [jobs folder in the Github repository](https://github.com/Lergin/Laborus/tree/master/jobs). These files can just be used to replace the automatically created config and will get all missing configuration keys after the next stop of the server.
+Some ready configuration files with some jobs can be found in the [Configuration Cookbook in the Github repository](https://github.com/Lergin/Laborus/tree/master/ConfigurationCookbook). These files can just be used to replace the automatically created config and will get all missing configuration keys after the next stop of the server.
 
 ### Commands
 
@@ -183,3 +184,7 @@ Extra Settings for the different Boni Types:
 |name|the name of the ability|""|
 |cooldown|amount of seconds between uses|0|
 |potionEffect|adds a potion effect to the player|{amplifier=0, duration=1, potionType="minecraft:speed", particles=true, ambiance=false}
+
+### Translation
+
+A Documentation of the Translation Settings and which variables are available can be found in the [Github Wiki](https://github.com/Lergin/Laborus/wiki/Translations) or on [Sponge Ore](https://ore.spongepowered.org/Lergin/Laborus/pages/Translations)
