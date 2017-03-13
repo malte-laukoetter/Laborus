@@ -14,23 +14,23 @@ import java.util.*;
  * a bonus that will give the player a bonus with a given probability
  */
 public abstract class JobBonus {
-    @Setting(value = "probability")
+    @Setting(value = "probability", comment = "the probability that the bonus is awarded (between 0.0 and 1.0)")
     private double probability = 0;
-    @Setting(value = "sendMessage")
+    @Setting(value = "sendMessage", comment = "the message will only be send if this is true")
     private boolean sendMessage = false;
-    @Setting(value = "message")
+    @Setting(value = "message", comment = "message send when the bonus is awarded")
     private Text message = Text.EMPTY;
     private Random random = new Random();
-    @Setting(value = "minLevel")
+    @Setting(value = "minLevel", comment = "the minimum level a player need to get the bonus")
     private int minLevel = 0;
-    @Setting(value = "maxLevel")
+    @Setting(value = "maxLevel", comment = "maximum level the bonus is awarded at")
     private int maxLevel = -1;
-    @Setting(value = "onlySelected")
+    @Setting(value = "onlySelected", comment = "if true it will only be awarded if the job is selected")
     private boolean onlySelected = true;
     //@Setting(value = "jobItems")
     // currently not working...
     private List<String> jobItems = ImmutableList.of();
-    @Setting(value = "actions")
+    @Setting(value = "actions", comment = "actions that can award this bonus (BREAK, ENTITY_DAMAGE, ENTITY_KILL, ENTITY_TAME, ITEM_USE, PLACE)")
     private List<JobAction> jobActions = ImmutableList.of();
 
     /**
