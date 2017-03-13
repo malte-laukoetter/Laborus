@@ -1,5 +1,6 @@
 package de.lergin.sponge.laborus.job.bonus;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import de.lergin.sponge.laborus.job.Job;
 import de.lergin.sponge.laborus.job.JobAction;
@@ -63,7 +64,7 @@ public class ItemRepair extends JobBonus {
     }
 
     public ItemRepair() {
-        super(Sets.newHashSet(JobAction.BREAK, JobAction.ENTITY_KILL));
+        super(Lists.newArrayList(JobAction.BREAK, JobAction.ENTITY_KILL));
     }
 
 }

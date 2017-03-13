@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
 
-@Plugin(id = "laborus", name = "Laborus", version = "1.2.2", description = "a job plugin", authors = {"Lergin"})
+@Plugin(id = "laborus", name = "Laborus", version = "1.3.0", description = "a job plugin", authors = {"Lergin"})
 public class Laborus {
     @Inject
     @DefaultConfig(sharedRoot = false)

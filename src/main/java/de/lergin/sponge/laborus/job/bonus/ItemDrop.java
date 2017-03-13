@@ -1,6 +1,6 @@
 package de.lergin.sponge.laborus.job.bonus;
 
-import com.google.common.collect.Sets;
+import com.google.common.collect.Lists;
 import de.lergin.sponge.laborus.job.JobAction;
 import de.lergin.sponge.laborus.job.JobBonus;
 import de.lergin.sponge.laborus.job.JobItem;
@@ -17,7 +17,7 @@ public class ItemDrop extends JobBonus {
     private ItemStack itemStack = ItemStack.of(ItemTypes.DIRT, 1);
 
     public ItemDrop() {
-        super(Sets.newHashSet(JobAction.BREAK, JobAction.ENTITY_KILL));
+        super(Lists.newArrayList(JobAction.BREAK, JobAction.ENTITY_KILL));
     }
 
     @Override

@@ -30,7 +30,8 @@ public abstract class JobBonus {
     //@Setting(value = "jobItems")
     // currently not working...
     private List<String> jobItems = ImmutableList.of();
-    private Set<JobAction> jobActions = ImmutableSet.of();
+    @Setting(value = "actions")
+    private List<JobAction> jobActions = ImmutableList.of();
 
     /**
      * @return true with the probability of probability
@@ -58,10 +59,10 @@ public abstract class JobBonus {
         if (maxLevel > 0 && maxLevel < job.getLevel(player))
             return false;
 
-        if (!(this.onlySelected && player.get(JobKeys.JOB_SELECTED).orElseGet(HashSet::new).contains(job.getId())))
+        if (this.onlySelected && !player.get(JobKeys.JOB_SELECTED).orElseGet(HashSet::new).contains(job.getId()))
             return false;
 
-        if (!(this.jobActions.isEmpty() || this.jobActions.contains(jobAction)))
+        if (!this.jobActions.isEmpty() && !this.jobActions.contains(jobAction))
             return false;
 
         return true;
@@ -87,8 +88,15 @@ public abstract class JobBonus {
     /**
      * creates a new JobBonus
      */
-    public JobBonus(Set<JobAction> jobActions) {
+    public JobBonus(List<JobAction> jobActions) {
         this.jobActions = jobActions;
+    }
+
+    /**
+     * creates a new JobBonus
+     */
+    public JobBonus() {
+        this.jobActions = ImmutableList.of();
     }
 
     /**
