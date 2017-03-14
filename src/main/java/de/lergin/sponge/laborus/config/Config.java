@@ -39,11 +39,9 @@ public class Config {
             node.setValue(TypeToken.of(BaseConfig.class), base);
             loader.save(node);
             logger.info("Saved the config!");
-        } catch(IOException e) {
+        } catch(IOException | ObjectMappingException e) {
             logger.warn("Could not save the config!");
-        } catch (ObjectMappingException e) {
-            e.printStackTrace();
-            logger.warn("Could not save the config!");
+            logger.warn(e.getLocalizedMessage());
         }
     }
 
@@ -74,7 +72,8 @@ public class Config {
             base.loadTranslationFiles();
             base.loadJobFiles();
         } catch (ObjectMappingException e) {
-            e.printStackTrace();
+            logger.warn("Could not load the config!");
+            logger.warn(e.getLocalizedMessage());
         }
     }
 

@@ -85,16 +85,15 @@ public class BaseConfig {
                 Job job = loader.load().getValue(TypeToken.of(Job.class));
 
                 if(job == null){
-                    Laborus.instance().getLogger().warn("Error while loading JobFile {0}", file);
+                    Laborus.instance().getLogger().warn("Error while loading JobFile {}", file);
                 }else{
                     jobLoaders.put(job.getId(), loader);
 
                     jobs.add(job);
                 }
             } catch (IOException | ObjectMappingException e) {
-                Laborus.instance().getLogger().warn("Error while loading JobFile {0}", file);
-
-                e.printStackTrace();
+                Laborus.instance().getLogger().warn("Error while loading JobFile {}", file);
+                Laborus.instance().getLogger().warn(e.getLocalizedMessage());
             }
         });
     }
@@ -114,7 +113,7 @@ public class BaseConfig {
                 TranslationConfig translation = node.getValue(TypeToken.of(TranslationConfig.class));
 
                 if(translation == null){
-                    Laborus.instance().getLogger().warn("Error while loading translation file {0}", file);
+                    Laborus.instance().getLogger().warn("Error while loading translation file {}", file);
                 }else{
                     translationLoaders.put(language, loader);
 
@@ -123,9 +122,8 @@ public class BaseConfig {
                     translationConfig.put(language, translation);
                 }
             } catch (IOException | ObjectMappingException e) {
-                Laborus.instance().getLogger().warn("Error while loading translation file {0}", file);
-
-                e.printStackTrace();
+                Laborus.instance().getLogger().warn("Error while loading translation file {}", file);
+                Laborus.instance().getLogger().warn(e.getLocalizedMessage());
             }
         });
 
