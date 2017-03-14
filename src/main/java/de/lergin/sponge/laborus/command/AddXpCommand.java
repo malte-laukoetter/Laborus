@@ -46,7 +46,7 @@ public class AddXpCommand extends JobCommand {
     private String PARAM_PLAYER_DESCRIPTION = "player";
 
     @Setting(value = "paramPlayerPermission", comment = "permission needed to use the player parameter")
-    private String PARAM_PLAYER_PERMISSION = "laborus.commands.addXp.outher_player";
+    private String PARAM_PLAYER_PERMISSION = "laborus.commands.addXp.other_player";
 
     public AddXpCommand() {
         super();
