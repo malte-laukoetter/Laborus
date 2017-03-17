@@ -1,7 +1,6 @@
 package de.lergin.sponge.laborus.job.bonus;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import de.lergin.sponge.laborus.Laborus;
 import de.lergin.sponge.laborus.job.JobAction;
 import de.lergin.sponge.laborus.job.JobBonus;
@@ -15,7 +14,6 @@ import org.spongepowered.api.event.cause.NamedCause;
 import org.spongepowered.api.service.economy.Currency;
 import org.spongepowered.api.service.economy.EconomyService;
 import org.spongepowered.api.service.economy.account.Account;
-import org.spongepowered.api.service.economy.transaction.TransactionResult;
 
 import java.math.BigDecimal;
 

@@ -1,14 +1,14 @@
 package de.lergin.sponge.laborus.job;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import de.lergin.sponge.laborus.data.JobKeys;
-import de.lergin.sponge.laborus.util.BlockStateComparator;
 import ninja.leaping.configurate.objectmapping.Setting;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
 
 /**
  * a bonus that will give the player a bonus with a given probability

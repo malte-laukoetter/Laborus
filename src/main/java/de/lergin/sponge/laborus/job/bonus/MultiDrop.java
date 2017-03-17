@@ -1,29 +1,16 @@
 package de.lergin.sponge.laborus.job.bonus;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import de.lergin.sponge.laborus.Laborus;
-import de.lergin.sponge.laborus.config.Config;
 import de.lergin.sponge.laborus.job.Job;
 import de.lergin.sponge.laborus.job.JobAction;
 import de.lergin.sponge.laborus.job.JobBonus;
 import de.lergin.sponge.laborus.job.JobItem;
-import de.lergin.sponge.laborus.job.items.StringJobItem;
-import de.lergin.sponge.laborus.util.BlockStateComparator;
-import ninja.leaping.configurate.ConfigurationNode;
-import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
-import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
-import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
-import sun.plugin.dom.core.Comment;
-
-import java.util.Optional;
 
 /**
  * bonus drop of the block

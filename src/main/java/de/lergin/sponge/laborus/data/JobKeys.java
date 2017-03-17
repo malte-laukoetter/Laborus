@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.spongepowered.api.data.DataQuery.of;
-import static org.spongepowered.api.data.key.KeyFactory.*;
+import static org.spongepowered.api.data.key.KeyFactory.makeSingleKey;
 
 public class JobKeys {
     public static final Key<Value<String>> DEFAULT_HOME = KeyFactory.makeSingleKey(

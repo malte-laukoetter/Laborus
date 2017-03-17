@@ -1,7 +1,6 @@
 package de.lergin.sponge.laborus.job.bonus;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import de.lergin.sponge.laborus.job.Job;
 import de.lergin.sponge.laborus.job.JobAction;
 import de.lergin.sponge.laborus.job.JobBonus;

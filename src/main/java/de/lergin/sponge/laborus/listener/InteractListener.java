@@ -2,10 +2,8 @@ package de.lergin.sponge.laborus.listener;
 
 import de.lergin.sponge.laborus.job.Job;
 import de.lergin.sponge.laborus.job.JobAction;
-import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.action.InteractEvent;
 import org.spongepowered.api.event.entity.living.humanoid.HandInteractEvent;
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.item.ItemType;
