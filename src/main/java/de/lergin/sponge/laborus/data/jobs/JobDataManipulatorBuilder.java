@@ -64,29 +64,18 @@ public class JobDataManipulatorBuilder extends AbstractDataBuilder<JobData> impl
 
     @Override
     protected Optional<JobData> buildContent(DataView dataView) {
-        if (dataView.contains(JobKeys.JOB_DATA.getQuery())) {
-
+        if (!dataView.isEmpty()) {
             // the data needs to be parsed by hand because we are getting a list instead of a set
             Set<String> selectedJobs =
                     ((ImmutableList<?>) dataView.get(JobKeys.JOB_SELECTED.getQuery()).orElseGet(HashSet::new)).stream()
                             .map(string -> (String) string)
                             .collect(Collectors.toSet());
 
-            Map<String, Double> jobData;
-            Optional<? extends Map<?, ?>> optional = dataView.getMap(JobKeys.JOB_DATA.getQuery());
-            if (optional.isPresent()) {
-                jobData = (Map<String, Double>) optional.get();
-            } else {
-                jobData = new HashMap<>();
-            }
+            Map<String, Double> jobData = dataView.getMap(JobKeys.JOB_DATA.getQuery())
+                    .map(map -> (Map<String, Double>) map).orElseGet(HashMap::new);
 
-            Map<String, Long> jobAbilityUsed;
-            Optional<? extends Map<?, ?>> optional2 = dataView.getMap(JobKeys.JOB_ABILITY_USED.getQuery());
-            if (optional2.isPresent()) {
-                jobAbilityUsed = (Map<String, Long>) optional2.get();
-            } else {
-                jobAbilityUsed = new HashMap<>();
-            }
+            Map<String, Long> jobAbilityUsed = dataView.getMap(JobKeys.JOB_ABILITY_USED.getQuery())
+                    .map(map -> (Map<String, Long>) map).orElseGet(HashMap::new);
 
             return Optional.of(new JobData(
                     jobData,
