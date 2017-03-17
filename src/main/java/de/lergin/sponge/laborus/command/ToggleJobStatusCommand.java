@@ -74,14 +74,14 @@ public class ToggleJobStatusCommand extends JobCommand {
         if(jobsEnabled){
             player.sendMessage(
                     Laborus.instance().translationHelper.get(
-                            TranslationKeys.COMMAND_TOGGLE_ACTIVATED,
+                            TranslationKeys.COMMAND_TOGGLE_DEACTIVATED,
                             player
                     )
             );
         }else{
             player.sendMessage(
                     Laborus.instance().translationHelper.get(
-                            TranslationKeys.COMMAND_TOGGLE_DEACTIVATED,
+                            TranslationKeys.COMMAND_TOGGLE_ACTIVATED,
                             player
                     )
             );
