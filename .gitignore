@@ -1,6 +1,9 @@
 .idea
 target
 out
+build
+.gradle
+gradle-app.setting
 
 # Windows image file caches
 Thumbs.db

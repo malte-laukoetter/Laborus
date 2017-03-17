@@ -11,6 +11,7 @@ import de.lergin.sponge.laborus.util.AntiReplaceFarming;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
+import org.bstats.Metrics;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.DefaultConfig;
@@ -26,7 +27,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
-@Plugin(id = "laborus", name = "Laborus", version = "1.3.0", description = "a job plugin", authors = {"Lergin"})
+@Plugin(id = "laborus", name = "Laborus", version = "@version@", description = "a job plugin", authors = {"Lergin"})
 public class Laborus {
     @Inject
     @DefaultConfig(sharedRoot = false)
