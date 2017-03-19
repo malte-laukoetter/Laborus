@@ -18,6 +18,8 @@ public class CommandsConfig {
     private AbilityStartCommand abilityStartCommand = new AbilityStartCommand();
     @Setting(value = "addXp", comment = "adds job xp")
     private AddXpCommand addXpCommand = new AddXpCommand();
+    @Setting(value = "setXp", comment = "sets the job xp")
+    private SetXpCommand setXpCommand = new SetXpCommand();
     @Setting(value = "change", comment = "changes the job")
     private ChangeJobCommand changeJobCommand = new ChangeJobCommand();
     @Setting(value = "info", comment = "shows information about jobs")
@@ -35,6 +37,7 @@ public class CommandsConfig {
 
         childCommands.put(abilityStartCommand.getCommandAliases(), abilityStartCommand.getCommandSpec());
         childCommands.put(addXpCommand.getCommandAliases(), addXpCommand.getCommandSpec());
+        childCommands.put(setXpCommand.getCommandAliases(), setXpCommand.getCommandSpec());
         childCommands.put(changeJobCommand.getCommandAliases(), changeJobCommand.getCommandSpec());
         childCommands.put(toggleJobStatusCommand.getCommandAliases(), toggleJobStatusCommand.getCommandSpec());
         childCommands.put(infoCommand.getCommandAliases(), infoCommand.getCommandSpec());

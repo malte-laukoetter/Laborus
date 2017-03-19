@@ -60,10 +60,11 @@ public class TranslationConfig {
 
     @Setting(value = "COMMAND_ADDXP_SEND_OTHER", comment = "")
     TextTemplate COMMAND_ADDXP_SEND_OTHER = TextTemplate.of(
+            "You added ",
             arg("xp").color(TextColors.GREEN).build(),
             Text.of(TextColors.GREEN, "xp"),
             " to ", arg("player.display_name").build(),
-            " to the job ", arg("job.name").color(TextColors.GREEN).build(),
+            " job ", arg("job.name").color(TextColors.GREEN).build(),
             "."
     );
 
@@ -83,6 +84,28 @@ public class TranslationConfig {
             Text.of(TextColors.GREEN, "xp"),
             " to ", arg("job.name").color(TextColors.GREEN).build(),
             "."
+    );
+
+    @Setting(value = "COMMAND_SETXP_SEND_OTHER", comment = "")
+    TextTemplate COMMAND_SETXP_SEND_OTHER = TextTemplate.of(
+            "You have set the xp of the job ", arg("job.name").color(TextColors.GREEN).build(),
+            " from the ", arg("player.display_name").build(),
+            " to ", arg("xp").color(TextColors.GREEN).build(),
+            "."
+    );
+
+    @Setting(value = "COMMAND_SETXP_RECEIVE_OTHER", comment = "")
+    TextTemplate COMMAND_SETXP_RECEIVE_OTHER = TextTemplate.of(
+            arg("source").color(TextColors.GREEN).build(),
+            " has set your xp of ", arg("job.name").color(TextColors.GREEN).build(),
+            " to ", arg("xp").color(TextColors.GREEN).build(), "."
+    );
+
+    @Setting(value = "COMMAND_SETXP_SELF", comment = "")
+    TextTemplate COMMAND_SETXP_SELF = TextTemplate.of(
+            "You set the xp of ", arg("job.name").color(TextColors.GREEN).build(),
+            " to ", arg("xp").color(TextColors.GREEN).build(),
+            Text.of(TextColors.GREEN, "xp"), "."
     );
 
     @Setting(value = "COMMAND_CHANGE_JOINED", comment = "")

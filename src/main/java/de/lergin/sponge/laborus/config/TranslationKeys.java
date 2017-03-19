@@ -14,6 +14,10 @@ public enum TranslationKeys {
     COMMAND_ADDXP_RECEIVE_OTHER,
     COMMAND_ADDXP_SELF,
 
+    COMMAND_SETXP_SEND_OTHER,
+    COMMAND_SETXP_RECEIVE_OTHER,
+    COMMAND_SETXP_SELF,
+
     COMMAND_CHANGE_JOINED,
     COMMAND_CHANGE_ALREADY_JOINED,
     COMMAND_CHANGE_LEAVED,
@@ -43,6 +47,10 @@ public enum TranslationKeys {
             case JOB_ABILITY_START:                     return config.JOB_ABILITY_START;
 
             case COMMAND_ADDXP_SEND_OTHER:              return config.COMMAND_ADDXP_SEND_OTHER;
+            case COMMAND_SETXP_RECEIVE_OTHER:           return config.COMMAND_SETXP_RECEIVE_OTHER;
+            case COMMAND_SETXP_SELF:                    return config.COMMAND_SETXP_SELF;
+
+            case COMMAND_SETXP_SEND_OTHER:              return config.COMMAND_SETXP_SEND_OTHER;
             case COMMAND_ADDXP_RECEIVE_OTHER:           return config.COMMAND_ADDXP_RECEIVE_OTHER;
             case COMMAND_ADDXP_SELF:                    return config.COMMAND_ADDXP_SELF;
 

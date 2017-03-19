@@ -23,18 +23,18 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * adds some xp to the {@link Player}
+ * sets the xp of the {@link Player}
  */
 @ConfigSerializable
-public class AddXpCommand extends JobCommand {
+public class SetXpCommand extends JobCommand {
     @Setting(value = "command", comment = "command")
-    private String COMMAND = "addXp";
+    private String COMMAND = "setXp";
 
     @Setting(value = "description", comment = "description of the command")
-    private Text DESCRIPTION = Text.of("adds some xp to the job");
+    private Text DESCRIPTION = Text.of("sets the xp of the job");
 
     @Setting(value = "permission", comment = "permission needed to use the command")
-    private String PERMISSION = "laborus.commands.addXp";
+    private String PERMISSION = "laborus.commands.setXp";
 
     @Setting(value = "paramJobDescription", comment = "description of the job parameter")
     private String PARAM_JOB_DESCRIPTION = "job";
@@ -46,9 +46,9 @@ public class AddXpCommand extends JobCommand {
     private String PARAM_PLAYER_DESCRIPTION = "player";
 
     @Setting(value = "paramPlayerPermission", comment = "permission needed to use the player parameter")
-    private String PARAM_PLAYER_PERMISSION = "laborus.commands.addXp.other_player";
+    private String PARAM_PLAYER_PERMISSION = "laborus.commands.setXp.other_player";
 
-    public AddXpCommand() {
+    public SetXpCommand() {
         super();
     }
 
@@ -116,9 +116,7 @@ public class AddXpCommand extends JobCommand {
         Map<String, Double> jobData = player.get(JobKeys.JOB_DATA).orElseGet(HashMap::new);
 
         Job job = ((Job) args.getOne(this.PARAM_JOB_DESCRIPTION).get());
-        double addXp = (double) args.getOne(this.PARAM_XP_DESCRIPTION).get();
-        double newXp = jobData.getOrDefault(job.getId(), 0.0) + addXp;
-
+        double newXp = (double) args.getOne(this.PARAM_XP_DESCRIPTION).get();
 
         jobData.put(job.getId(), newXp);
 
@@ -127,26 +125,26 @@ public class AddXpCommand extends JobCommand {
         if (!(commandSource instanceof Player) || !commandSource.equals(player)) {
             commandSource.sendMessage(
                     Laborus.instance().translationHelper.get(
-                            TranslationKeys.COMMAND_ADDXP_SEND_OTHER,
+                            TranslationKeys.COMMAND_SETXP_SEND_OTHER,
                             commandSource
                     ),
-                    this.textArgs(job, player, commandSource, addXp)
+                    this.textArgs(job, player, commandSource, newXp)
             );
 
             player.sendMessage(
                     Laborus.instance().translationHelper.get(
-                            TranslationKeys.COMMAND_ADDXP_RECEIVE_OTHER,
+                            TranslationKeys.COMMAND_SETXP_RECEIVE_OTHER,
                             player
                     ),
-                    this.textArgs(job,player,commandSource,addXp)
+                    this.textArgs(job,player,commandSource, newXp)
             );
         } else {
             commandSource.sendMessage(
                     Laborus.instance().translationHelper.get(
-                            TranslationKeys.COMMAND_ADDXP_SELF,
+                            TranslationKeys.COMMAND_SETXP_SELF,
                             commandSource
                     ),
-                    this.textArgs(job,player,commandSource,addXp)
+                    this.textArgs(job,player,commandSource, newXp)
             );
         }
 
