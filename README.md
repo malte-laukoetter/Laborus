@@ -6,13 +6,6 @@ a Minecraft job plugin for [Sponge](https://Spongepowered.org "SpongePowered.org
 2. How to use
   1. Commands
 3. Configuration
-  1. General
-  2. Jobs
-     1. General settings
-     2. JobActions
-     3. JobBoni
-     4. Ability
-  3. Translations
 
 ## Features
 
