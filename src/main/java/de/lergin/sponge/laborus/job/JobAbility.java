@@ -19,13 +19,15 @@ public abstract class JobAbility {
     @Setting(value = "name")
     private String name = "";
 
+    private Laborus plugin = Laborus.instance();
+
     public JobAbility() {}
 
     public abstract boolean startAbility(Job job, Player player);
 
     public void sendStartMessage(Job job, Player player) {
         player.sendMessage(
-                Laborus.instance().translationHelper.get(
+                plugin.translationHelper.get(
                         TranslationKeys.JOB_ABILITY_START,
                         player,
                         job.getId()
@@ -36,7 +38,7 @@ public abstract class JobAbility {
 
     public void sendCoolDownNotEndedMessage(Job job, Player player) {
         player.sendMessage(
-                Laborus.instance().translationHelper.get(
+                plugin.translationHelper.get(
                         TranslationKeys.JOB_ABILITY_CANNOT_START_COOLDOWN,
                         player,
                         job.getId()
@@ -48,7 +50,14 @@ public abstract class JobAbility {
     public boolean canStartAbility(Job job, Player player) {
         Map<String, Long> abilityUsed = player.get(JobKeys.JOB_ABILITY_USED).orElseGet(HashMap::new);
 
-        return (abilityUsed.getOrDefault(job.getId(), 0L) + coolDown) < Instant.now().getEpochSecond();
+        boolean canStartAbility =
+                (abilityUsed.getOrDefault(job.getId(), 0L) + coolDown) < Instant.now().getEpochSecond();
+
+        if(!canStartAbility){
+            plugin.config.base.loggingConfig.jobAbilities(job, "Cannot start (cooldown)");
+        }
+
+        return canStartAbility;
     }
 
     public void startCoolDown(Job job, Player player) {
@@ -59,6 +68,11 @@ public abstract class JobAbility {
 
         if(!player.offer(JobKeys.JOB_ABILITY_USED, tempMap).isSuccessful()){
             player.offer(new JobDataManipulatorBuilder().abilityUsed(tempMap).create());
+
+            plugin.config.base.loggingConfig.jobAbilities(job, "cooldown started");
+        }else{
+            plugin.config.base.loggingConfig
+                    .jobAbilities(job, "cooldown couldn't be started (data offer not successful)");
         }
     }
 

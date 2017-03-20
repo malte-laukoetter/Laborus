@@ -11,6 +11,7 @@ import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
+import org.slf4j.Logger;
 import org.spongepowered.api.entity.living.player.gamemode.GameMode;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 
@@ -62,6 +63,9 @@ public class BaseConfig {
     @Setting(value = "jobFiles", comment = "a list of files that each have a job configuration. The base path is this folder")
     private List<String> jobFiles = ImmutableList.of();
     private Map<String, ConfigurationLoader> jobLoaders;
+
+    @Setting(value = "logging", comment = "what for messages should be logged")
+    public LoggingConfig loggingConfig = new LoggingConfig();
 
     public List<Job> jobs;
 

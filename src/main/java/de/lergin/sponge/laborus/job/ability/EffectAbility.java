@@ -1,5 +1,6 @@
 package de.lergin.sponge.laborus.job.ability;
 
+import de.lergin.sponge.laborus.Laborus;
 import de.lergin.sponge.laborus.job.Job;
 import de.lergin.sponge.laborus.job.JobAbility;
 import ninja.leaping.configurate.objectmapping.Setting;
@@ -15,6 +16,8 @@ import java.util.List;
 
 @ConfigSerializable
 public class EffectAbility extends JobAbility {
+    private Laborus plugin = Laborus.instance();
+
     @Setting(value = "potionEffect", comment = "the settings of the potion effect")
     private PotionEffectConfig effectConfig = new PotionEffectConfig();
 
@@ -33,6 +36,8 @@ public class EffectAbility extends JobAbility {
 
         startCoolDown(job, player);
         sendStartMessage(job, player);
+
+        plugin.config.base.loggingConfig.jobAbilities(job, "Started EffectAbility ({})", potionEffects.toString());
 
         return true;
     }

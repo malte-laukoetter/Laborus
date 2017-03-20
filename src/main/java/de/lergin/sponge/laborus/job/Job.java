@@ -2,6 +2,7 @@ package de.lergin.sponge.laborus.job;
 
 import com.google.common.collect.ImmutableList;
 import de.lergin.sponge.laborus.Laborus;
+import de.lergin.sponge.laborus.config.LoggingConfig;
 import de.lergin.sponge.laborus.config.TranslationKeys;
 import de.lergin.sponge.laborus.data.JobKeys;
 import de.lergin.sponge.laborus.data.jobs.JobDataManipulatorBuilder;
@@ -32,6 +33,8 @@ import java.util.stream.Collectors;
  */
 @ConfigSerializable
 public class Job {
+    private Laborus plugin = Laborus.instance();
+
     @Setting(value = "name", comment = "name of the job shown to the user")
     private String NAME = "unknown";
 
@@ -142,7 +145,12 @@ public class Job {
             player.offer(new JobDataManipulatorBuilder().jobs(jobData).create());
         }
 
+        plugin.config.base.loggingConfig.jobGeneral(this,"Added {} xp to {}", amount, player.getName());
+
         this.getLevel().stream().filter(level -> level > oldXp && level <= newXp).forEach(level -> {
+            plugin.config.base.loggingConfig
+                    .jobGeneral(this,"{} reached new level {} ({} xp)", player.getName(), this.getLevel(player), level);
+
             player.sendMessage(
                     Laborus.instance().translationHelper.get(
                             TranslationKeys.JOB_LEVEL_UP,
@@ -184,6 +192,8 @@ public class Job {
      * @return true if the {@link Player} was awarded
      */
     public boolean onJobListener(Object item, Player player, JobAction action) {
+        plugin.config.base.loggingConfig.jobListener(this, "{}", item);
+
         for (JobItem jobItem : getJobActions().get(action)) {
             if (
                     jobItem.getItem().equals(item) ||
@@ -194,6 +204,9 @@ public class Job {
                             )
                     ) {
                 if (jobItem.canDo(this, getXp((player)))) {
+                    plugin.config.base.loggingConfig
+                            .jobActions(this, "Awarding JobItem ({})", jobItem.getItem());
+
                     double newXp = jobItem.getXp() *
                             (isSelected(player) ? 1 : Laborus.instance().config.base.xpWithoutJob);
 
@@ -204,6 +217,9 @@ public class Job {
 
                     return true;
                 } else {
+                    plugin.config.base.loggingConfig
+                            .jobActions(this, "Cannot use JobItem ({})", jobItem.getItem());
+
                     Map<String, TextElement> args = this.textArgs(player);
 
                     if(item instanceof Translatable){
@@ -224,6 +240,9 @@ public class Job {
                     );
                     return false;
                 }
+            } else{
+                 plugin.config.base.loggingConfig
+                        .jobActions(this, "{} didn't match {}", jobItem.getItem(), item);
             }
         }
 
