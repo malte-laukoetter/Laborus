@@ -1,16 +1,22 @@
 package de.lergin.sponge.laborus;
 
+import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
+import de.lergin.sponge.laborus.api.JobService;
 import de.lergin.sponge.laborus.config.Config;
+import de.lergin.sponge.laborus.config.JobBoniTypeSerilizer;
 import de.lergin.sponge.laborus.config.TranslationHelper;
 import de.lergin.sponge.laborus.data.jobs.ImmutableJobDataManipulator;
 import de.lergin.sponge.laborus.data.jobs.JobData;
 import de.lergin.sponge.laborus.data.jobs.JobDataManipulatorBuilder;
 import de.lergin.sponge.laborus.job.Job;
+import de.lergin.sponge.laborus.job.JobBoni;
+import de.lergin.sponge.laborus.job.bonus.EconomyReward;
 import de.lergin.sponge.laborus.util.AntiReplaceFarming;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
+import ninja.leaping.configurate.objectmapping.serialize.TypeSerializers;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.DefaultConfig;
@@ -83,6 +89,17 @@ public class Laborus {
 
     @Listener
     public void onGameInitialization(GameInitializationEvent event) {
+        Sponge.getServiceManager().setProvider(this, JobService.class, new JobService());
+
+        JobService jobService = Sponge.getServiceManager().getRegistration(JobService.class).get().getProvider();
+
+        jobService.registerJobBonus(EconomyReward.class, "economy");
+
+        TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(JobBoni.class), new JobBoniTypeSerilizer(
+                jobService.getJobBoni()
+        ));
+
+
         //setup the dataBase for the AntiReplaceFarming thing
         AntiReplaceFarming.setupDataBase();
 

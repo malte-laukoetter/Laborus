@@ -2,12 +2,11 @@ package de.lergin.sponge.laborus.job;
 
 import com.google.common.collect.ImmutableList;
 import de.lergin.sponge.laborus.Laborus;
-import de.lergin.sponge.laborus.config.LoggingConfig;
+import de.lergin.sponge.laborus.api.JobBonus;
 import de.lergin.sponge.laborus.config.TranslationKeys;
 import de.lergin.sponge.laborus.data.JobKeys;
 import de.lergin.sponge.laborus.data.jobs.JobDataManipulatorBuilder;
 import de.lergin.sponge.laborus.job.ability.EffectAbility;
-import de.lergin.sponge.laborus.job.bonus.*;
 import de.lergin.sponge.laborus.job.items.EntityJobItem;
 import de.lergin.sponge.laborus.job.items.ItemJobItem;
 import de.lergin.sponge.laborus.job.items.StringJobItem;
@@ -51,7 +50,7 @@ public class Job {
     private EffectAbility jobAbility = null;
 
     @Setting(value = "bonus", comment = "the boni of the job")
-    private JobBoni jobBoni = new JobBoni();
+    private JobBoni jobBoni = new JobBoni(new HashMap<>());
 
     @Setting(value = "actions", comment = "the stuff that awards ep to the player")
     private JobActions jobActions = new JobActions();
@@ -357,38 +356,6 @@ public class Job {
         }
 
         return level;
-    }
-
-    @ConfigSerializable
-    private static class JobBoni {
-        @Setting(value = "multiDrop", comment = "multiplies the drop of items")
-        private List<MultiDrop> multiDropBonuses = ImmutableList.of();
-
-        @Setting(value = "ep", comment = "awards a random amount of minecraft ep")
-        private List<EpDrop> epBonuses = ImmutableList.of();
-
-        @Setting(value = "itemDrop", comment = "awards with the drop of an itemstack")
-        private List<ItemDrop> itemDropBonuses = ImmutableList.of();
-
-        @Setting(value = "itemRepair", comment = "repairs the tool in the mainhand slot by a random percentage")
-        private List<ItemRepair> itemRepairBonuses = ImmutableList.of();
-
-        @Setting(value = "economy", comment = "awards a random amount of money via the economy api")
-        private List<EconomyReward> economyBonuses = ImmutableList.of();
-
-        public List<JobBonus> get(){
-            List<JobBonus> jobBoni = new ArrayList<>();
-
-            jobBoni.addAll(multiDropBonuses);
-            jobBoni.addAll(epBonuses);
-            jobBoni.addAll(itemDropBonuses);
-            jobBoni.addAll(itemRepairBonuses);
-            jobBoni.addAll(economyBonuses);
-
-            return jobBoni;
-        }
-
-        public JobBoni(){}
     }
 
     @ConfigSerializable

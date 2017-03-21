@@ -1,7 +1,10 @@
-package de.lergin.sponge.laborus.job;
+package de.lergin.sponge.laborus.api;
 
 import com.google.common.collect.ImmutableList;
 import de.lergin.sponge.laborus.data.JobKeys;
+import de.lergin.sponge.laborus.job.Job;
+import de.lergin.sponge.laborus.job.JobAction;
+import de.lergin.sponge.laborus.job.JobItem;
 import ninja.leaping.configurate.objectmapping.Setting;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
