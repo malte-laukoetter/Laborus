@@ -1,6 +1,7 @@
 package de.lergin.sponge.laborus.job;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import de.lergin.sponge.laborus.Laborus;
 import de.lergin.sponge.laborus.api.JobBonus;
 import de.lergin.sponge.laborus.config.TranslationKeys;
@@ -50,7 +51,7 @@ public class Job {
     private EffectAbility jobAbility = null;
 
     @Setting(value = "bonus", comment = "the boni of the job")
-    private JobBoni jobBoni = new JobBoni(new HashMap<>());
+    private Map<String, JobBoni> jobBoni = ImmutableMap.of();
 
     @Setting(value = "actions", comment = "the stuff that awards ep to the player")
     private JobActions jobActions = new JobActions();
@@ -342,8 +343,14 @@ public class Job {
         return args;
     }
 
-    private List<JobBonus> jobBoni(){
-        return jobBoni.get();
+    public List<JobBonus> jobBoni(){
+        List<JobBonus> jobBoni = new ArrayList<>();
+
+        this.jobBoni.forEach((key, jobBonus) -> {
+            jobBoni.addAll(jobBonus.get());
+        });
+
+        return jobBoni;
     }
 
     public List<Long> getLevel() {

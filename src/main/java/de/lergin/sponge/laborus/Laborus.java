@@ -4,14 +4,14 @@ import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import de.lergin.sponge.laborus.api.JobService;
 import de.lergin.sponge.laborus.config.Config;
-import de.lergin.sponge.laborus.config.JobBoniTypeSerilizer;
+import de.lergin.sponge.laborus.config.JobBoniTypeSerializer;
 import de.lergin.sponge.laborus.config.TranslationHelper;
 import de.lergin.sponge.laborus.data.jobs.ImmutableJobDataManipulator;
 import de.lergin.sponge.laborus.data.jobs.JobData;
 import de.lergin.sponge.laborus.data.jobs.JobDataManipulatorBuilder;
 import de.lergin.sponge.laborus.job.Job;
 import de.lergin.sponge.laborus.job.JobBoni;
-import de.lergin.sponge.laborus.job.bonus.EconomyReward;
+import de.lergin.sponge.laborus.job.bonus.*;
 import de.lergin.sponge.laborus.util.AntiReplaceFarming;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
@@ -78,27 +78,27 @@ public class Laborus {
     @Listener
     public void gameConstruct(GameConstructionEvent event) {
         instance = this;
-    }
-
-    @Listener
-    public void onGamePreInitialization(GamePreInitializationEvent event) throws IOException, ObjectMappingException {
-        config = new Config(this, loader);
-
-        config.reload();
-    }
-
-    @Listener
-    public void onGameInitialization(GameInitializationEvent event) {
         Sponge.getServiceManager().setProvider(this, JobService.class, new JobService());
+    }
+
+    @Listener
+    public void onGamePreInitialization(GamePreInitializationEvent event) {
+        TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(JobBoni.class), new JobBoniTypeSerializer());
 
         JobService jobService = Sponge.getServiceManager().getRegistration(JobService.class).get().getProvider();
 
         jobService.registerJobBonus(EconomyReward.class, "economy");
+        jobService.registerJobBonus(EpDrop.class, "ep");
+        jobService.registerJobBonus(ItemDrop.class, "itemDrop");
+        jobService.registerJobBonus(ItemRepair.class, "itemRepair");
+        jobService.registerJobBonus(MultiDrop.class, "multiDrop");
+    }
 
-        TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(JobBoni.class), new JobBoniTypeSerilizer(
-                jobService.getJobBoni()
-        ));
+    @Listener
+    public void onGameInitialization(GameInitializationEvent event) throws IOException, ObjectMappingException {
+        config = new Config(this, loader);
 
+        config.reload();
 
         //setup the dataBase for the AntiReplaceFarming thing
         AntiReplaceFarming.setupDataBase();
