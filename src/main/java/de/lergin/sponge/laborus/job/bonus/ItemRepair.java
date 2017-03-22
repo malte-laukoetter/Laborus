@@ -25,27 +25,25 @@ public class ItemRepair extends JobBonus {
     private double minPercent = 0;
 
     @Override
-    public void useBonus(JobItem item, Player player, Object i2) {
-        if (this.isHappening()) {
-            Optional<ItemStack> optional = player.getItemInHand(HandTypes.MAIN_HAND);
+    public void applyBonus(JobItem item, Player player, Object i2) {
+        Optional<ItemStack> optional = player.getItemInHand(HandTypes.MAIN_HAND);
 
-            if (!optional.isPresent())
-                return;
+        if (!optional.isPresent())
+            return;
 
-            ItemStack itemStack = optional.get();
+        ItemStack itemStack = optional.get();
 
-            int currentDurability = itemStack.getValue(Keys.ITEM_DURABILITY).get().get();
+        int currentDurability = itemStack.getValue(Keys.ITEM_DURABILITY).get().get();
 
-            // test if already fully repaired
-            if(currentDurability != 0){
-                int addDurability = Math.toIntExact(
-                        Math.round(currentDurability * minPercent + Math.random() * (maxPercent - minPercent))
-                );
+        // test if already fully repaired
+        if(currentDurability != 0){
+            int addDurability = Math.toIntExact(
+                    Math.round(currentDurability * minPercent + Math.random() * (maxPercent - minPercent))
+            );
 
-                itemStack.offer(Keys.ITEM_DURABILITY, currentDurability + addDurability);
+            itemStack.offer(Keys.ITEM_DURABILITY, currentDurability + addDurability);
 
-                player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
-            }
+            player.setItemInHand(HandTypes.MAIN_HAND, itemStack);
         }
     }
 
@@ -58,7 +56,7 @@ public class ItemRepair extends JobBonus {
 
         return optional.isPresent() &&
                 optional.get().supports(Keys.ITEM_DURABILITY) &&
-                testConditions(job, jobAction, jobItem, player);
+                super.canHappen(job, jobAction, jobItem, player);
 
     }
 

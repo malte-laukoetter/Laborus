@@ -18,7 +18,7 @@ import org.spongepowered.api.service.economy.account.Account;
 import java.math.BigDecimal;
 
 @ConfigSerializable
-public class EconomyReward extends JobBonus{
+public class EconomyReward extends JobBonus {
     private final EconomyService service =
             Sponge.getServiceManager().getRegistration(EconomyService.class).get().getProvider();
     @Setting(value = "amountMax", comment = "maximal amount of money")
@@ -34,27 +34,21 @@ public class EconomyReward extends JobBonus{
     }
 
     @Override
-    public void useBonus(JobItem item, Player player, Object i2) {
-        if (this.isHappening()) {
-            Currency cur;
+    public void applyBonus(JobItem item, Player player, Object i2) {
+        Currency cur;
 
-            if(currency == null){
-                cur = service.getDefaultCurrency();
-            }else{
-                cur = service.getCurrencies().stream()
-                        .filter(c -> c.getId().equals(currency)).findFirst().orElseGet(service::getDefaultCurrency);
-            }
-
-            BigDecimal amount = BigDecimal.valueOf(amountMax).add(BigDecimal.valueOf(amountMin).negate())
-                    .multiply(BigDecimal.valueOf(Math.random())).add(BigDecimal.valueOf(amountMin));
-
-            Account account = service.getOrCreateAccount(player.getUniqueId()).get();
-
-            account.deposit(cur, amount, cause);
-
-            if (isSendMessage()) {
-                player.sendMessage(getMessage());
-            }
+        if(currency == null){
+            cur = service.getDefaultCurrency();
+        }else{
+            cur = service.getCurrencies().stream()
+                    .filter(c -> c.getId().equals(currency)).findFirst().orElseGet(service::getDefaultCurrency);
         }
+
+        BigDecimal amount = BigDecimal.valueOf(amountMax).add(BigDecimal.valueOf(amountMin).negate())
+                .multiply(BigDecimal.valueOf(Math.random())).add(BigDecimal.valueOf(amountMin));
+
+        Account account = service.getOrCreateAccount(player.getUniqueId()).get();
+
+        account.deposit(cur, amount, cause);
     }
 }

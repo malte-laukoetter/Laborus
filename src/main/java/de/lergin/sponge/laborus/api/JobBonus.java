@@ -8,7 +8,9 @@ import de.lergin.sponge.laborus.job.JobItem;
 import ninja.leaping.configurate.objectmapping.Setting;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.channel.MessageReceiver;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -16,7 +18,7 @@ import java.util.Random;
 /**
  * a bonus that will give the player a bonus with a given probability
  */
-public abstract class JobBonus {
+public abstract class JobBonus implements Serializable{
     @Setting(value = "probability", comment = "the probability that the bonus is awarded (between 0.0 and 1.0)")
     private double probability = 0;
     @Setting(value = "sendMessage", comment = "the message will only be send if this is true")
@@ -52,10 +54,6 @@ public abstract class JobBonus {
      * @return true if the bonus can happen
      */
     public boolean canHappen(Job job, JobAction jobAction, JobItem jobItem, Player player) {
-        return testConditions(job, jobAction, jobItem, player);
-    }
-
-    public boolean testConditions(Job job, JobAction jobAction, JobItem jobItem, Player player) {
         if (minLevel > job.getLevel(player))
             return false;
 
@@ -82,11 +80,22 @@ public abstract class JobBonus {
     }
 
     /**
-     * executes the bonus with the probability of {@link this.probability}
+     * starts the use of the bonus, test the probability calls applyBonus and sends the message
+     */
+    public void useBonus(JobItem jobItem, Player player, Object item){
+        if (this.isHappening()) {
+            this.applyBonus(jobItem, player, item);
+
+            this.sendMessage(player);
+        }
+    }
+
+    /**
+     * executes the specific Bonus actions of the Bonus
      *
      * @param item the item the {@link de.lergin.sponge.laborus.job.JobAction} is happening with
      */
-    public abstract void useBonus(JobItem jobitem, Player player, Object item);
+    public abstract void applyBonus(JobItem jobitem, Player player, Object item);
 
     /**
      * creates a new JobBonus
@@ -118,6 +127,16 @@ public abstract class JobBonus {
      */
     public boolean isSendMessage() {
         return sendMessage;
+    }
+
+    /**
+     * sends the message if isSendMessage is true
+     * @param receiver
+     */
+    public void sendMessage(MessageReceiver receiver){
+        if(isSendMessage()){
+            receiver.sendMessage(getMessage());
+        }
     }
 
     /**

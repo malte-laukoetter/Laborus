@@ -21,19 +21,17 @@ public class MultiDrop extends JobBonus {
     private int extraDrops = 0;
 
     @Override
-    public void useBonus(JobItem item, Player player, Object item2) {
-        if (this.isHappening() && item2 instanceof BlockState) {
+    public void applyBonus(JobItem item, Player player, Object item2) {
+        if (item2 instanceof BlockState) {
             ItemStack itemStack = ItemStack.builder().fromBlockState((BlockState) item2).quantity(extraDrops).build();
 
-            if (BonusHelper.dropItem(player.getLocation(), itemStack, Cause.builder().owner(player).build()) && isSendMessage()) {
-                player.sendMessage(getMessage());
-            }
+            BonusHelper.dropItem(player.getLocation(), itemStack, Cause.builder().owner(player).build());
         }
     }
 
     @Override
     public boolean canHappen(Job job, JobAction jobAction, JobItem jobItem, Player player) {
-        return jobItem.getItem() instanceof String && testConditions(job, jobAction, jobItem, player);
+        return jobItem.getItem() instanceof String && super.canHappen(job, jobAction, jobItem, player);
     }
 
     public MultiDrop() {

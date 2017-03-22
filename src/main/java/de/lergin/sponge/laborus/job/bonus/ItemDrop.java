@@ -21,12 +21,7 @@ public class ItemDrop extends JobBonus {
     }
 
     @Override
-    public void useBonus(JobItem item, Player player, Object i2) {
-        if (!this.isHappening())
-            return;
-
-        if (BonusHelper.dropItem(player.getLocation(), itemStack, Cause.builder().owner(player).build()) && isSendMessage()) {
-            player.sendMessage(getMessage());
-        }
+    public void applyBonus(JobItem item, Player player, Object i2) {
+        BonusHelper.dropItem(player.getLocation(), itemStack, Cause.builder().owner(player).build());
     }
 }
