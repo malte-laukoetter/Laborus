@@ -1,6 +1,8 @@
 package de.lergin.sponge.laborus.listener;
 
+import de.lergin.sponge.laborus.api.JobAction;
 import de.lergin.sponge.laborus.job.Job;
+import de.lergin.sponge.laborus.job.JobItem;
 
 import java.util.List;
 
