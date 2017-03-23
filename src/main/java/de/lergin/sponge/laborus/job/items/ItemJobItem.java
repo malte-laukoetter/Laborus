@@ -15,9 +15,6 @@ public class ItemJobItem extends JobItem {
     @Setting(value = "item", comment = "an itemtype, see http://minecraft.gamepedia.com/Data_values#Item_IDs")
     private ItemType item = ItemTypes.DIRT;
 
-    /**
-     * returns the item
-     */
     @Override
     public ItemType getItem() {
         return item;
@@ -28,7 +25,7 @@ public class ItemJobItem extends JobItem {
         return o.getItem() instanceof ItemType && matches((ItemType) o.getItem());
     }
 
-    public boolean matches(ItemType item) {
+    private boolean matches(ItemType item) {
         return this.getItem() == item;
     }
 
