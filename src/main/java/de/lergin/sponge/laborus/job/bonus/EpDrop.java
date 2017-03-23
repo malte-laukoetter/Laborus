@@ -3,7 +3,7 @@ package de.lergin.sponge.laborus.job.bonus;
 import com.google.common.collect.Lists;
 import de.lergin.sponge.laborus.job.JobAction;
 import de.lergin.sponge.laborus.api.JobBonus;
-import de.lergin.sponge.laborus.job.JobItem;
+import de.lergin.sponge.laborus.api.JobItem;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.data.key.Keys;

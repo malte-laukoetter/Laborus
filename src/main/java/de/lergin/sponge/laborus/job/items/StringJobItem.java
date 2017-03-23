@@ -1,6 +1,6 @@
 package de.lergin.sponge.laborus.job.items;
 
-import de.lergin.sponge.laborus.job.JobItem;
+import de.lergin.sponge.laborus.api.JobItem;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 
