@@ -2,7 +2,6 @@ package de.lergin.laborus.config;
 
 import de.lergin.laborus.Laborus;
 import de.lergin.laborus.command.*;
-import de.lergin.sponge.laborus.command.*;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.Sponge;

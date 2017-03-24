@@ -15,8 +15,6 @@ import de.lergin.laborus.data.jobs.JobDataManipulatorBuilder;
 import de.lergin.laborus.job.Job;
 import de.lergin.laborus.job.JobActions;
 import de.lergin.laborus.job.JobBoni;
-import de.lergin.sponge.laborus.job.bonus.*;
-import de.lergin.sponge.laborus.job.actions.*;
 import de.lergin.laborus.util.AntiReplaceFarming;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
