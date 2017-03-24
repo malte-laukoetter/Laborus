@@ -237,7 +237,6 @@ public class TranslationConfig {
     public void saveJobSpecificMessages(ConfigurationNode node){
         additionalTranslations.forEach((key, trans)->{
             try {
-                System.out.println(key);
                 node.getNode(key).setValue(TypeToken.of(TextTemplate.class), trans);
             } catch (ObjectMappingException e) {
                 e.printStackTrace();
