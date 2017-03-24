@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.Callable;
 import java.util.function.BooleanSupplier;
 
@@ -44,9 +45,13 @@ public abstract class JobAction<T extends JobItem> implements Serializable {
     public JobActionState onEvent(Player player, BooleanSupplier isWorking, Callable<T> getJobItem) throws Exception {
         if (!job.enabled(player) || !isWorking.getAsBoolean()) return IGNORE;
 
-        T jobItem = getJobItem.call();
+        T actionJobItem = getJobItem.call();
 
-        if (getJobItems().stream().noneMatch((item) -> item.matches(jobItem))) return IGNORE;
+        Optional<T> optional = getJobItems().stream().filter((item) -> item.matches(actionJobItem)).findAny();
+
+        if(!optional.isPresent()) return IGNORE;
+
+        T jobItem = optional.get();
 
         if (!jobItem.canDo(getJob().getLevel(player))) return BLOCK;
 
