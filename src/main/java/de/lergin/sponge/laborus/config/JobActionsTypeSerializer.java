@@ -37,6 +37,8 @@ public class JobActionsTypeSerializer implements TypeSerializer<JobActions> {
     public void serialize(TypeToken<?> type, JobActions obj, ConfigurationNode value) throws ObjectMappingException {
         JobService service = Sponge.getServiceManager().getRegistration(JobService.class).get().getProvider();
 
+        System.out.println("IT GETS CALLED");
+
         service.getJobAction().forEach((key, token)->{
             try {
                 test(token, value.getNode(key), obj);

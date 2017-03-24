@@ -14,8 +14,7 @@ public class JobActions {
     }
 
     public <T extends JobAction> Optional<T> get(TypeToken<T> typeToken) {
-        return (Optional<T>) get().stream().filter((o)-> o == null &&
-                typeToken.equals(TypeToken.of(o.getClass()))).findAny();
+        return (Optional<T>) get().stream().filter((o)-> o != null && typeToken.equals(TypeToken.of(o.getClass()))).findAny();
     }
 
     public JobActions(List<JobAction> jobActions) {
