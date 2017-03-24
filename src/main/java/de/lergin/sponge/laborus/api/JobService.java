@@ -1,22 +1,25 @@
 package de.lergin.sponge.laborus.api;
 
 import com.google.common.reflect.TypeToken;
+import de.lergin.sponge.laborus.Laborus;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class JobService {
     private Map<Object, TypeToken<? extends JobBonus>> jobBoni = new HashMap<>();
-    Map<Object, TypeToken<? extends JobAction>> jobAction = new HashMap<>();
+    private Map<Object, TypeToken<? extends JobAction>> jobAction = new HashMap<>();
+
+    private Laborus plugin = Laborus.instance();
 
     public void registerJobBonus(Class<? extends JobBonus> bonusClass, String configurationName){
         registerJobBonus(bonusClass, configurationName, "");
     }
 
     public void registerJobBonus(Class<? extends JobBonus> bonusClass, String configurationName, String configurationComment){
-        System.out.println(bonusClass);
-
         jobBoni.put(configurationName, TypeToken.of(bonusClass));
+
+        plugin.getLogger().info("Registered JobBonus {}", bonusClass.getCanonicalName());
     }
 
     public Map<Object, TypeToken<? extends JobBonus>> getJobBoni(){
@@ -28,9 +31,9 @@ public class JobService {
     }
 
     public void registerJobAction(Class<? extends JobAction> actionClass, String configurationName, String configurationComment){
-        System.out.println(actionClass);
-
         jobAction.put(configurationName, TypeToken.of(actionClass));
+
+        plugin.getLogger().info("Registered JobAction {}", actionClass.getCanonicalName());
     }
 
     public Map<Object, TypeToken<? extends JobAction>> getJobAction(){

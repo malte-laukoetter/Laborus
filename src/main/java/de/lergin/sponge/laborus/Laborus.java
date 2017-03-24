@@ -14,7 +14,7 @@ import de.lergin.sponge.laborus.job.Job;
 import de.lergin.sponge.laborus.job.JobActions;
 import de.lergin.sponge.laborus.job.JobBoni;
 import de.lergin.sponge.laborus.job.bonus.*;
-import de.lergin.sponge.laborus.listener.*;
+import de.lergin.sponge.laborus.job.actions.*;
 import de.lergin.sponge.laborus.util.AntiReplaceFarming;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
@@ -97,12 +97,12 @@ public class Laborus {
         jobService.registerJobBonus(ItemRepair.class, "itemRepair");
         jobService.registerJobBonus(MultiDrop.class, "multiDrop");
 
-        jobService.registerJobAction(BreakBlockListener.class, "break");
-        jobService.registerJobAction(EntityDamageListener.class, "damage");
-        jobService.registerJobAction(EntityKillListener.class, "kill");
-        jobService.registerJobAction(EntityTameListener.class, "tame");
-        jobService.registerJobAction(InteractListener.class, "use");
-        jobService.registerJobAction(PlaceBlockListener.class, "place");
+        jobService.registerJobAction(BreakBlockJobAction.class, "break");
+        jobService.registerJobAction(EntityDamageJobAction.class, "damage");
+        jobService.registerJobAction(EntityKillJobAction.class, "kill");
+        jobService.registerJobAction(EntityTameJobAction.class, "tame");
+        jobService.registerJobAction(InteractJobAction.class, "use");
+        jobService.registerJobAction(PlaceBlockJobAction.class, "place");
     }
 
     @Listener

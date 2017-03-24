@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import de.lergin.sponge.laborus.Laborus;
 import de.lergin.sponge.laborus.api.JobBonus;
-import de.lergin.sponge.laborus.api.JobItem;
 import de.lergin.sponge.laborus.api.JobAction;
 import de.lergin.sponge.laborus.config.TranslationKeys;
 import de.lergin.sponge.laborus.data.JobKeys;

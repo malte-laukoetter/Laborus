@@ -1,8 +1,6 @@
-package de.lergin.sponge.laborus.listener;
+package de.lergin.sponge.laborus.job.actions;
 
 import de.lergin.sponge.laborus.api.JobAction;
-import de.lergin.sponge.laborus.job.Job;
-import de.lergin.sponge.laborus.job.items.EntityJobItem;
 import de.lergin.sponge.laborus.job.items.ItemJobItem;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
@@ -17,8 +15,8 @@ import java.util.List;
  * listener for interacting jobEvents
  */
 @ConfigSerializable
-public class InteractListener extends JobAction<ItemJobItem> {
-    public InteractListener(){}
+public class InteractJobAction extends JobAction<ItemJobItem> {
+    public InteractJobAction(){}
 
     @Setting(value = "items")
     private List<ItemJobItem> jobItems;

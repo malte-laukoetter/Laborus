@@ -1,4 +1,4 @@
-package de.lergin.sponge.laborus.listener;
+package de.lergin.sponge.laborus.job.actions;
 
 import de.lergin.sponge.laborus.api.JobAction;
 import de.lergin.sponge.laborus.job.items.EntityJobItem;
@@ -6,17 +6,17 @@ import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.entity.TameEntityEvent;
+import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
 
 import java.util.List;
 
 /**
- * listener for jobEvents when an entity is tamed
+ * listener for entity kill jobEvents
  */
 @ConfigSerializable
-public class EntityTameListener extends JobAction<EntityJobItem> {
-    public EntityTameListener() {}
+public class EntityKillJobAction extends JobAction<EntityJobItem> {
+    public EntityKillJobAction() {}
 
     @Setting(value = "items")
     private List<EntityJobItem> jobItems;
@@ -28,11 +28,11 @@ public class EntityTameListener extends JobAction<EntityJobItem> {
 
     @Override
     public String getId() {
-        return "ENTITY_TAME";
+        return "ENTITY_KILL";
     }
 
     @Listener
-    public void onEvent(TameEntityEvent event, @First Player player) throws Exception {
+    public void onEvent(DestructEntityEvent.Death event, @First Player player) throws Exception {
         super.onEvent(event, player,
                 () -> true,
                 () -> EntityJobItem.fromEntity(event.getTargetEntity()));

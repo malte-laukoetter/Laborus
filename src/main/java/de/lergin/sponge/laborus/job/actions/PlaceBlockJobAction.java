@@ -1,16 +1,12 @@
-package de.lergin.sponge.laborus.listener;
+package de.lergin.sponge.laborus.job.actions;
 
 import de.lergin.sponge.laborus.api.JobAction;
 import de.lergin.sponge.laborus.api.JobActionState;
-import de.lergin.sponge.laborus.job.Job;
 import de.lergin.sponge.laborus.job.items.BlockJobItem;
-import de.lergin.sponge.laborus.job.items.EntityJobItem;
 import de.lergin.sponge.laborus.util.AntiReplaceFarming;
-import de.lergin.sponge.laborus.util.BlockStateComparator;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.block.BlockSnapshot;
-import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -20,11 +16,11 @@ import org.spongepowered.api.event.filter.cause.First;
 import java.util.List;
 
 /**
- * listener for break block jobEvents
+ * listener for place block jobEvents
  */
 @ConfigSerializable
-public class BreakBlockListener extends JobAction<BlockJobItem> {
-    public BreakBlockListener() {}
+public class PlaceBlockJobAction extends JobAction<BlockJobItem> {
+    public PlaceBlockJobAction() {}
 
     @Setting(value = "items")
     private List<BlockJobItem> jobItems;
@@ -36,17 +32,17 @@ public class BreakBlockListener extends JobAction<BlockJobItem> {
 
     @Override
     public String getId() {
-        return "BREAK";
+        return "PLACE";
     }
 
     @Listener
-    public void onEvent(ChangeBlockEvent.Break event, @First Player player) throws Exception {
+    public void onEvent(ChangeBlockEvent.Place event, @First Player player) throws Exception {
         for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
             JobActionState state = super.onEvent(transaction, player,
                     () -> AntiReplaceFarming.testLocation(
                             transaction.getOriginal().getLocation().get(),
                             transaction.getOriginal().getState(),
-                            "PLACE"
+                            "BREAK"
                     ),
                     () -> BlockJobItem.fromBlockState(transaction.getOriginal().getState()));
 
@@ -54,7 +50,7 @@ public class BreakBlockListener extends JobAction<BlockJobItem> {
                 AntiReplaceFarming.addLocation(
                         transaction.getOriginal().getLocation().get(),
                         transaction.getOriginal().getState(),
-                        "BREAK"
+                        "PLACE"
                 );
             }
         }

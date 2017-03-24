@@ -1,4 +1,4 @@
-package de.lergin.sponge.laborus.listener;
+package de.lergin.sponge.laborus.job.actions;
 
 import de.lergin.sponge.laborus.api.JobAction;
 import de.lergin.sponge.laborus.api.JobActionState;
@@ -16,11 +16,11 @@ import org.spongepowered.api.event.filter.cause.First;
 import java.util.List;
 
 /**
- * listener for place block jobEvents
+ * listener for break block jobEvents
  */
 @ConfigSerializable
-public class PlaceBlockListener extends JobAction<BlockJobItem> {
-    public PlaceBlockListener() {}
+public class BreakBlockJobAction extends JobAction<BlockJobItem> {
+    public BreakBlockJobAction() {}
 
     @Setting(value = "items")
     private List<BlockJobItem> jobItems;
@@ -32,17 +32,17 @@ public class PlaceBlockListener extends JobAction<BlockJobItem> {
 
     @Override
     public String getId() {
-        return "PLACE";
+        return "BREAK";
     }
 
     @Listener
-    public void onEvent(ChangeBlockEvent.Place event, @First Player player) throws Exception {
+    public void onEvent(ChangeBlockEvent.Break event, @First Player player) throws Exception {
         for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
             JobActionState state = super.onEvent(transaction, player,
                     () -> AntiReplaceFarming.testLocation(
                             transaction.getOriginal().getLocation().get(),
                             transaction.getOriginal().getState(),
-                            "BREAK"
+                            "PLACE"
                     ),
                     () -> BlockJobItem.fromBlockState(transaction.getOriginal().getState()));
 
@@ -50,7 +50,7 @@ public class PlaceBlockListener extends JobAction<BlockJobItem> {
                 AntiReplaceFarming.addLocation(
                         transaction.getOriginal().getLocation().get(),
                         transaction.getOriginal().getState(),
-                        "PLACE"
+                        "BREAK"
                 );
             }
         }

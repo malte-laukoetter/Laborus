@@ -1,7 +1,6 @@
-package de.lergin.sponge.laborus.listener;
+package de.lergin.sponge.laborus.job.actions;
 
 import de.lergin.sponge.laborus.api.JobAction;
-import de.lergin.sponge.laborus.job.Job;
 import de.lergin.sponge.laborus.job.items.EntityJobItem;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
@@ -16,8 +15,8 @@ import java.util.List;
  * listener for entity damage jobEvents
  */
 @ConfigSerializable
-public class EntityDamageListener extends JobAction<EntityJobItem> {
-    public EntityDamageListener() {}
+public class EntityDamageJobAction extends JobAction<EntityJobItem> {
+    public EntityDamageJobAction() {}
 
     @Setting(value = "items")
     private List<EntityJobItem> jobItems;
