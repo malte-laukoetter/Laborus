@@ -1,7 +1,5 @@
 package de.lergin.sponge.laborus.job.bonus;
 
-import com.google.common.collect.Lists;
-import de.lergin.sponge.laborus.job.JobAction;
 import de.lergin.sponge.laborus.api.JobBonus;
 import de.lergin.sponge.laborus.api.JobItem;
 import ninja.leaping.configurate.objectmapping.Setting;
@@ -35,7 +33,5 @@ public class EpDrop extends JobBonus {
         extent.spawnEntity(itemEntity, Cause.builder().owner(player).build());
     }
 
-    public EpDrop() {
-        super(Lists.newArrayList(JobAction.BREAK, JobAction.ENTITY_KILL));
-    }
+    public EpDrop() {}
 }

@@ -2,7 +2,10 @@ package de.lergin.sponge.laborus.listener;
 
 import de.lergin.sponge.laborus.api.JobAction;
 import de.lergin.sponge.laborus.job.Job;
+import de.lergin.sponge.laborus.job.items.EntityJobItem;
 import de.lergin.sponge.laborus.job.items.ItemJobItem;
+import ninja.leaping.configurate.objectmapping.Setting;
+import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.living.humanoid.HandInteractEvent;
@@ -13,9 +16,21 @@ import java.util.List;
 /**
  * listener for interacting jobEvents
  */
+@ConfigSerializable
 public class InteractListener extends JobAction<ItemJobItem> {
-    public InteractListener(Job job, List<ItemJobItem> itemTypes) {
-        super(job, itemTypes);
+    public InteractListener(){}
+
+    @Setting(value = "items")
+    private List<ItemJobItem> jobItems;
+
+    @Override
+    public List<ItemJobItem> getJobItems() {
+        return jobItems;
+    }
+
+    @Override
+    public String getId() {
+        return "ITEM_USE";
     }
 
     @Listener

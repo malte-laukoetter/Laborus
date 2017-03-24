@@ -1,8 +1,9 @@
 package de.lergin.sponge.laborus.listener;
 
-import de.lergin.sponge.laborus.job.Job;
-import de.lergin.sponge.laborus.job.JobAction;
-import org.spongepowered.api.entity.EntityType;
+import de.lergin.sponge.laborus.api.JobAction;
+import de.lergin.sponge.laborus.job.items.EntityJobItem;
+import ninja.leaping.configurate.objectmapping.Setting;
+import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.TameEntityEvent;
@@ -13,23 +14,27 @@ import java.util.List;
 /**
  * listener for jobEvents when an entity is tamed
  */
-public class EntityTameListener extends JobListener<EntityType> {
-    public EntityTameListener(Job job, List<EntityType> blockTypes) {
-        super(job, blockTypes);
+@ConfigSerializable
+public class EntityTameListener extends JobAction<EntityJobItem> {
+    public EntityTameListener() {}
+
+    @Setting(value = "items")
+    private List<EntityJobItem> jobItems;
+
+    @Override
+    public List<EntityJobItem> getJobItems() {
+        return jobItems;
+    }
+
+    @Override
+    public String getId() {
+        return "ENTITY_TAME";
     }
 
     @Listener
-    public void onEvent(TameEntityEvent event, @First Player player) {
-        if (JOB.enabled(player)) {
-            final EntityType ENTITY_TYPE = event.getTargetEntity().getType();
-
-            if (JOB_ITEM_TYPES.contains(ENTITY_TYPE)) {
-                event.setCancelled(!JOB.onJobListener(
-                        ENTITY_TYPE,
-                        player,
-                        JobAction.ENTITY_TAME
-                ));
-            }
-        }
+    public void onEvent(TameEntityEvent event, @First Player player) throws Exception {
+        super.onEvent(event, player,
+                () -> true,
+                () -> EntityJobItem.fromEntity(event.getTargetEntity()));
     }
 }

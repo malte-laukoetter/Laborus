@@ -4,12 +4,13 @@ import de.lergin.sponge.laborus.job.Job;
 import ninja.leaping.configurate.objectmapping.Setting;
 import org.spongepowered.api.text.Text;
 
+import java.io.Serializable;
 import java.util.Locale;
 
 /**
  * an object with that something can happen in a job
  */
-public abstract class JobItem {
+public abstract class JobItem implements Serializable {
     @Setting(value = "xp", comment = "amount of job xp gained after finishing the action with this item")
     private double XP = 0;
     @Setting(value = "needLevel", comment = "level needed to use this item with the action")

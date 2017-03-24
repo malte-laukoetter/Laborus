@@ -3,7 +3,6 @@ package de.lergin.sponge.laborus.api;
 import com.google.common.collect.ImmutableList;
 import de.lergin.sponge.laborus.data.JobKeys;
 import de.lergin.sponge.laborus.job.Job;
-import de.lergin.sponge.laborus.job.JobAction;
 import ninja.leaping.configurate.objectmapping.Setting;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
@@ -35,7 +34,7 @@ public abstract class JobBonus implements Serializable{
     // currently not working...
     private List<String> jobItems = ImmutableList.of();
     @Setting(value = "actions", comment = "actions that can award this bonus (BREAK, ENTITY_DAMAGE, ENTITY_KILL, ENTITY_TAME, ITEM_USE, PLACE)")
-    private List<JobAction> jobActions = ImmutableList.of();
+    private List<String> jobActions = ImmutableList.of();
 
     /**
      * @return true with the probability of probability
@@ -52,7 +51,7 @@ public abstract class JobBonus implements Serializable{
      * @param player    the {@link Player} that should be tested
      * @return true if the bonus can happen
      */
-    public boolean canHappen(Job job, JobAction jobAction, JobItem jobItem, Player player) {
+    public boolean canHappen(Job job, JobAction<?> jobAction, JobItem jobItem, Player player) {
         if (minLevel > job.getLevel(player))
             return false;
 
@@ -62,7 +61,7 @@ public abstract class JobBonus implements Serializable{
         if (this.onlySelected && !player.get(JobKeys.JOB_SELECTED).orElseGet(HashSet::new).contains(job.getId()))
             return false;
 
-        if (!this.jobActions.isEmpty() && !this.jobActions.contains(jobAction))
+        if (!this.jobActions.isEmpty() && !this.jobActions.contains(jobAction.getId()))
             return false;
 
         return true;
@@ -92,14 +91,14 @@ public abstract class JobBonus implements Serializable{
     /**
      * executes the specific Bonus actions of the Bonus
      *
-     * @param item the item the {@link de.lergin.sponge.laborus.job.JobAction} is happening with
+     * @param item the item the {@link JobAction} is happening with
      */
     public abstract void applyBonus(JobItem jobitem, Player player, Object item);
 
     /**
      * creates a new JobBonus
      */
-    public JobBonus(List<JobAction> jobActions) {
+    public JobBonus(List<String> jobActions) {
         this.jobActions = jobActions;
     }
 

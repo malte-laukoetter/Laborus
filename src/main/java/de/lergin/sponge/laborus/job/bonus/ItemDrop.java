@@ -1,7 +1,5 @@
 package de.lergin.sponge.laborus.job.bonus;
 
-import com.google.common.collect.Lists;
-import de.lergin.sponge.laborus.job.JobAction;
 import de.lergin.sponge.laborus.api.JobBonus;
 import de.lergin.sponge.laborus.api.JobItem;
 import ninja.leaping.configurate.objectmapping.Setting;
@@ -16,9 +14,7 @@ public class ItemDrop extends JobBonus {
     @Setting(value = "item", comment = "an itemstack that will be droped")
     private ItemStack itemStack = ItemStack.of(ItemTypes.DIRT, 1);
 
-    public ItemDrop() {
-        super(Lists.newArrayList(JobAction.BREAK, JobAction.ENTITY_KILL));
-    }
+    public ItemDrop() {}
 
     @Override
     public void applyBonus(JobItem item, Player player, Object i2) {

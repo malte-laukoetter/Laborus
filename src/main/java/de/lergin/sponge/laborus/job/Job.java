@@ -5,29 +5,20 @@ import com.google.common.collect.ImmutableMap;
 import de.lergin.sponge.laborus.Laborus;
 import de.lergin.sponge.laborus.api.JobBonus;
 import de.lergin.sponge.laborus.api.JobItem;
+import de.lergin.sponge.laborus.api.JobAction;
 import de.lergin.sponge.laborus.config.TranslationKeys;
 import de.lergin.sponge.laborus.data.JobKeys;
 import de.lergin.sponge.laborus.data.jobs.JobDataManipulatorBuilder;
 import de.lergin.sponge.laborus.job.ability.EffectAbility;
-import de.lergin.sponge.laborus.job.items.EntityJobItem;
-import de.lergin.sponge.laborus.job.items.ItemJobItem;
-import de.lergin.sponge.laborus.job.items.StringJobItem;
-import de.lergin.sponge.laborus.util.BlockStateComparator;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
-import org.spongepowered.api.CatalogType;
-import org.spongepowered.api.Sponge;
-import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.TextElement;
 import org.spongepowered.api.text.chat.ChatTypes;
-import org.spongepowered.api.text.translation.Translatable;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * class for Jobs
@@ -55,24 +46,14 @@ public class Job {
     private Map<String, JobBoni> jobBoni = ImmutableMap.of();
 
     @Setting(value = "actions", comment = "the stuff that awards ep to the player")
-    private JobActions jobActions = new JobActions();
+    private JobActions jobActions = new JobActions(ImmutableList.of());
 
     @Setting(value = "level", comment = "a list of ep points the player needs for each level, if not set it will use the default levels")
     private List<Long> configLevel = null;
     private List<Long> level = null;
 
     public void initJob(){
-        getJobActions().forEach((k,v) -> {
-            try {
-                Sponge.getEventManager().registerListeners(
-                        Laborus.instance(),
-                        k.getListenerConstructor().newInstance(this, v.stream().map(JobItem::getItem).collect(Collectors.toList()))
-                );
-            } catch (InstantiationException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        });
-
+        jobActions.get().forEach((a)-> a.init(this));
     }
 
     public Job() {}
@@ -122,7 +103,7 @@ public class Job {
         return jobAbility != null;
     }
 
-    public Map<JobAction, List<? extends JobItem>> getJobActions() {
+    public List<JobAction> getJobActions() {
         return jobActions.get();
     }
 
@@ -182,72 +163,6 @@ public class Job {
      */
     public double getXp(Player player) {
         return player.get(JobKeys.JOB_DATA).orElseGet(HashMap::new).getOrDefault(getId(), 0.0);
-    }
-
-    /**
-     * called by the {@link de.lergin.sponge.laborus.listener.JobListener} and handles the awarding of the player
-     *
-     * @param item   the item of the event
-     * @param player the {@link Player} that has caused the event
-     * @param action the {@link JobAction} of the {@link de.lergin.sponge.laborus.listener.JobListener}
-     * @return true if the {@link Player} was awarded
-     */
-    public boolean onJobListener(Object item, Player player, JobAction action) {
-        plugin.config.base.loggingConfig.jobListener(this, "{}", item);
-
-        for (JobItem jobItem : getJobActions().get(action)) {
-            if (
-                    jobItem.getItem().equals(item) ||
-                            (
-                                    jobItem.getItem() instanceof String &&
-                                            item instanceof BlockState &&
-                                            BlockStateComparator.compare((BlockState) item, (String) jobItem.getItem())
-                            )
-                    ) {
-                if (jobItem.canDo(this, getXp((player)))) {
-                    plugin.config.base.loggingConfig
-                            .jobActions(this, "Awarding JobItem ({})", jobItem.getItem());
-
-                    double newXp = jobItem.getXp() *
-                            (isSelected(player) ? 1 : Laborus.instance().config.base.xpWithoutJob);
-
-                    this.addXp(player, newXp);
-                    jobBoni().stream()
-                            .filter(jobBonus -> jobBonus.canHappen(this, action, jobItem, player))
-                            .forEach(jobBonus -> jobBonus.useBonus(jobItem, player, item));
-
-                    return true;
-                } else {
-                    plugin.config.base.loggingConfig
-                            .jobActions(this, "Cannot use JobItem ({})", jobItem.getItem());
-
-                    Map<String, TextElement> args = this.textArgs(player);
-
-                    if(item instanceof Translatable){
-                        args.put("item", Text.of(((Translatable) item).getTranslation().get(player.getLocale())));
-                    }else if(item instanceof CatalogType){
-                        args.put("item", Text.of(((CatalogType) item).getName()));
-                    }else{
-                        args.put("item", Text.of(item.toString()));
-                    }
-
-                    player.sendMessage(
-                            ChatTypes.ACTION_BAR,
-                            Laborus.instance().translationHelper.get(
-                                    TranslationKeys.JOB_LEVEL_NOT_HIGH_ENOUGH,
-                                    player,
-                                    this.getId()
-                            ).apply(args).build()
-                    );
-                    return false;
-                }
-            } else{
-                 plugin.config.base.loggingConfig
-                        .jobActions(this, "{} didn't match {}", jobItem.getItem(), item);
-            }
-        }
-
-        return false;
     }
 
     /**
@@ -364,56 +279,5 @@ public class Job {
         }
 
         return level;
-    }
-
-    @ConfigSerializable
-    private static class JobActions {
-        @Setting(value = "break", comment = "a list of JobItems that award if destroyed")
-        private List<StringJobItem> breakJobItems = ImmutableList.of();
-
-        @Setting(value = "place", comment = "a list of JobItems that award if placed")
-        private List<StringJobItem> placeJobItems = ImmutableList.of();
-
-        @Setting(value = "kill", comment = "a list of JobItems that award if killed. needLevel has no effect")
-        private List<EntityJobItem> killJobItems = ImmutableList.of();
-
-        @Setting(value = "damage", comment = "a list of JobItems that award if damaged")
-        private List<EntityJobItem> damageJobItems = ImmutableList.of();
-
-        @Setting(value = "tame", comment = "a list of JobItems that award if tamed")
-        private List<EntityJobItem> tameJobItems = ImmutableList.of();
-
-        @Setting(value = "use", comment = "a list of JobItems that award if used")
-        private List<ItemJobItem> useJobItems = ImmutableList.of();
-
-        private Map<JobAction, List<? extends JobItem>> jobActions;
-
-        public Map<JobAction, List<? extends JobItem>> get(){
-            if(jobActions == null){
-                jobActions = new HashMap<>();
-
-                if(!breakJobItems.isEmpty()){
-                    jobActions.put(JobAction.BREAK, breakJobItems);
-                }
-                if(!placeJobItems.isEmpty()){
-                    jobActions.put(JobAction.PLACE, placeJobItems);
-                }
-                if(!killJobItems.isEmpty()){
-                    jobActions.put(JobAction.ENTITY_KILL, killJobItems);
-                }
-                if(!damageJobItems.isEmpty()){
-                    jobActions.put(JobAction.ENTITY_DAMAGE, damageJobItems);
-                }
-                if(!tameJobItems.isEmpty()){
-                    jobActions.put(JobAction.ENTITY_TAME, tameJobItems);
-                }
-                if(!useJobItems.isEmpty()){
-                    jobActions.put(JobAction.ITEM_USE, useJobItems);
-                }
-            }
-            return jobActions;
-        }
-
-        public JobActions(){}
     }
 }

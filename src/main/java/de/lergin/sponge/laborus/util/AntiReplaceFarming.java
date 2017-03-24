@@ -1,7 +1,6 @@
 package de.lergin.sponge.laborus.util;
 
 import de.lergin.sponge.laborus.Laborus;
-import de.lergin.sponge.laborus.job.JobAction;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -34,14 +33,14 @@ public final class AntiReplaceFarming {
     }
 
     /**
-     * tests if the {@link Location<World>} has a database entry with the {@link BlockState} and {@link JobAction}
+     * tests if the {@link Location<World>} has a database entry with the {@link BlockState} and Action
      *
      * @param loc        the {@link Location<World>} that should be tested
      * @param blockState the {@link BlockState} that the {@link Location<World>} should have
-     * @param action     the {@link JobAction} that should be tested
+     * @param action     the Action that should be tested
      * @return true if a database entry exist or antiReplaceFarming is deactivated
      */
-    public static boolean testLocation(Location<World> loc, BlockState blockState, JobAction action) {
+    public static boolean testLocation(Location<World> loc, BlockState blockState, String action) {
         if (!USE_ANTI_REPLACE)
             return true;
 
@@ -55,7 +54,7 @@ public final class AntiReplaceFarming {
             getData.setInt(2, loc.getBlockX());
             getData.setInt(3, loc.getBlockY());
             getData.setInt(4, loc.getBlockZ());
-            getData.setString(5, action.name());
+            getData.setString(5, action);
             getData.setString(6, blockState.toString());
             getData.setInt(7, Laborus.instance().config.base.antiReplaceTime);
 
@@ -76,13 +75,13 @@ public final class AntiReplaceFarming {
     }
 
     /**
-     * adds the {@link Location<World>} with the {@link BlockState} and {@link JobAction} to the antiReplaceFarming-DB
+     * adds the {@link Location<World>} with the {@link BlockState} and Action to the antiReplaceFarming-DB
      *
      * @param loc        the {@link Location<World>} that should be added
      * @param blockState the {@link BlockState} that was/is at the position
-     * @param action     the {@link JobAction} that has happened
+     * @param action     the Action that has happened
      */
-    public static void addLocation(Location<World> loc, BlockState blockState, JobAction action) {
+    public static void addLocation(Location<World> loc, BlockState blockState, String action) {
         if (!USE_ANTI_REPLACE)
             return;
 
@@ -96,7 +95,7 @@ public final class AntiReplaceFarming {
             getData.setInt(3, loc.getBlockY());
             getData.setInt(4, loc.getBlockZ());
             getData.setString(5, blockState.toString());
-            getData.setString(6, action.name());
+            getData.setString(6, action);
 
             getData.execute();
 

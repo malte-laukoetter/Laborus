@@ -1,8 +1,7 @@
 package de.lergin.sponge.laborus.job.bonus;
 
-import com.google.common.collect.Lists;
 import de.lergin.sponge.laborus.job.Job;
-import de.lergin.sponge.laborus.job.JobAction;
+import de.lergin.sponge.laborus.api.JobAction;
 import de.lergin.sponge.laborus.api.JobBonus;
 import de.lergin.sponge.laborus.api.JobItem;
 import ninja.leaping.configurate.objectmapping.Setting;
@@ -60,8 +59,6 @@ public class ItemRepair extends JobBonus {
 
     }
 
-    public ItemRepair() {
-        super(Lists.newArrayList(JobAction.BREAK, JobAction.ENTITY_KILL));
-    }
+    public ItemRepair() {}
 
 }

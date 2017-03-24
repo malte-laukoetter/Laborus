@@ -3,6 +3,7 @@ package de.lergin.sponge.laborus.job.items;
 import de.lergin.sponge.laborus.api.JobItem;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
+import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.text.Text;
@@ -28,10 +29,18 @@ public class EntityJobItem extends JobItem {
         return this.getItem() == item;
     }
 
+    public static EntityJobItem fromEntity(Entity entity){
+        return new EntityJobItem(entity.getType());
+    }
+
     @Override
     public Text getName(Locale locale) {
         return Text.of(getItem().getTranslation().get(locale));
     }
 
     public EntityJobItem() {}
+
+    public EntityJobItem(EntityType item) {
+        this.item = item;
+    }
 }

@@ -4,14 +4,17 @@ import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import de.lergin.sponge.laborus.api.JobService;
 import de.lergin.sponge.laborus.config.Config;
+import de.lergin.sponge.laborus.config.JobActionsTypeSerializer;
 import de.lergin.sponge.laborus.config.JobBoniTypeSerializer;
 import de.lergin.sponge.laborus.config.TranslationHelper;
 import de.lergin.sponge.laborus.data.jobs.ImmutableJobDataManipulator;
 import de.lergin.sponge.laborus.data.jobs.JobData;
 import de.lergin.sponge.laborus.data.jobs.JobDataManipulatorBuilder;
 import de.lergin.sponge.laborus.job.Job;
+import de.lergin.sponge.laborus.job.JobActions;
 import de.lergin.sponge.laborus.job.JobBoni;
 import de.lergin.sponge.laborus.job.bonus.*;
+import de.lergin.sponge.laborus.listener.*;
 import de.lergin.sponge.laborus.util.AntiReplaceFarming;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
@@ -84,6 +87,7 @@ public class Laborus {
     @Listener
     public void onGamePreInitialization(GamePreInitializationEvent event) {
         TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(JobBoni.class), new JobBoniTypeSerializer());
+        TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(JobActions.class), new JobActionsTypeSerializer());
 
         JobService jobService = Sponge.getServiceManager().getRegistration(JobService.class).get().getProvider();
 
@@ -92,6 +96,13 @@ public class Laborus {
         jobService.registerJobBonus(ItemDrop.class, "itemDrop");
         jobService.registerJobBonus(ItemRepair.class, "itemRepair");
         jobService.registerJobBonus(MultiDrop.class, "multiDrop");
+
+        jobService.registerJobAction(BreakBlockListener.class, "break");
+        jobService.registerJobAction(EntityDamageListener.class, "damage");
+        jobService.registerJobAction(EntityKillListener.class, "kill");
+        jobService.registerJobAction(EntityTameListener.class, "tame");
+        jobService.registerJobAction(InteractListener.class, "use");
+        jobService.registerJobAction(PlaceBlockListener.class, "place");
     }
 
     @Listener

@@ -1,11 +1,12 @@
 package de.lergin.sponge.laborus.listener;
 
-import de.lergin.sponge.laborus.job.Job;
-import de.lergin.sponge.laborus.job.JobAction;
+import de.lergin.sponge.laborus.api.JobAction;
+import de.lergin.sponge.laborus.api.JobActionState;
+import de.lergin.sponge.laborus.job.items.BlockJobItem;
 import de.lergin.sponge.laborus.util.AntiReplaceFarming;
-import de.lergin.sponge.laborus.util.BlockStateComparator;
+import ninja.leaping.configurate.objectmapping.Setting;
+import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.block.BlockSnapshot;
-import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.data.Transaction;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
@@ -17,34 +18,39 @@ import java.util.List;
 /**
  * listener for place block jobEvents
  */
-public class PlaceBlockListener extends JobListener<String> {
-    public PlaceBlockListener(Job job, List<String> blockTypes) {
-        super(job, blockTypes);
+@ConfigSerializable
+public class PlaceBlockListener extends JobAction<BlockJobItem> {
+    public PlaceBlockListener() {}
+
+    @Setting(value = "items")
+    private List<BlockJobItem> jobItems;
+
+    @Override
+    public List<BlockJobItem> getJobItems() {
+        return jobItems;
+    }
+
+    @Override
+    public String getId() {
+        return "PLACE";
     }
 
     @Listener
-    public void onEvent(ChangeBlockEvent.Place event, @First Player player) {
-        if (JOB.enabled(player)) {
-            for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
-                final BlockSnapshot FINAL_BLOCK = transaction.getFinal();
-                final BlockState BLOCK_STATE = FINAL_BLOCK.getState();
+    public void onEvent(ChangeBlockEvent.Place event, @First Player player) throws Exception {
+        for (Transaction<BlockSnapshot> transaction : event.getTransactions()) {
+            JobActionState state = super.onEvent(transaction, player,
+                    () -> AntiReplaceFarming.testLocation(
+                            transaction.getOriginal().getLocation().get(),
+                            transaction.getOriginal().getState(),
+                            "BREAK"
+                    ),
+                    () -> BlockJobItem.fromBlockState(transaction.getOriginal().getState()));
 
-                JOB_ITEM_TYPES.stream()
-                        .filter(item -> BlockStateComparator.compare(BLOCK_STATE, item))
-                        .filter(item ->
-                                AntiReplaceFarming.testLocation(
-                                        FINAL_BLOCK.getLocation().get(),
-                                        FINAL_BLOCK.getState(),
-                                        JobAction.BREAK
-                                )
-                        )
-                        .filter(item -> !JOB.onJobListener(BLOCK_STATE, player, JobAction.PLACE))
-                        .forEach(item -> transaction.setValid(false));
-
+            if(state == JobActionState.SUCCESS){
                 AntiReplaceFarming.addLocation(
-                        FINAL_BLOCK.getLocation().get(),
-                        FINAL_BLOCK.getState(),
-                        JobAction.PLACE
+                        transaction.getOriginal().getLocation().get(),
+                        transaction.getOriginal().getState(),
+                        "PLACE"
                 );
             }
         }

@@ -1,8 +1,6 @@
 package de.lergin.sponge.laborus.job.bonus;
 
-import com.google.common.collect.Lists;
 import de.lergin.sponge.laborus.Laborus;
-import de.lergin.sponge.laborus.job.JobAction;
 import de.lergin.sponge.laborus.api.JobBonus;
 import de.lergin.sponge.laborus.api.JobItem;
 import ninja.leaping.configurate.objectmapping.Setting;
@@ -29,9 +27,7 @@ public class EconomyReward extends JobBonus {
     private String currency = null;
     private final Cause cause = Cause.of(NamedCause.source(Sponge.getPluginManager().fromInstance(Laborus.instance())));
 
-    public EconomyReward() {
-        super(Lists.newArrayList(JobAction.BREAK, JobAction.ENTITY_KILL));
-    }
+    public EconomyReward() {}
 
     @Override
     public void applyBonus(JobItem item, Player player, Object i2) {

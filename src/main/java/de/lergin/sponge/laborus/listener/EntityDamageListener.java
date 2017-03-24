@@ -1,12 +1,12 @@
 package de.lergin.sponge.laborus.listener;
 
+import de.lergin.sponge.laborus.api.JobAction;
 import de.lergin.sponge.laborus.job.Job;
-import de.lergin.sponge.laborus.job.JobAction;
-import org.spongepowered.api.entity.EntityType;
-import org.spongepowered.api.entity.EntityTypes;
+import de.lergin.sponge.laborus.job.items.EntityJobItem;
+import ninja.leaping.configurate.objectmapping.Setting;
+import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
 import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
 
@@ -15,24 +15,27 @@ import java.util.List;
 /**
  * listener for entity damage jobEvents
  */
-public class EntityDamageListener extends JobListener<EntityType> {
-    public EntityDamageListener(Job job, List<EntityType> entityTypes) {
-        super(job, entityTypes);
+@ConfigSerializable
+public class EntityDamageListener extends JobAction<EntityJobItem> {
+    public EntityDamageListener() {}
+
+    @Setting(value = "items")
+    private List<EntityJobItem> jobItems;
+
+    @Override
+    public List<EntityJobItem> getJobItems() {
+        return jobItems;
+    }
+
+    @Override
+    public String getId() {
+        return "ENTITY_DAMAGE";
     }
 
     @Listener
-    public void onEvent(DamageEntityEvent event, @First EntityDamageSource damageSource) {
-        if (damageSource.getSource().getType().equals(EntityTypes.PLAYER) &&
-                JOB.enabled((Player) damageSource.getSource())) {
-            final EntityType ENTITY_TYPE = event.getTargetEntity().getType();
-
-            if (JOB_ITEM_TYPES.contains(ENTITY_TYPE)) {
-                event.setCancelled(!JOB.onJobListener(
-                        ENTITY_TYPE,
-                        (Player) damageSource.getSource(),
-                        JobAction.ENTITY_DAMAGE
-                ));
-            }
-        }
+    public void onEvent(DamageEntityEvent event, @First Player player) throws Exception {
+        super.onEvent(event, player,
+                () -> true,
+                () -> EntityJobItem.fromEntity(event.getTargetEntity()));
     }
 }
