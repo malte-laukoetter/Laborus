@@ -1,0 +1,12 @@
+de.lergin.laborus
+de.lergin.laborus.api
+de.lergin.laborus.command
+de.lergin.laborus.config
+de.lergin.laborus.data
+de.lergin.laborus.data.jobs
+de.lergin.laborus.job
+de.lergin.laborus.job.ability
+de.lergin.laborus.job.actions
+de.lergin.laborus.job.bonus
+de.lergin.laborus.job.items
+de.lergin.laborus.util
