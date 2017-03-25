@@ -22,6 +22,23 @@ import static de.lergin.laborus.api.JobActionState.BLOCK;
 import static de.lergin.laborus.api.JobActionState.IGNORE;
 import static de.lergin.laborus.api.JobActionState.SUCCESS;
 
+/**
+ * an action that can award some xp and so one
+ *
+ * it needs to be registered with the JobService:
+ * JobService jobService = Sponge.getServiceManager().getRegistration(JobService.class).get().getProvider();
+ * jobService.registerJobAction(Class.class, "nameForTheConfig");
+ *
+ * The JobAction need to implement Serializable which is done in the Simplest way by using the @ConfigSerializable
+ * annotation.
+ *
+ * The JobAction should have a Listener that listens to an event and then calls the onEvent() method.
+ *
+ *
+ * For an example you can look at (@see EntityDamageJobAction)
+ * 
+ * @param <T> the Type of the JobItems used by this JobAction
+ */
 public abstract class JobAction<T extends JobItem> implements Serializable {
     public JobAction() {}
 

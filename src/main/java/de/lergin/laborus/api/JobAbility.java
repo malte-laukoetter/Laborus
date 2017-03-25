@@ -5,7 +5,6 @@ import de.lergin.laborus.data.JobKeys;
 import de.lergin.laborus.data.jobs.JobDataManipulatorBuilder;
 import de.lergin.laborus.config.TranslationKeys;
 import de.lergin.laborus.job.Job;
-import jdk.nashorn.internal.scripts.JO;
 import ninja.leaping.configurate.objectmapping.Setting;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
@@ -16,6 +15,20 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * a ability for a job that can be activated via the /jobs ability command.
+ *
+ * it needs to be registered with the JobService:
+ * JobService jobService = Sponge.getServiceManager().getRegistration(JobService.class).get().getProvider();
+ * jobService.registerJobAbility(Class.class, "nameForTheConfig");
+ *
+ * the only other method that needs to be implemented is activateAbility that should start the ability, the sending of
+ * messages and the handling of the cooldown is done automatically
+ *
+ * The best way to implement the Serializable Interface is by using the @ConfigSerializable Annotation and the using of
+ * the @Setting Annotation for additional settings. If this is used the settings for the cooldown and name are
+ * automatically added.
+ */
 public abstract class JobAbility implements Serializable {
     @Setting(value = "cooldown")
     private int coolDown = 0;
