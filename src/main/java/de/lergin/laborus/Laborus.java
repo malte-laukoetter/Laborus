@@ -63,7 +63,10 @@ public class Laborus {
     public Map<String, Job> getJobs() {
         Map<String, Job> jobs = new HashMap<>();
 
-        config.base.jobs.forEach(j -> jobs.put(j.getId(), j));
+        if(config != null && config.base != null && config.base.jobs != null){
+            config.base.jobs.forEach(j -> jobs.put(j.getId(), j));
+        }
+
 
         return jobs;
     }

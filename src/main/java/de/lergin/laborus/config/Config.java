@@ -85,10 +85,12 @@ public class Config {
      */
     public void reload() throws IOException, ObjectMappingException {
         logger.info("Started reloading the config!");
-        load();
-        save();
 
         Sponge.getCommandManager().getOwnedBy(Laborus.instance()).forEach(Sponge.getCommandManager()::removeMapping);
+        Laborus.instance().getJobs().forEach((key, job)-> job.unloadJob());
+
+        load();
+        save();
 
         AntiReplaceFarming.setUseAntiReplace(base.useAntiReplace);
 
