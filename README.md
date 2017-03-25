@@ -70,3 +70,7 @@ Permission for player arg: `laborus.commands.setXp.other_player`
 ## Configuration
 
 A Documentation of the Configuration Settings can be found in the [Github Wiki](https://github.com/Lergin/Laborus/wiki/Configuration) or on [Sponge Ore](https://ore.spongepowered.org/Lergin/Laborus/pages/Configuration)
+
+## JavaDocs / Api
+
+The Plugin has an Api to add new Boni, Actions and Abilities. You can find more about this in the [JavaDocs](https://lergin.github.io/Laborus/de/lergin/laborus/api/package-summary.html).
