@@ -12,6 +12,7 @@ import de.lergin.laborus.data.JobKeys;
 import de.lergin.laborus.job.ability.EffectAbility;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
@@ -54,6 +55,10 @@ public class Job {
 
     public void initJob(){
         jobActions.get().forEach((a)-> a.init(this));
+    }
+
+    public void unloadJob(){
+        jobActions.get().forEach((a)-> Sponge.getEventManager().unregisterListeners(a));
     }
 
     public Job() {}

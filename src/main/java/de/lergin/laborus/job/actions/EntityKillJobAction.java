@@ -33,7 +33,7 @@ public class EntityKillJobAction extends JobAction<EntityJobItem> {
 
     @Listener
     public void onEvent(DestructEntityEvent.Death event, @First Player player) throws Exception {
-        super.onEvent(event, player,
+        super.onEvent(player,
                 () -> true,
                 () -> EntityJobItem.fromEntity(event.getTargetEntity()));
     }
