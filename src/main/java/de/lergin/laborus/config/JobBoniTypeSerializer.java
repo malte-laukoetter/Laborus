@@ -25,6 +25,8 @@ public class JobBoniTypeSerializer<T extends JobBonus> implements TypeSerializer
 
     @Override
     public void serialize(TypeToken<?> type, JobBoni<T> obj, ConfigurationNode value) throws ObjectMappingException {
+        if(obj.get() == null) return;
+
         if(obj.get().isEmpty()) {
             value.setValue(ImmutableList.of());
         }
