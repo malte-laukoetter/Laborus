@@ -3,6 +3,7 @@ package de.lergin.laborus.job;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import de.lergin.laborus.Laborus;
+import de.lergin.laborus.api.JobAbility;
 import de.lergin.laborus.api.JobAction;
 import de.lergin.laborus.data.jobs.JobDataManipulatorBuilder;
 import de.lergin.laborus.api.JobBonus;
@@ -39,7 +40,7 @@ public class Job {
     private String PERMISSION = "";
 
     @Setting(value = "ability", comment = "the special ability of the job")
-    private EffectAbility jobAbility = null;
+    private JobAbilities jobAbility = new JobAbilities(null);
 
     @Setting(value = "bonus", comment = "the boni of the job")
     private Map<String, JobBoni> jobBoni = ImmutableMap.of();
@@ -90,7 +91,7 @@ public class Job {
      * @return the {@link JobAbility}
      */
     public JobAbility getJobAbility() {
-        return jobAbility;
+        return jobAbility.get();
     }
 
     /**

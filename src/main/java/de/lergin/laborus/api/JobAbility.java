@@ -1,19 +1,22 @@
-package de.lergin.laborus.job;
+package de.lergin.laborus.api;
 
 import de.lergin.laborus.Laborus;
 import de.lergin.laborus.data.JobKeys;
 import de.lergin.laborus.data.jobs.JobDataManipulatorBuilder;
 import de.lergin.laborus.config.TranslationKeys;
+import de.lergin.laborus.job.Job;
+import jdk.nashorn.internal.scripts.JO;
 import ninja.leaping.configurate.objectmapping.Setting;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.TextElement;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class JobAbility {
+public abstract class JobAbility implements Serializable {
     @Setting(value = "cooldown")
     private int coolDown = 0;
     @Setting(value = "name")
@@ -23,7 +26,23 @@ public abstract class JobAbility {
 
     public JobAbility() {}
 
-    public abstract boolean startAbility(Job job, Player player);
+    public abstract void activateAbility(Job job, Player player);
+
+    public boolean startAbility(Job job, Player player){
+        if (!canStartAbility(job, player)) {
+            sendCoolDownNotEndedMessage(job, player);
+            return false;
+        }
+
+        activateAbility(job, player);
+
+        startCoolDown(job, player);
+        sendStartMessage(job, player);
+
+        plugin.config.base.loggingConfig.jobAbilities(job, "Started Ability ({})", this.getName());
+
+        return true;
+    }
 
     public void sendStartMessage(Job job, Player player) {
         player.sendMessage(

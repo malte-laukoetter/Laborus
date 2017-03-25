@@ -2,13 +2,12 @@ package de.lergin.laborus;
 
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
-import de.lergin.laborus.config.JobActionsTypeSerializer;
-import de.lergin.laborus.config.JobBoniTypeSerializer;
+import de.lergin.laborus.config.*;
+import de.lergin.laborus.job.JobAbilities;
+import de.lergin.laborus.job.ability.EffectAbility;
 import de.lergin.laborus.job.actions.*;
 import de.lergin.laborus.job.bonus.*;
 import de.lergin.laborus.api.JobService;
-import de.lergin.laborus.config.Config;
-import de.lergin.laborus.config.TranslationHelper;
 import de.lergin.laborus.data.jobs.ImmutableJobDataManipulator;
 import de.lergin.laborus.data.jobs.JobData;
 import de.lergin.laborus.data.jobs.JobDataManipulatorBuilder;
@@ -88,6 +87,7 @@ public class Laborus {
     public void onGamePreInitialization(GamePreInitializationEvent event) {
         TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(JobBoni.class), new JobBoniTypeSerializer());
         TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(JobActions.class), new JobActionsTypeSerializer());
+        TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(JobAbilities.class), new JobAbilitiesTypeSerializer());
 
         JobService jobService = Sponge.getServiceManager().getRegistration(JobService.class).get().getProvider();
 
@@ -103,6 +103,8 @@ public class Laborus {
         jobService.registerJobAction(EntityTameJobAction.class, "tame");
         jobService.registerJobAction(InteractJobAction.class, "use");
         jobService.registerJobAction(PlaceBlockJobAction.class, "place");
+
+        jobService.registerJobAbility(EffectAbility.class, "effect");
     }
 
     @Listener

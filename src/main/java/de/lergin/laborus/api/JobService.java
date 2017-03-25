@@ -9,6 +9,7 @@ import java.util.Map;
 public class JobService {
     private Map<Object, TypeToken<? extends JobBonus>> jobBoni = new HashMap<>();
     private Map<Object, TypeToken<? extends JobAction>> jobAction = new HashMap<>();
+    private Map<Object, TypeToken<? extends JobAbility>> jobAbilities = new HashMap<>();
 
     private Laborus plugin = Laborus.instance();
 
@@ -38,5 +39,19 @@ public class JobService {
 
     public Map<Object, TypeToken<? extends JobAction>> getJobAction(){
         return jobAction;
+    }
+
+    public void registerJobAbility(Class<? extends JobAbility> abilityClass, String configurationName){
+        registerJobAbility(abilityClass, configurationName, "");
+    }
+
+    public void registerJobAbility(Class<? extends JobAbility> abilityClass, String configurationName, String configurationComment){
+        jobAbilities.put(configurationName, TypeToken.of(abilityClass));
+
+        plugin.getLogger().info("Registered JobAbility {}", abilityClass.getCanonicalName());
+    }
+
+    public Map<Object, TypeToken<? extends JobAbility>> getJobAilities(){
+        return jobAbilities;
     }
 }

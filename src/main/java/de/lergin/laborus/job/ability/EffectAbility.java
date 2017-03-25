@@ -1,8 +1,7 @@
 package de.lergin.laborus.job.ability;
 
-import de.lergin.laborus.Laborus;
 import de.lergin.laborus.job.Job;
-import de.lergin.laborus.job.JobAbility;
+import de.lergin.laborus.api.JobAbility;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.data.key.Keys;
@@ -16,30 +15,16 @@ import java.util.List;
 
 @ConfigSerializable
 public class EffectAbility extends JobAbility {
-    private Laborus plugin = Laborus.instance();
-
     @Setting(value = "potionEffect", comment = "the settings of the potion effect")
     private PotionEffectConfig effectConfig = new PotionEffectConfig();
 
     public EffectAbility() {}
 
     @Override
-    public boolean startAbility(Job job, Player player) {
-        if (!canStartAbility(job, player)) {
-            sendCoolDownNotEndedMessage(job, player);
-            return false;
-        }
-
+    public void activateAbility(Job job, Player player) {
         List<PotionEffect> potionEffects = player.get(Keys.POTION_EFFECTS).orElseGet(ArrayList::new);
         potionEffects.add(effectConfig.get());
         player.offer(Keys.POTION_EFFECTS, potionEffects);
-
-        startCoolDown(job, player);
-        sendStartMessage(job, player);
-
-        plugin.config.base.loggingConfig.jobAbilities(job, "Started EffectAbility ({})", potionEffects.toString());
-
-        return true;
     }
 
     @ConfigSerializable
