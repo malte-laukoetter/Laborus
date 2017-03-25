@@ -1,16 +1,13 @@
 plugins {
-    id 'java'
-    id 'com.github.johnrengelman.shadow' version '1.2.4'
+    id 'org.spongepowered.plugin' version '0.8.1'
     id 'ninja.miserable.blossom' version '1.0.1'
 }
 
-group = 'de.lergin.sponge'
+group = 'de.lergin'
 version = '1.4.0'
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
-
-defaultTasks 'shadowJar'
 
 repositories {
     mavenCentral()
@@ -18,33 +15,14 @@ repositories {
         name 'Sponge'
         url 'http://repo.spongepowered.org/maven'
     }
-    maven {
-        name 'bStats'
-        url 'http://repo.bstats.org/content/repositories/releases/'
-    }
 }
 
 dependencies {
     compile 'org.spongepowered:spongeapi:5.1.0'
-//    compile 'org.bstats:bstats-sponge:1.1'
 }
 
 blossom {
     def location = 'src/main/java/de/lergin/laborus/Laborus.java'
 
     replaceToken '@version@', project.version, location
-}
-
-shadowJar {
-//    dependencies {
-//        include dependency("org.bstats:bstats-sponge")
-//    }
-
-//    relocate 'org.bstats', 'de.lergin.laborus'
-
-    archiveName = "Laborus-${project.version}.jar"
-}
-
-artifacts {
-    archives shadowJar
 }
