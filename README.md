@@ -33,7 +33,7 @@ This command adds the given amount of xp to the xp of the job.
 
 Permission: `laborus.commands.addXp`
 
-Permission for player arg: `laborus.commands.addXp.outher_player`
+Permission for player arg: `laborus.commands.addXp.other_player`
 
 #### /jobs change [join|leave] [job]
 
@@ -56,6 +56,16 @@ Permission: `laborus.commands.ability`
 #### /jobs info [job]
 
 Shows information about the job if one is send with the command, otherwise a list of all jobs is shown.
+
+
+#### /jobs setXP [job] [xp] [player]
+
+This command sets the xp of the job.
+
+Permission: `laborus.commands.setXp`
+
+Permission for player arg: `laborus.commands.setXp.other_player`
+
 
 ## Configuration
 

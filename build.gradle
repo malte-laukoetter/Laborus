@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'de.lergin.sponge'
-version = '1.3.3-DEV'
+version = '1.4.0'
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
@@ -30,7 +30,7 @@ dependencies {
 }
 
 blossom {
-    def location = 'src/main/java/de/lergin/sponge/laborus/Laborus.java'
+    def location = 'src/main/java/de/lergin/laborus/Laborus.java'
 
     replaceToken '@version@', project.version, location
 }
@@ -40,7 +40,7 @@ shadowJar {
 //        include dependency("org.bstats:bstats-sponge")
 //    }
 
-//    relocate 'org.bstats', 'de.lergin.sponge.laborus'
+//    relocate 'org.bstats', 'de.lergin.laborus'
 
     archiveName = "Laborus-${project.version}.jar"
 }
