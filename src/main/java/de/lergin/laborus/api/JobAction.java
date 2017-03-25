@@ -1,5 +1,6 @@
 package de.lergin.laborus.api;
 
+import com.google.common.reflect.TypeToken;
 import de.lergin.laborus.Laborus;
 import de.lergin.laborus.config.TranslationKeys;
 import de.lergin.laborus.job.Job;
@@ -10,16 +11,11 @@ import org.spongepowered.api.event.Cancellable;
 import org.spongepowered.api.text.TextElement;
 
 import java.io.Serializable;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.function.BooleanSupplier;
 
-import static de.lergin.laborus.api.JobActionState.BLOCK;
-import static de.lergin.laborus.api.JobActionState.IGNORE;
-import static de.lergin.laborus.api.JobActionState.SUCCESS;
+import static de.lergin.laborus.api.JobActionState.*;
 
 /**
  * an action that can award some xp and so one
@@ -95,6 +91,18 @@ public abstract class JobAction<T extends JobItem> implements Serializable {
 
         if (!jobItem.canDo(getJob().getLevel(player))) return BLOCK;
 
+        if(jobItem.isAlsoInOtherJob()){
+            // some crazy lambda stuff to test if any item in any action of any job matches the item
+            if(plugin.getJobs().values().stream().anyMatch(
+                    job-> job.getJobActions().stream()
+                        .filter(jobAction -> Objects.equals(jobAction.getId(), this.getId()))
+                        .filter(jobAction -> jobAction.getJobItems().getClass().equals(this.getJobItems().getClass()))
+                        .anyMatch(jobAction -> ((List<T>) jobAction.getJobItems()).stream()
+                                .filter(item-> item.equals(jobItem))
+                                .anyMatch(item->!item.canDo(jobAction.getJob().getLevel(player)))))){
+                return BLOCK_OTHER;
+            }
+        }
 
         plugin.config.base.loggingConfig
                 .jobActions(getJob(), "Awarding JobItem ({})", jobItem.getItem());

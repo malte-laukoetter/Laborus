@@ -10,10 +10,10 @@ import org.slf4j.Logger;
 public class LoggingConfig {
     private Logger logger = Laborus.instance().getLogger();
     @Setting
-    private boolean jobActions = true; //done
+    private boolean jobActions = false;
 
     @Setting
-    private boolean jobAbilities = true; //done
+    private boolean jobAbilities = false;
 
     @Setting
     private boolean jobBoni = false;

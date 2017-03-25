@@ -15,6 +15,9 @@ public abstract class JobItem implements Serializable {
     private double XP = 0;
     @Setting(value = "needLevel", comment = "level needed to use this item with the action")
     private int NEED_LEVEL = 0;
+    @Setting(value = "alsoInOtherJob", comment = "setting if also another job has this item, if true all items will be checked" +
+            " if they can be used")
+    private boolean ALSO_IN_OTHER_JOB = false;
 
     /**
      * returns the amount of xp someone gets when he is finishing an action with this item
@@ -32,6 +35,10 @@ public abstract class JobItem implements Serializable {
      */
     public double getNeedLevel() {
         return NEED_LEVEL;
+    }
+
+    public boolean isAlsoInOtherJob() {
+        return ALSO_IN_OTHER_JOB;
     }
 
     /**
