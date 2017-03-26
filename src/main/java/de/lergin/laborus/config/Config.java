@@ -10,12 +10,19 @@ import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.function.Supplier;
+
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class Config {
     private ConfigurationLoader<CommentedConfigurationNode> loader;
+    private Path confDir;
     private Logger logger;
 
 
@@ -26,6 +33,24 @@ public class Config {
     public Config(Laborus plugin, ConfigurationLoader<CommentedConfigurationNode> loader){
         this.loader = loader;
         this.logger = plugin.getLogger();
+        this.confDir= plugin.getConfigDir().getParent();
+    }
+
+    /**
+     *
+     */
+    public void saveWithBackup() throws IOException {
+        File[] files = confDir.toFile().listFiles();
+
+        if(files != null){
+            for (File file : files) {
+                if(file.getName().endsWith(".conf")){
+                    Files.copy(file.toPath(), confDir.resolve(file.getName().concat(".old")), REPLACE_EXISTING);
+                }
+            }
+        }
+
+        save();
     }
 
     /**
@@ -33,16 +58,39 @@ public class Config {
      */
     public void save() {
         try {
-            base.saveJobFiles();
-            base.saveTranslationFiles();
+            if(Objects.equals(Laborus.instance().pluginContainer.getVersion().orElse("unknown"), base.version)){
+                saveCurrentVersion();
+            }else{
+                if(base.version.contains("1.4.")){
+                    saveCurrentVersion();
+                }else{
+                    saveCurrentVersion();
+                }
+            }
 
-            node.setValue(TypeToken.of(BaseConfig.class), base);
-            loader.save(node);
-            logger.info("Saved the config!");
         } catch(IOException | ObjectMappingException e) {
             logger.warn("Could not save the config!");
             logger.warn(e.getLocalizedMessage());
         }
+    }
+
+    private void saveCurrentVersion() throws ObjectMappingException, IOException {
+        base.saveJobFiles();
+        base.saveTranslationFiles();
+        base.version = Laborus.instance().pluginContainer.getVersion().orElse("unknown");
+
+        node.setValue(TypeToken.of(BaseConfig.class), base);
+
+     /*   confDir.iterator().forEachRemaining(path->{
+            if(path.endsWith(".conf")){
+                System.out.println(path);
+                path.toFile().renameTo(path.resolve(".old").toFile());
+            }
+        });
+*/
+
+        loader.save(node);
+        logger.info("Saved the config!");
     }
 
     /**

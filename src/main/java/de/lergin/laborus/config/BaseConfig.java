@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.reflect.TypeToken;
 import de.lergin.laborus.Laborus;
-import de.lergin.laborus.api.JobItem;
 import de.lergin.laborus.job.Job;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
@@ -12,6 +11,7 @@ import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.gamemode.GameMode;
 import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 
@@ -24,6 +24,9 @@ import java.util.Map;
 
 @ConfigSerializable
 public class BaseConfig {
+    @Setting(value = "version", comment = "the version this config file was created in")
+    public String version = Laborus.instance().pluginContainer.getVersion().orElse("unknown");
+
     @Setting(value = "commands", comment = "settings for the commands")
     public CommandsConfig commandsConfig = new CommandsConfig();
 
