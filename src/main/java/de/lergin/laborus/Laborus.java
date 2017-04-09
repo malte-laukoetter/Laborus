@@ -28,10 +28,12 @@ import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.plugin.PluginContainer;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 @Plugin(id = "laborus", name = "Laborus", version = "@version@", description = "a job plugin", authors = {"Lergin"})
@@ -45,6 +47,9 @@ public class Laborus {
 
     @Inject
     private Logger logger;
+
+    @Inject
+    public PluginContainer pluginContainer;
 
     public Logger getLogger() {
         return logger;
@@ -114,7 +119,17 @@ public class Laborus {
     public void onGameInitialization(GameInitializationEvent event) throws IOException, ObjectMappingException {
         config = new Config(this, loader);
 
-        config.reload();
+        config.load();
+        config.saveWithBackup();
+
+        AntiReplaceFarming.setUseAntiReplace(config.base.useAntiReplace);
+
+        config.base.initJobs();
+        config.base.commandsConfig.registerCommands(Laborus.instance());
+
+        translationHelper =
+                new TranslationHelper(config.base.translationConfig, Locale.forLanguageTag(config.base.fallbackLanguage));
+
 
         //setup the dataBase for the AntiReplaceFarming thing
         AntiReplaceFarming.setupDataBase();
