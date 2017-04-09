@@ -37,7 +37,7 @@ import static de.lergin.laborus.api.JobActionState.*;
  */
 public abstract class JobAction<T extends JobItem> implements Serializable {
     /**
-     * should return the if of the JobAction used in the config to block certain JobBoni
+     * should return the id of the JobAction used in the config to block certain JobBoni
      * @return a unique string for the JobAction Class
      */
     public abstract String getId();
@@ -83,11 +83,19 @@ public abstract class JobAction<T extends JobItem> implements Serializable {
 
         T actionJobItem = getJobItem.call();
 
-        Optional<T> optional = getJobItems().stream().filter((item) -> item.matches(actionJobItem)).findAny();
+        List<T> items = getJobItems();
 
-        if(!optional.isPresent()) return IGNORE;
+        T jobItem;
 
-        T jobItem = optional.get();
+        if(items.isEmpty()){
+            jobItem = actionJobItem;
+        }else{
+            Optional<T> optional = getJobItems().stream().filter((item) -> item.matches(actionJobItem)).findAny();
+
+            if(!optional.isPresent()) return IGNORE;
+
+            jobItem = optional.get();
+        }
 
         if (!jobItem.canDo(getJob().getLevel(player))) return BLOCK;
 

@@ -29,6 +29,7 @@ public class JobBoniTypeSerializer<T extends JobBonus> implements TypeSerializer
 
         if(obj.get().isEmpty()) {
             value.setValue(ImmutableList.of());
+            return;
         }
 
         TypeToken<T> token = TypeToken.of((Class<T>) obj.get().get(0).getClass());
