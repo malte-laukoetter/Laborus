@@ -1,6 +1,5 @@
 package de.lergin.laborus.api;
 
-import com.google.common.reflect.TypeToken;
 import de.lergin.laborus.Laborus;
 import de.lergin.laborus.config.TranslationKeys;
 import de.lergin.laborus.job.Job;
@@ -67,6 +66,13 @@ public abstract class JobAction<T extends JobItem> implements Serializable {
     public void init(Job job){
         this.job = job;
         Sponge.getEventManager().registerListeners(plugin, this);
+    }
+
+    /**
+     * used by Laborus to unload the JobAction (delete the listeners)
+     */
+    public void unload(){
+        Sponge.getEventManager().unregisterListeners(this);
     }
 
     /**

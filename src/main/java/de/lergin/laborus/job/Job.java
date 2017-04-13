@@ -58,7 +58,7 @@ public class Job {
     }
 
     public void unloadJob(){
-        jobActions.get().forEach((a)-> Sponge.getEventManager().unregisterListeners(a));
+        jobActions.get().forEach(JobAction::unload);
     }
 
     public Job() {}
