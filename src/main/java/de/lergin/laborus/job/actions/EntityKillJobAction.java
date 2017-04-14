@@ -6,6 +6,7 @@ import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.entity.DamageEntityEvent;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.event.filter.cause.First;
 
@@ -34,6 +35,13 @@ public class EntityKillJobAction extends JobAction<EntityJobItem> {
     @Listener
     public void onEvent(DestructEntityEvent.Death event, @First Player player) throws Exception {
         super.onEvent(player,
+                () -> true,
+                () -> EntityJobItem.fromEntity(event.getTargetEntity()));
+    }
+
+    @Listener
+    public void onBlockEvent(DamageEntityEvent event, @First Player player) throws Exception {
+        super.onBlockEvent(event, player,
                 () -> true,
                 () -> EntityJobItem.fromEntity(event.getTargetEntity()));
     }

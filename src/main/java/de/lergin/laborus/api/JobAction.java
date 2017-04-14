@@ -85,38 +85,13 @@ public abstract class JobAction<T extends JobItem> implements Serializable {
      * @throws Exception exception if something in one of the suppliers isn't working
      */
     public JobActionState onEvent(Player player, BooleanSupplier isWorking, Callable<T> getJobItem) throws Exception {
-        if (!job.enabled(player) || !isWorking.getAsBoolean()) return IGNORE;
+        JobActionState state = onBlockEvent(player, isWorking, getJobItem);
 
-        T actionJobItem = getJobItem.call();
-
-        List<T> items = getJobItems();
-
-        T jobItem;
-
-        if(items.isEmpty()){
-            jobItem = actionJobItem;
-        }else{
-            Optional<T> optional = getJobItems().stream().filter((item) -> item.matches(actionJobItem)).findAny();
-
-            if(!optional.isPresent()) return IGNORE;
-
-            jobItem = optional.get();
+        if(state != SUCCESS){
+            return state;
         }
 
-        if (!jobItem.canDo(getJob().getLevel(player))) return BLOCK;
-
-        if(jobItem.isAlsoInOtherJob()){
-            // some crazy lambda stuff to test if any item in any action of any job matches the item
-            if(plugin.getJobs().values().stream().anyMatch(
-                    job-> job.getJobActions().stream()
-                        .filter(jobAction -> Objects.equals(jobAction.getId(), this.getId()))
-                        .filter(jobAction -> jobAction.getJobItems().getClass().equals(this.getJobItems().getClass()))
-                        .anyMatch(jobAction -> ((List<T>) jobAction.getJobItems()).stream()
-                                .filter(item-> item.equals(jobItem))
-                                .anyMatch(item->!item.canDo(jobAction.getJob().getLevel(player)))))){
-                return BLOCK_OTHER;
-            }
-        }
+        T jobItem = getJobItem.call();
 
         plugin.config.base.loggingConfig
                 .jobActions(getJob(), "Awarding JobItem ({})", jobItem.getItem());
@@ -143,16 +118,7 @@ public abstract class JobAction<T extends JobItem> implements Serializable {
          if (state == BLOCK){
              JobItem jobItem = getJobItem.call();
 
-             plugin.config.base.loggingConfig
-                     .jobActions(getJob(), "Cannot use JobItem ({})", jobItem.getName(Locale.getDefault()));
-
-             Map<String, TextElement> args = getJob().textArgs(player);
-
-             args.put("item", jobItem.getName(player.getLocale()));
-
-             player.sendMessage(
-                     plugin.translationHelper.get(TranslationKeys.JOB_LEVEL_NOT_HIGH_ENOUGH, player.getLocale()),
-                     args);
+             sendBlockMessage(player, jobItem);
 
              event.setCancelled(true);
          }
@@ -171,20 +137,81 @@ public abstract class JobAction<T extends JobItem> implements Serializable {
          if (state == BLOCK){
              JobItem jobItem = getJobItem.call();
 
-             plugin.config.base.loggingConfig
-                     .jobActions(getJob(), "Cannot use JobItem ({})", jobItem.getName(Locale.getDefault()));
-
-             Map<String, TextElement> args = getJob().textArgs(player);
-
-             args.put("item", jobItem.getName(player.getLocale()));
-
-             player.sendMessage(
-                     plugin.translationHelper.get(TranslationKeys.JOB_LEVEL_NOT_HIGH_ENOUGH, player.getLocale()),
-                     args);
+             sendBlockMessage(player, jobItem);
 
              transaction.setValid(false);
          }
 
          return state;
+    }
+
+    public JobActionState onBlockEvent(Transaction<?> transaction, Player player, BooleanSupplier isWorking, Callable<T> getJobItem) throws Exception {
+        JobActionState state = this.onBlockEvent(player, isWorking, getJobItem);
+
+        if (state == BLOCK){
+            transaction.setValid(false);
+        }
+
+        return state;
+    }
+
+    public JobActionState onBlockEvent(Cancellable event, Player player, BooleanSupplier isWorking, Callable<T> getJobItem) throws Exception {
+        JobActionState state = this.onBlockEvent(player, isWorking, getJobItem);
+
+        if (state == BLOCK){
+            event.setCancelled(true);
+        }
+
+        return state;
+    }
+
+    public JobActionState onBlockEvent(Player player, BooleanSupplier isWorking, Callable<T> getJobItem) throws Exception {
+        if (!job.enabled(player) || !isWorking.getAsBoolean()) return IGNORE;
+
+        T actionJobItem = getJobItem.call();
+
+        List<T> items = getJobItems();
+
+        T jobItem;
+
+        if(items.isEmpty()){
+            jobItem = actionJobItem;
+        }else{
+            Optional<T> optional = getJobItems().stream().filter((item) -> item.matches(actionJobItem)).findAny();
+
+            if(!optional.isPresent()) return IGNORE;
+
+            jobItem = optional.get();
+        }
+
+        if (!jobItem.canDo(getJob().getLevel(player))) return BLOCK;
+
+        if(jobItem.isAlsoInOtherJob()){
+            // some crazy lambda stuff to test if any item in any action of any job matches the item
+            if(plugin.getJobs().values().stream().anyMatch(
+                    job-> job.getJobActions().stream()
+                            .filter(jobAction -> Objects.equals(jobAction.getId(), this.getId()))
+                            .filter(jobAction -> jobAction.getJobItems().getClass().equals(this.getJobItems().getClass()))
+                            .anyMatch(jobAction -> ((List<T>) jobAction.getJobItems()).stream()
+                                    .filter(item-> item.equals(jobItem))
+                                    .anyMatch(item->!item.canDo(jobAction.getJob().getLevel(player)))))){
+                return BLOCK_OTHER;
+            }
+        }
+
+        return SUCCESS;
+    }
+
+    public void sendBlockMessage(Player player, JobItem jobItem){
+        plugin.config.base.loggingConfig
+                .jobActions(getJob(), "Cannot use JobItem ({})", jobItem.getName(Locale.getDefault()));
+
+        Map<String, TextElement> args = getJob().textArgs(player);
+
+        args.put("item", jobItem.getName(player.getLocale()));
+
+        player.sendMessage(
+                plugin.translationHelper.get(TranslationKeys.JOB_LEVEL_NOT_HIGH_ENOUGH, player.getLocale()),
+                args);
     }
 }
