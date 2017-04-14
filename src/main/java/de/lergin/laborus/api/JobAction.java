@@ -85,13 +85,17 @@ public abstract class JobAction<T extends JobItem> implements Serializable {
      * @throws Exception exception if something in one of the suppliers isn't working
      */
     public JobActionState onEvent(Player player, BooleanSupplier isWorking, Callable<T> getJobItem) throws Exception {
-        JobActionState state = onBlockEvent(player, isWorking, getJobItem);
+        T jobItem = getJobItem(getJobItem.call());
+
+        if(jobItem == null){
+            return IGNORE;
+        }
+
+        JobActionState state = onBlockEvent(player, isWorking, jobItem);
 
         if(state != SUCCESS){
             return state;
         }
-
-        T jobItem = getJobItem.call();
 
         plugin.config.base.loggingConfig
                 .jobActions(getJob(), "Awarding JobItem ({})", jobItem.getItem());
@@ -149,6 +153,10 @@ public abstract class JobAction<T extends JobItem> implements Serializable {
         JobActionState state = this.onBlockEvent(player, isWorking, getJobItem);
 
         if (state == BLOCK){
+            JobItem jobItem = getJobItem.call();
+
+            sendBlockMessage(player, jobItem);
+
             transaction.setValid(false);
         }
 
@@ -159,30 +167,18 @@ public abstract class JobAction<T extends JobItem> implements Serializable {
         JobActionState state = this.onBlockEvent(player, isWorking, getJobItem);
 
         if (state == BLOCK){
+            JobItem jobItem = getJobItem.call();
+
+            sendBlockMessage(player, jobItem);
+
             event.setCancelled(true);
         }
 
         return state;
     }
 
-    public JobActionState onBlockEvent(Player player, BooleanSupplier isWorking, Callable<T> getJobItem) throws Exception {
+    public JobActionState onBlockEvent(Player player, BooleanSupplier isWorking, JobItem jobItem) throws Exception {
         if (!job.enabled(player) || !isWorking.getAsBoolean()) return IGNORE;
-
-        T actionJobItem = getJobItem.call();
-
-        List<T> items = getJobItems();
-
-        T jobItem;
-
-        if(items.isEmpty()){
-            jobItem = actionJobItem;
-        }else{
-            Optional<T> optional = getJobItems().stream().filter((item) -> item.matches(actionJobItem)).findAny();
-
-            if(!optional.isPresent()) return IGNORE;
-
-            jobItem = optional.get();
-        }
 
         if (!jobItem.canDo(getJob().getLevel(player))) return BLOCK;
 
@@ -202,6 +198,19 @@ public abstract class JobAction<T extends JobItem> implements Serializable {
         return SUCCESS;
     }
 
+
+    public JobActionState onBlockEvent(Player player, BooleanSupplier isWorking, Callable<T> getJobItem) throws Exception {
+        if (!job.enabled(player) || !isWorking.getAsBoolean()) return IGNORE;
+
+        T jobItem = getJobItem(getJobItem.call());
+
+        if(jobItem == null){
+            return IGNORE;
+        }
+
+        return onBlockEvent(player, isWorking, jobItem);
+    }
+
     public void sendBlockMessage(Player player, JobItem jobItem){
         plugin.config.base.loggingConfig
                 .jobActions(getJob(), "Cannot use JobItem ({})", jobItem.getName(Locale.getDefault()));
@@ -213,5 +222,23 @@ public abstract class JobAction<T extends JobItem> implements Serializable {
         player.sendMessage(
                 plugin.translationHelper.get(TranslationKeys.JOB_LEVEL_NOT_HIGH_ENOUGH, player.getLocale()),
                 args);
+    }
+
+    private T getJobItem(T item){
+        List<T> items = getJobItems();
+
+        T jobItem;
+
+        if(items.isEmpty()){
+            jobItem = item;
+        }else{
+            Optional<T> optional = getJobItems().stream().filter((i) -> i.matches(item)).findAny();
+
+            if(!optional.isPresent()) return null;
+
+            jobItem = optional.get();
+        }
+
+        return jobItem;
     }
 }

@@ -34,9 +34,8 @@ public class BlockStateComparator {
         Optional<BlockType> optional1 = Sponge.getRegistry().getType(CatalogTypes.BLOCK_TYPE, blockString1.split("\\[")[0]);
         Optional<BlockType> optional2 = Sponge.getRegistry().getType(CatalogTypes.BLOCK_TYPE, blockString2.split("\\[")[0]);
 
-        return !(!optional1.isPresent() || !optional2.isPresent() || optional1.get() != optional2.get()) &&
-                (!blockString1.contains("[") && !blockString2.contains("[") ||
-                        compareData(blockString1, blockString2));
+        return optional1.isPresent() && optional2.isPresent() && optional1.get() == optional2.get() &&
+                (!blockString1.contains("[") || (blockString2.contains("[") && compareData(blockString1, blockString2)));
 
     }
 
