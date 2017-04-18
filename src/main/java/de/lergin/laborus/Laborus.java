@@ -111,6 +111,7 @@ public class Laborus {
         jobService.registerJobAction(EntityTameJobAction.class, "tame");
         jobService.registerJobAction(InteractJobAction.class, "use");
         jobService.registerJobAction(PlaceBlockJobAction.class, "place");
+        jobService.registerJobAction(CraftingJobAction.class, "craft");
 
         jobService.registerJobAbility(EffectAbility.class, "effect");
     }
