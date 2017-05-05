@@ -104,6 +104,7 @@ public class Laborus {
         jobService.registerJobBonus(ItemDrop.class, "itemDrop");
         jobService.registerJobBonus(ItemRepair.class, "itemRepair");
         jobService.registerJobBonus(MultiDrop.class, "multiDrop");
+        jobService.registerJobBonus(CommandExecution.class, "command");
 
         jobService.registerJobAction(BreakBlockJobAction.class, "break");
         jobService.registerJobAction(EntityDamageJobAction.class, "damage");
