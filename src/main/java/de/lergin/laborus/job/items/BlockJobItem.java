@@ -28,7 +28,12 @@ public class BlockJobItem extends JobItem {
 
     @Override
     public boolean matches(JobItem item) {
-        return item instanceof BlockJobItem && BlockStateComparator.compare(getItem(), (String) item.getItem());
+        return item instanceof BlockJobItem && matches((String) item.getItem());
+    }
+
+    @Override
+    public boolean matches(String item) {
+        return  BlockStateComparator.compare(getItem(), item);
     }
 
     @Override

@@ -29,6 +29,11 @@ public class EntityJobItem extends JobItem {
         return this.getItem() == item;
     }
 
+    @Override
+    public boolean matches(String item) {
+        return getItem().getId().equals(item);
+    }
+
     public static EntityJobItem fromEntity(Entity entity){
         return new EntityJobItem(entity.getType());
     }

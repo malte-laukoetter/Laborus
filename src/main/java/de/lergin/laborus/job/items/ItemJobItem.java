@@ -9,6 +9,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 
 import java.util.Locale;
+import java.util.Objects;
 
 @ConfigSerializable
 public class ItemJobItem extends JobItem {
@@ -27,6 +28,11 @@ public class ItemJobItem extends JobItem {
 
     private boolean matches(ItemType item) {
         return this.getItem() == item;
+    }
+
+    @Override
+    public boolean matches(String item) {
+        return this.getItem().getId().equals(item);
     }
 
     public static ItemJobItem fromItemStack(ItemStack item){

@@ -73,5 +73,10 @@ public abstract class JobItem implements Serializable {
      */
     public abstract boolean matches(JobItem item);
 
+    /**
+     * decides if the string matches the current object
+     */
+    public abstract boolean matches(String item);
+
     public abstract Text getName(Locale locale);
 }

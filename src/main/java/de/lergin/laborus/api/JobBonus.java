@@ -30,8 +30,7 @@ public abstract class JobBonus implements Serializable{
     private int maxLevel = -1;
     @Setting(value = "onlySelected", comment = "if true it will only be awarded if the job is selected")
     private boolean onlySelected = true;
-    //@Setting(value = "jobItems")
-    // currently not working...
+    @Setting(value = "jobItems", comment = "an optional list of jobitems that are allowed to reward this bonus")
     private List<String> jobItems = ImmutableList.of();
     @Setting(value = "actions", comment = "actions that can award this bonus (BREAK, ENTITY_DAMAGE, ENTITY_KILL, ENTITY_TAME, ITEM_USE, PLACE)")
     private List<String> jobActions = ImmutableList.of();
@@ -64,17 +63,7 @@ public abstract class JobBonus implements Serializable{
         if (!this.jobActions.isEmpty() && !this.jobActions.contains(jobAction.getId()))
             return false;
 
-        return true;
-      /*  if (this.jobItems.isEmpty())
-            return true;
-
-        for (String item : this.jobItems) {
-            if (jobItem.getItem().equals(item) || jobItem.getItem() instanceof String &&
-                    BlockStateComparator.compare(item, (String) jobItem.getItem()))
-                return true;
-        }
-
-        return false;*/
+        return this.jobItems.isEmpty() || this.jobItems.stream().anyMatch(jobItem::matches);
     }
 
     /**
