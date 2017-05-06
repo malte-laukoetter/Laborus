@@ -25,7 +25,7 @@ public class ItemJobItem extends JobItem {
 
     @Override
     public boolean matches(JobItem o) {
-        return o.getItem() instanceof ItemType && matches((ItemType) o.getItem());
+        return matchesAll || o.getItem() instanceof ItemType && matches((ItemType) o.getItem());
     }
 
     private boolean matches(ItemType item) {
@@ -34,7 +34,7 @@ public class ItemJobItem extends JobItem {
 
     @Override
     public boolean matches(String item) {
-        return this.getItem().getId().equals(item);
+        return matchesAll || this.getItem().getId().equals(item);
     }
 
     public static ItemJobItem fromItemStack(ItemStack item){
@@ -57,7 +57,7 @@ public class ItemJobItem extends JobItem {
     public static class Serializer implements TypeSerializer<ItemJobItem> {
         @Override
         public ItemJobItem deserialize(TypeToken<?> typeToken, ConfigurationNode configurationNode) throws ObjectMappingException {
-            Object o = configurationNode.getNode("item").getString();
+            String o = configurationNode.getNode("item").getString();
 
             if(o.equals("*")){
                 return new ItemJobItem(true);

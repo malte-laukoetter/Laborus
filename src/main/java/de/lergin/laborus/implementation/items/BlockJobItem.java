@@ -33,7 +33,7 @@ public class BlockJobItem extends JobItem {
 
     @Override
     public boolean matches(String item) {
-        return item.equals("*") || BlockStateComparator.compare(getItem(), item);
+        return getItem().equals("*") || BlockStateComparator.compare(getItem(), item);
     }
 
     @Override
