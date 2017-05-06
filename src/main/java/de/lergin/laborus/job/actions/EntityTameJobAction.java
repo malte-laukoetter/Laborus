@@ -1,7 +1,7 @@
-package de.lergin.laborus.implementation.actions;
+package de.lergin.laborus.job.actions;
 
 import de.lergin.laborus.api.JobAction;
-import de.lergin.laborus.implementation.items.EntityJobItem;
+import de.lergin.laborus.job.items.EntityJobItem;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.entity.living.player.Player;

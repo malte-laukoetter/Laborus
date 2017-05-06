@@ -5,8 +5,8 @@ de.lergin.laborus.config
 de.lergin.laborus.data
 de.lergin.laborus.data.jobs
 de.lergin.laborus.job
-de.lergin.laborus.implementation.ability
-de.lergin.laborus.implementation.actions
-de.lergin.laborus.implementation.bonus
-de.lergin.laborus.implementation.items
+de.lergin.laborus.job.ability
+de.lergin.laborus.job.actions
+de.lergin.laborus.job.bonus
+de.lergin.laborus.job.items
 de.lergin.laborus.util

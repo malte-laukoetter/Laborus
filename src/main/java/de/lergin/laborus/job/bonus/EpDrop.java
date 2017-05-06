@@ -1,4 +1,4 @@
-package de.lergin.laborus.implementation.boni;
+package de.lergin.laborus.job.bonus;
 
 import de.lergin.laborus.api.JobBonus;
 import de.lergin.laborus.api.JobItem;
@@ -17,7 +17,7 @@ import java.util.Random;
  * Bonus that drops some extra ep
  */
 @ConfigSerializable
-public class EpDropJobBonus extends JobBonus {
+public class EpDrop extends JobBonus {
     @Setting(value = "minEp", comment = "minimal amount of minecraft ep")
     private int minEp = 0;
     @Setting(value = "maxEp", comment = "maximal amount of minecraft ep")
@@ -33,5 +33,5 @@ public class EpDropJobBonus extends JobBonus {
         extent.spawnEntity(itemEntity, Cause.builder().owner(player).build());
     }
 
-    public EpDropJobBonus() {}
+    public EpDrop() {}
 }

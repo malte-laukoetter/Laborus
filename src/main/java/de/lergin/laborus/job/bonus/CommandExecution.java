@@ -1,4 +1,4 @@
-package de.lergin.laborus.implementation.boni;
+package de.lergin.laborus.job.bonus;
 
 import de.lergin.laborus.api.JobBonus;
 import de.lergin.laborus.api.JobItem;
@@ -8,7 +8,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 
 @ConfigSerializable
-public class CommandExecutionJobBonus extends JobBonus {
+public class CommandExecution extends JobBonus {
     @Setting(value = "command", comment = "the command to execute {player} will be replaced by the playername")
     private String command;
 
@@ -20,5 +20,5 @@ public class CommandExecutionJobBonus extends JobBonus {
         );
     }
 
-    public CommandExecutionJobBonus(){}
+    public CommandExecution(){}
 }

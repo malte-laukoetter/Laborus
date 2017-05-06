@@ -1,4 +1,4 @@
-package de.lergin.laborus.util;
+package de.lergin.laborus.job.bonus;
 
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
@@ -9,7 +9,7 @@ import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.extent.Extent;
 
-public final class BonusHelper {
+class BonusHelper {
     public static boolean dropItem(Location<World> loc, ItemStack itemStack, Cause cause) {
         Extent extent = loc.getExtent();
 

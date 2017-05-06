@@ -1,8 +1,8 @@
-package de.lergin.laborus.implementation.actions;
+package de.lergin.laborus.job.actions;
 
 import de.lergin.laborus.api.JobAction;
 import de.lergin.laborus.api.JobActionState;
-import de.lergin.laborus.implementation.items.BlockJobItem;
+import de.lergin.laborus.job.items.BlockJobItem;
 import de.lergin.laborus.util.AntiReplaceFarming;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;

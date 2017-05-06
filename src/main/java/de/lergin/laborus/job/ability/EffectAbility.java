@@ -1,4 +1,4 @@
-package de.lergin.laborus.implementation.abilities;
+package de.lergin.laborus.job.ability;
 
 import de.lergin.laborus.job.Job;
 import de.lergin.laborus.api.JobAbility;
@@ -14,11 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ConfigSerializable
-public class EffectJobAbility extends JobAbility {
+public class EffectAbility extends JobAbility {
     @Setting(value = "potionEffect", comment = "the settings of the potion effect")
     private PotionEffectConfig effectConfig = new PotionEffectConfig();
 
-    public EffectJobAbility() {}
+    public EffectAbility() {}
 
     @Override
     public void activateAbility(Job job, Player player) {

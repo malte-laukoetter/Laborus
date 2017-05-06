@@ -1,4 +1,4 @@
-package de.lergin.laborus.implementation.items;
+package de.lergin.laborus.job.items;
 
 import de.lergin.laborus.api.JobItem;
 import de.lergin.laborus.util.BlockStateComparator;
@@ -33,7 +33,7 @@ public class BlockJobItem extends JobItem {
 
     @Override
     public boolean matches(String item) {
-        return item.equals("*") || BlockStateComparator.compare(getItem(), item);
+        return  BlockStateComparator.compare(getItem(), item);
     }
 
     @Override

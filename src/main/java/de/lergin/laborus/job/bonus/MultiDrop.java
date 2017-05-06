@@ -1,10 +1,9 @@
-package de.lergin.laborus.implementation.boni;
+package de.lergin.laborus.job.bonus;
 
 import de.lergin.laborus.api.JobAction;
 import de.lergin.laborus.api.JobBonus;
 import de.lergin.laborus.job.Job;
 import de.lergin.laborus.api.JobItem;
-import de.lergin.laborus.util.BonusHelper;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.block.BlockState;
@@ -16,7 +15,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
  * bonus drop of the block
  */
 @ConfigSerializable
-public class MultiDropJobBonus extends JobBonus {
+public class MultiDrop extends JobBonus {
     @Setting(value = "extraDrops", comment = "amount of times the item gets dropped extra")
     private int extraDrops = 0;
 
@@ -34,5 +33,5 @@ public class MultiDropJobBonus extends JobBonus {
         return jobItem.getItem() instanceof String && super.canHappen(job, jobAction, jobItem, player);
     }
 
-    public MultiDropJobBonus() {}
+    public MultiDrop() {}
 }
