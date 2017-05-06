@@ -3,10 +3,12 @@ package de.lergin.laborus;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 import de.lergin.laborus.config.*;
+import de.lergin.laborus.implementation.items.EntityJobItem;
+import de.lergin.laborus.implementation.items.ItemJobItem;
 import de.lergin.laborus.job.JobAbilities;
-import de.lergin.laborus.job.ability.EffectAbility;
-import de.lergin.laborus.job.actions.*;
-import de.lergin.laborus.job.bonus.*;
+import de.lergin.laborus.implementation.abilities.EffectJobAbility;
+import de.lergin.laborus.implementation.actions.*;
+import de.lergin.laborus.implementation.boni.*;
 import de.lergin.laborus.api.JobService;
 import de.lergin.laborus.data.jobs.ImmutableJobDataManipulator;
 import de.lergin.laborus.data.jobs.JobData;
@@ -97,14 +99,17 @@ public class Laborus {
         TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(JobActions.class), new JobActionsTypeSerializer());
         TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(JobAbilities.class), new JobAbilitiesTypeSerializer());
 
+        TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(EntityJobItem.class), new EntityJobItem.Serializer());
+        TypeSerializers.getDefaultSerializers().registerType(TypeToken.of(ItemJobItem.class), new ItemJobItem.Serializer());
+
         JobService jobService = Sponge.getServiceManager().getRegistration(JobService.class).get().getProvider();
 
-        jobService.registerJobBonus(EconomyReward.class, "economy");
-        jobService.registerJobBonus(EpDrop.class, "ep");
-        jobService.registerJobBonus(ItemDrop.class, "itemDrop");
-        jobService.registerJobBonus(ItemRepair.class, "itemRepair");
-        jobService.registerJobBonus(MultiDrop.class, "multiDrop");
-        jobService.registerJobBonus(CommandExecution.class, "command");
+        jobService.registerJobBonus(EconomyJobBonus.class, "economy");
+        jobService.registerJobBonus(EpDropJobBonus.class, "ep");
+        jobService.registerJobBonus(ItemDropJobBonus.class, "itemDrop");
+        jobService.registerJobBonus(ItemRepairJobBonus.class, "itemRepair");
+        jobService.registerJobBonus(MultiDropJobBonus.class, "multiDrop");
+        jobService.registerJobBonus(CommandExecutionJobBonus.class, "command");
 
         jobService.registerJobAction(BreakBlockJobAction.class, "break");
         jobService.registerJobAction(EntityDamageJobAction.class, "damage");
@@ -113,7 +118,7 @@ public class Laborus {
         jobService.registerJobAction(InteractJobAction.class, "use");
         jobService.registerJobAction(PlaceBlockJobAction.class, "place");
 
-        jobService.registerJobAbility(EffectAbility.class, "effect");
+        jobService.registerJobAbility(EffectJobAbility.class, "effect");
     }
 
     @Listener
