@@ -5,6 +5,7 @@ import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.text.Text;
 
 import java.util.Locale;
@@ -35,6 +36,10 @@ public class ItemJobItem extends JobItem {
 
     public static ItemJobItem fromItemStack(ItemStack item){
         return new ItemJobItem(item.getItem());
+    }
+
+    public static ItemJobItem fromItemStackSnapshot(ItemStackSnapshot item){
+        return new ItemJobItem(item.getType());
     }
 
     public ItemJobItem() {}
