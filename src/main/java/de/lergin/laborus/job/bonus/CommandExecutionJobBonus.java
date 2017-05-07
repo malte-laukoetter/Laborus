@@ -8,7 +8,7 @@ import org.spongepowered.api.Sponge;
 import org.spongepowered.api.entity.living.player.Player;
 
 @ConfigSerializable
-public class CommandExecution extends JobBonus {
+public class CommandExecutionJobBonus extends JobBonus {
     @Setting(value = "command", comment = "the command to execute {player} will be replaced by the playername")
     private String command;
 
@@ -20,5 +20,5 @@ public class CommandExecution extends JobBonus {
         );
     }
 
-    public CommandExecution(){}
+    public CommandExecutionJobBonus(){}
 }

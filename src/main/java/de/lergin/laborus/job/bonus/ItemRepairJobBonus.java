@@ -17,7 +17,7 @@ import java.util.Optional;
  * Bonus that repairs the item in the hand by a percentage between maxPercent and minPercent
  */
 @ConfigSerializable
-public class ItemRepair extends JobBonus {
+public class ItemRepairJobBonus extends JobBonus {
     @Setting(value = "maxPercent", comment = "maximal percent")
     private double maxPercent = 0;
     @Setting(value = "minPercent", comment = "minimal percent")
@@ -59,6 +59,6 @@ public class ItemRepair extends JobBonus {
 
     }
 
-    public ItemRepair() {}
+    public ItemRepairJobBonus() {}
 
 }

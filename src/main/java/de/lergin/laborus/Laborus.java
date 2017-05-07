@@ -99,12 +99,12 @@ public class Laborus {
 
         JobService jobService = Sponge.getServiceManager().getRegistration(JobService.class).get().getProvider();
 
-        jobService.registerJobBonus(EconomyReward.class, "economy");
-        jobService.registerJobBonus(EpDrop.class, "ep");
-        jobService.registerJobBonus(ItemDrop.class, "itemDrop");
-        jobService.registerJobBonus(ItemRepair.class, "itemRepair");
-        jobService.registerJobBonus(MultiDrop.class, "multiDrop");
-        jobService.registerJobBonus(CommandExecution.class, "command");
+        jobService.registerJobBonus(EconomyJobBonus.class, "economy");
+        jobService.registerJobBonus(EpDropJobBonus.class, "ep");
+        jobService.registerJobBonus(ItemDropJobBonus.class, "itemDrop");
+        jobService.registerJobBonus(ItemRepairJobBonus.class, "itemRepair");
+        jobService.registerJobBonus(MultiDropJobBonus.class, "multiDrop");
+        jobService.registerJobBonus(CommandExecutionJobBonus.class, "command");
 
         jobService.registerJobAction(BreakBlockJobAction.class, "break");
         jobService.registerJobAction(EntityDamageJobAction.class, "damage");

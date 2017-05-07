@@ -16,7 +16,7 @@ import org.spongepowered.api.service.economy.account.Account;
 import java.math.BigDecimal;
 
 @ConfigSerializable
-public class EconomyReward extends JobBonus {
+public class EconomyJobBonus extends JobBonus {
     private final EconomyService service =
             Sponge.getServiceManager().getRegistration(EconomyService.class).get().getProvider();
     @Setting(value = "amountMax", comment = "maximal amount of money")
@@ -27,7 +27,7 @@ public class EconomyReward extends JobBonus {
     private String currency = null;
     private final Cause cause = Cause.of(NamedCause.source(Sponge.getPluginManager().fromInstance(Laborus.instance())));
 
-    public EconomyReward() {}
+    public EconomyJobBonus() {}
 
     @Override
     public void applyBonus(JobItem item, Player player, Object i2) {

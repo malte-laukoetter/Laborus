@@ -17,7 +17,7 @@ import java.util.Random;
  * Bonus that drops some extra ep
  */
 @ConfigSerializable
-public class EpDrop extends JobBonus {
+public class EpDropJobBonus extends JobBonus {
     @Setting(value = "minEp", comment = "minimal amount of minecraft ep")
     private int minEp = 0;
     @Setting(value = "maxEp", comment = "maximal amount of minecraft ep")
@@ -33,5 +33,5 @@ public class EpDrop extends JobBonus {
         extent.spawnEntity(itemEntity, Cause.builder().owner(player).build());
     }
 
-    public EpDrop() {}
+    public EpDropJobBonus() {}
 }
