@@ -5,7 +5,6 @@ import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityType;
-import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.text.Text;
 
 import java.util.Locale;
@@ -13,7 +12,7 @@ import java.util.Locale;
 @ConfigSerializable
 public class EntityJobItem extends JobItem {
     @Setting(value = "item", comment = "an entitytype, see http://minecraft.gamepedia.com/Data_values#Entity_IDs")
-    private EntityType item = EntityTypes.BAT;
+    private EntityType item = null;
 
     @Override
     public EntityType getItem() {
@@ -22,7 +21,7 @@ public class EntityJobItem extends JobItem {
 
     @Override
     public boolean matches(JobItem o) {
-        return o.getItem() instanceof EntityType && matches((EntityType) o.getItem());
+        return super.matchesAll() || o.getItem() instanceof EntityType && matches((EntityType) o.getItem());
     }
 
     private boolean matches(EntityType item) {
@@ -31,7 +30,7 @@ public class EntityJobItem extends JobItem {
 
     @Override
     public boolean matches(String item) {
-        return getItem().getId().equals(item);
+        return super.matchesAll() || getItem().getId().equals(item);
     }
 
     public static EntityJobItem fromEntity(Entity entity){

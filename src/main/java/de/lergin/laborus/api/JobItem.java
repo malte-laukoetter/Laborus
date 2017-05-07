@@ -18,6 +18,8 @@ public abstract class JobItem implements Serializable {
     @Setting(value = "alsoInOtherJob", comment = "setting if also another job has this item, if true all items will be checked" +
             " if they can be used")
     private boolean ALSO_IN_OTHER_JOB = false;
+    @Setting(value = "matchesAll", comment = "the item matches everything")
+    private boolean MATCHES_ALL = false;
 
     /**
      * returns the amount of xp someone gets when he is finishing an action with this item
@@ -66,6 +68,13 @@ public abstract class JobItem implements Serializable {
      */
     public boolean canDo(int level) {
         return (getNeedLevel() - level) <= 0;
+    }
+
+    /**
+     * is the item a wildcard item
+     */
+    public boolean matchesAll(){
+        return this.MATCHES_ALL;
     }
 
     /**

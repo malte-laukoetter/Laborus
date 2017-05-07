@@ -4,17 +4,15 @@ import de.lergin.laborus.api.JobItem;
 import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.item.ItemType;
-import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 
 import java.util.Locale;
-import java.util.Objects;
 
 @ConfigSerializable
 public class ItemJobItem extends JobItem {
     @Setting(value = "item", comment = "an itemtype, see http://minecraft.gamepedia.com/Data_values#Item_IDs")
-    private ItemType item = ItemTypes.DIRT;
+    private ItemType item = null;
 
     @Override
     public ItemType getItem() {
@@ -23,7 +21,7 @@ public class ItemJobItem extends JobItem {
 
     @Override
     public boolean matches(JobItem o) {
-        return o.getItem() instanceof ItemType && matches((ItemType) o.getItem());
+        return super.matchesAll() || o.getItem() instanceof ItemType && matches((ItemType) o.getItem());
     }
 
     private boolean matches(ItemType item) {
@@ -32,7 +30,7 @@ public class ItemJobItem extends JobItem {
 
     @Override
     public boolean matches(String item) {
-        return this.getItem().getId().equals(item);
+        return super.matchesAll() || this.getItem().getId().equals(item);
     }
 
     public static ItemJobItem fromItemStack(ItemStack item){

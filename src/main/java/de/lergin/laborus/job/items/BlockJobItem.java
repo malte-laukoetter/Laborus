@@ -12,7 +12,7 @@ import java.util.Locale;
 @ConfigSerializable
 public class BlockJobItem extends JobItem {
     @Setting(value = "item", comment = "an blockstate or blocktype as a string, see http://minecraft.gamepedia.com/Data_values#Block_IDs it also supports blockdata")
-    private String item = "";
+    private String item = null;
 
     /**
      * returns the item
@@ -28,12 +28,12 @@ public class BlockJobItem extends JobItem {
 
     @Override
     public boolean matches(JobItem item) {
-        return item instanceof BlockJobItem && matches((String) item.getItem());
+        return super.matchesAll() || item instanceof BlockJobItem && matches((String) item.getItem());
     }
 
     @Override
     public boolean matches(String item) {
-        return  BlockStateComparator.compare(getItem(), item);
+        return super.matchesAll() || BlockStateComparator.compare(getItem(), item);
     }
 
     @Override
