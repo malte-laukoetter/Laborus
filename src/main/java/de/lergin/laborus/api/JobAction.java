@@ -85,6 +85,10 @@ public abstract class JobAction<T extends JobItem> implements Serializable {
      * @throws Exception exception if something in one of the suppliers isn't working
      */
     public JobActionState onEvent(Player player, BooleanSupplier isWorking, Callable<T> getJobItem) throws Exception {
+        if(!isWorking.getAsBoolean()){
+            return IGNORE;
+        }
+
         T jobItem = getJobItem(getJobItem.call());
 
         if(jobItem == null){
