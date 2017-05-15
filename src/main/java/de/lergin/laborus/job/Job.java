@@ -124,7 +124,11 @@ public class Job {
         double oldXp = jobData.getOrDefault(getId(), 0.0);
         double newXp = oldXp + amount;
 
-        jobData.put(getId(), newXp);
+        if(newXp < 0.0){
+            jobData.put(getId(), 0.0);
+        }else{
+            jobData.put(getId(), newXp);
+        }
 
         if (player.supports(JobKeys.JOB_DATA)) {
             player.offer(JobKeys.JOB_DATA, jobData);
