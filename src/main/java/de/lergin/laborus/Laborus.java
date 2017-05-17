@@ -22,6 +22,8 @@ import ninja.leaping.configurate.objectmapping.serialize.TypeSerializers;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.config.DefaultConfig;
+import org.spongepowered.api.data.DataRegistration;
+import org.spongepowered.api.data.persistence.DataBuilder;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameConstructionEvent;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
@@ -137,8 +139,16 @@ public class Laborus {
         AntiReplaceFarming.setupDataBase();
 
         //init customData
-        Sponge.getDataManager().register(JobData.class, ImmutableJobDataManipulator.class,
-                new JobDataManipulatorBuilder());
+        DataRegistration<JobData, ImmutableJobDataManipulator> registration =
+                DataRegistration.<JobData, ImmutableJobDataManipulator>builder()
+                        .dataClass(JobData.class)
+                        .immutableClass(ImmutableJobDataManipulator.class)
+                        .builder(new JobDataManipulatorBuilder())
+                        .manipulatorId("laborus_job_data")
+                        .dataName("Laborus Job Data")
+                        .buildAndRegister(this.pluginContainer);
+        Sponge.getDataManager().registerLegacyManipulatorIds("de.lergin.laborus.data.jobs.JobData", registration);
+        Sponge.getDataManager().registerLegacyManipulatorIds("de.lergin.sponge.laborus.data.jobs.JobData", registration);
     }
 
     @Listener
