@@ -4,6 +4,8 @@ out
 build
 .gradle
 gradle-app.setting
+classes
+*.iml
 
 # Windows image file caches
 Thumbs.db

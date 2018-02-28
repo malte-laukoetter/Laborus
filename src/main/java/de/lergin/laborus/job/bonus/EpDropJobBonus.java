@@ -30,7 +30,7 @@ public class EpDropJobBonus extends JobBonus {
 
         itemEntity.offer(Keys.CONTAINED_EXPERIENCE, new Random().nextInt(maxEp - minEp) + minEp);
 
-        extent.spawnEntity(itemEntity, Cause.builder().owner(player).build());
+        extent.spawnEntity(itemEntity);
     }
 
     public EpDropJobBonus() {}

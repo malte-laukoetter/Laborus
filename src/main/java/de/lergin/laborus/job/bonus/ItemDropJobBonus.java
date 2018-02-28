@@ -7,6 +7,8 @@ import ninja.leaping.configurate.objectmapping.Setting;
 import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.EventContext;
+import org.spongepowered.api.event.cause.EventContextKeys;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 
@@ -19,6 +21,6 @@ public class ItemDropJobBonus extends JobBonus {
 
     @Override
     public void applyBonus(JobItem item, Player player, Object i2) {
-        BonusHelper.dropItem(player.getLocation(), itemStack, Cause.builder().owner(player).build());
+        BonusHelper.dropItem(player.getLocation(), itemStack);
     }
 }

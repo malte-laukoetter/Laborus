@@ -10,13 +10,13 @@ import org.spongepowered.api.world.World;
 import org.spongepowered.api.world.extent.Extent;
 
 public class BonusHelper {
-    public static boolean dropItem(Location<World> loc, ItemStack itemStack, Cause cause) {
+    public static boolean dropItem(Location<World> loc, ItemStack itemStack) {
         Extent extent = loc.getExtent();
 
         Entity itemEntity = extent.createEntity(EntityTypes.ITEM, loc.getPosition());
 
         itemEntity.offer(Keys.REPRESENTED_ITEM, itemStack.createSnapshot());
-        extent.spawnEntity(itemEntity, cause);
+        extent.spawnEntity(itemEntity);
 
         return true;
     }

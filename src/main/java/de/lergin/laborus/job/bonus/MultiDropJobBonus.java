@@ -10,6 +10,8 @@ import ninja.leaping.configurate.objectmapping.serialize.ConfigSerializable;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.event.cause.EventContext;
+import org.spongepowered.api.event.cause.EventContextKeys;
 import org.spongepowered.api.item.inventory.ItemStack;
 
 /**
@@ -25,7 +27,7 @@ public class MultiDropJobBonus extends JobBonus {
         if (item2 instanceof BlockState) {
             ItemStack itemStack = ItemStack.builder().fromBlockState((BlockState) item2).quantity(extraDrops).build();
 
-            BonusHelper.dropItem(player.getLocation(), itemStack, Cause.builder().owner(player).build());
+            BonusHelper.dropItem(player.getLocation(), itemStack);
         }
     }
 
