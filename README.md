@@ -1,4 +1,5 @@
-![Laborus](https://lergin.de/img/plugins/Laborus_Banner.png)
+![Laborus](https://github.com/Lergin/Laborus/raw/master/images/Laborus_Banner.png)
+
 
 a Minecraft job plugin for [Sponge](https://Spongepowered.org "SpongePowered.org")
 
