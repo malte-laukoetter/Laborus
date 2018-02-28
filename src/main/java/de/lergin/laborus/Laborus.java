@@ -37,7 +37,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-@Plugin(id = "laborus", name = "Laborus", version = "@version@", description = "a job plugin", authors = {"Lergin"})
+@Plugin(id = "laborus")
 public class Laborus {
     @Inject
     @DefaultConfig(sharedRoot = false)

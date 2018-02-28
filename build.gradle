@@ -1,10 +1,9 @@
 plugins {
     id 'org.spongepowered.plugin' version '0.8.1'
-    id 'ninja.miserable.blossom' version '1.0.1'
 }
 
 group = 'de.lergin'
-version = '1.4.3'
+version = '1.6.0'
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
@@ -21,8 +20,14 @@ dependencies {
     compile 'org.spongepowered:spongeapi:7.0.0-SNAPSHOT'
 }
 
-blossom {
-    def location = 'src/main/java/de/lergin/laborus/Laborus.java'
-
-    replaceToken '@version@', project.version, location
+sponge {
+    plugin {
+        id = 'laborus'
+        meta {
+            name = 'Laborus'
+            version = project.version
+            description = 'a job plugin'
+            authors = ['Lergin']
+        }
+    }
 }
