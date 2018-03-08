@@ -10,30 +10,30 @@ import static org.spongepowered.api.data.DataQuery.of;
 
 public class JobKeys {
     public static final Key<MapValue<String, Double>> JOB_DATA = Key.builder()
+        .type(new TypeToken<MapValue<String, Double>>() { })
         .id("jobdata")
         .name("Job Data")
         .query(of("JobData"))
-        .type(new TypeToken<MapValue<String, Double>>() { })
         .build();
 
     public static final Key<Value<Boolean>> JOB_ENABLED = Key.builder()
+        .type(new TypeToken<Value<Boolean>>() { })
         .id("job_enabled")
         .name("Jobs Enabled")
         .query(of("JobEnabled"))
-        .type(new TypeToken<Value<Boolean>>() { })
         .build();
 
     public static final Key<SetValue<String>> JOB_SELECTED = Key.builder()
+        .type(new TypeToken<SetValue<String>>() { })
         .id("jobselected")
         .name("Job Selected")
         .query(of("JobSelected"))
-        .type(new TypeToken<SetValue<String>>() { })
         .build();
 
     public static final Key<MapValue<String, Long>> JOB_ABILITY_USED = Key.builder()
+        .type(new TypeToken<MapValue<String, Long>>() { })
         .id("job_ability_used")
         .name("Job Ability used")
         .query(of("JobAbilityUsed"))
-        .type(new TypeToken<MapValue<String, Long>>() { })
         .build();
 }
